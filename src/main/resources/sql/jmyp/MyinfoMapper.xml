@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.jmyp.dao.MyinfoDao">
+	<!-- 회원 가입 -->
+	<!-- 등급, 제목, 희망근무, 경력내용 추가 -->
+	<select id="selectRegister" resultType="kr.happy.jobkorea.register.model.RegisterModel">
+	/*kr.happy.jobkorea.jmyp.dao.MyinfoDao.selectRegister*/
+		select
+			user.loginID,
+			user.password, 
+			user.name, 
+			user.user_type,
+			user.email,
+			user.email_cop, 
+			user.area, 
+			user.tel1,
+			user.tel2,
+			user.tel3,
+			user.birthday,
+			user.sex,
+			user.career_year,
+			user.career_mm,
+			user.skill_add,
+			user.singular_facts,
+			user.user_position,
+			user.consult_yn,
+			user.salary,
+			user.join_date,
+			user.title,
+			user.grade,
+			user.comp_area1,
+			user.comp_area2,
+			user.comp_area3,
+			user.career_contents,
+			(
+			  select group_concat(sk.skill_detail SEPARATOR '/') 
+		       from TB_USERSKILL sk
+		      WHERE sk.loginID = user.loginID
+			) as skill_detail
+			
+		from tb_userinfo as user
+		where loginID = #{loginId}
+		
+	</select>
+	
+	<update id="userUpdate">
+		update tb_userinfo
+		
+		SET
+		   
+		   password = #{password}
+		  ,name = #{name}
+		  ,email = #{email}
+		  ,email_cop = #{email_cop}
+		  ,sex = #{sex}
+		  ,birthday = #{birthday}
+		  ,area = #{area}
+		  ,tel1 = #{tel1}
+		  ,tel2 = #{tel2}
+		  ,tel3 = #{tel3}
+		  ,user_position = #{userPosition}
+		  ,salary = #{salary}
+		  ,consult_yn = #{consult_yn}
+		  ,career_year = #{career_year}
+		  ,career_mm = #{career_mm}
+		  ,skill_add = #{skill_add}
+		  ,singular_facts = #{singular_facts}
+		  ,career_contents = #{career_contents}
+		  ,comp_area1 = #{comp_area1}
+		  ,comp_area2 = #{comp_area2}
+		  ,comp_area3 = #{comp_area3}
+		  ,grade = #{grade}
+		  ,title = #{title}
+		  
+		WHERE loginID = #{loginID}
+			
+	</update>
+	
+	<insert id="updateSkill">
+		insert into TB_USERSKILL (
+			skill_code,
+			skill_detail,
+			loginID)
+			
+		VALUES (#{skill_code},
+				#{skill_detail},
+				#{loginID})
+	</insert>
+	
+	<delete id="skillDelete">
+		delete from TB_USERSKILL
+		where loginID = #{loginID}
+	</delete>
+
+</mapper>

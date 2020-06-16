@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.jmli.dao.JmliDeveloperDao">
+  
+	<!-- 공지사항 목록 조회 -->
+	<select id="getDeveloperList" resultType="Map" >
+		
+		
+		select  user.loginID,
+				user.name,
+				user.user_position,
+				dtl.detail_name as area,
+				dtl2.detail_name as skill,
+				user.skill_add				
+		 from   tb_userinfo as user		 
+		 join   tb_detail_code as dtl		 
+		   on   user.area = dtl.detail_code	and group_code = 'areaCD'
+         join   tb_detail_code as dtl2		 
+		   on   user.skill = dtl2.detail_code and dtl2.group_code = 'SKLCD'
+		where   user.user_type = 'D'	
+		  AND   user.USE_YN = '0'		
+			<if test="searcharea != null and searcharea !=''">
+   			 	and user.area = #{searcharea}
+   			</if>   			
+   			<if test="searchind != null and searchind !=''">
+   			 	and user.user_position = #{searchind}
+   			</if>   			
+   			<if test="searchlevel != null and searchlevel !=''">
+   			 	and user.skill = #{searchlevel}
+   			</if>		
+		group by user.loginID
+   		ORDER BY user.name
+		LIMIT #{pageIndex}, #{pageSize} 
+	</select>
+	
+	 <!-- 공지사항 목록 총 갯수 조회 -->
+	<select id="totalCountDeveloper" resultType="int">
+		SELECT COUNT(*) AS tot_cnt 
+		 from   tb_userinfo	 		
+		where   user_type = 'D'	
+		  AND   USE_YN = '0'		
+			<if test="searcharea != null and searcharea !=''">
+   			 	and area = #{searcharea}
+   			</if>   			
+   			<if test="searchind != null and searchind !=''">
+   			 	and user_position = #{searchind}
+   			</if>   			
+   			<if test="searchlevel != null and searchlevel !=''">
+   			 	and skill = #{searchlevel}
+   			</if>
+   			
+	</select>
+	
+	<select id="selectDeveloperOne" resultType="developerModel">
+		select  *
+		  from  tb_userinfo
+		 where  loginID = #{loginID}
+		   AND  USE_YN = '0' 
+	</select>
+	
+	<select id="showSkill" resultType="JmliUserSkill">
+		select skill_code   as skillCode,
+			   skill_detail as skillDetail
+	    from TB_USERSKILL
+	    where loginID = #{loginID}
+	</select>
+	
+	
+	<insert id="insertMessage" parameterType="Map">
+		/*kr.happy.jobkorea.jmli.dao.JmliDeveloperDao.insertMessage*/		
+		<selectKey resultType="string" keyProperty="msg_seq" order="BEFORE">
+			SELECT IFNULL(MAX(CAST(msg_code AS UNSIGNED)),0) + 1 FROM TB_MESSAGE 
+		</selectKey> 
+		INSERT INTO TB_MESSAGE
+		(
+				msg_code, msg_note, msg_date, msg_receive, msg_send
+		)
+		VALUES
+		(
+				#{msg_seq}
+			,	#{messageText}
+			,	NOW()
+			,	#{receiver}
+			,	#{loginId}			
+		)		
+	</insert>
+	
+	
+</mapper>
