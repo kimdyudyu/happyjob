@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.jmyp.dao.JMyBoardsDao">
+
+	<select id="SelectBoards" resultType="kr.happy.jobkorea.jmyp.model.JMyBoardsModel">
+	  	/*kr.happy.jobkorea.jmyp.dao.JMyBoardsDao.SelectBoards*/
+	  	SELECT board_Type, board_code, wno, title, reg_date, cmnt_level
+	  	FROM(		  	
+			SELECT 
+				"게시판" as board_Type, 
+				"b" as board_code,
+				wno,
+				title,
+				reg_date,
+				cmnt_level
+			FROM    tb_board	
+			<where>
+				<if	test="!isBoard.equals('true')">
+					1=0
+				</if>		
+					AND loginID = #{loginId}
+				<if test="(title != null) and (!title.equals(''))">			
+					AND title like concat('%',#{title},'%')
+				</if>
+				<if test="(fromDt != null) and (!fromDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+				</if>    
+				<if test="(toDt != null) and (!toDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+				</if>			
+			</where>		
+			UNION
+			SELECT 
+				"자료실" as board_Type, 
+				"r" as board_code,
+				wno,
+				title,
+				reg_date,
+	      		"1"  as cmnt_level
+			FROM    tb_room	
+			<where>
+				<if	test="!isRoom.equals('true')">
+					1=0
+				</if>	
+					AND loginID = #{loginId}
+				<if test="(title != null) and (!title.equals(''))">			
+					AND title like concat('%',#{title},'%')
+				</if>
+				<if test="(fromDt != null) and (!fromDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+				</if>    
+				<if test="(toDt != null) and (!toDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+				</if>
+			</where>				
+			UNION		
+			SELECT 
+				"QnA" as board_Type,
+				"q" as board_code,
+				wno,
+				title,
+				reg_date,
+				cmnt_level
+			FROM    tb_qna
+			<where>
+				<if	test="!isQnA.equals('true')">
+					1=0
+				</if>		
+					AND loginID = #{loginId}
+				<if test="(title != null) and (!title.equals(''))">			
+					AND title like concat('%',#{title},'%')
+				</if>
+				<if test="(fromDt != null) and (!fromDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+				</if>    
+				<if test="(toDt != null) and (!toDt.equals(''))">
+					AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+				</if>								
+			</where>
+		) BoardTotal
+			ORDER BY BoardTotal.reg_date DESC
+			LIMIT #{pageIndex}, #{pageSize}
+		
+	 </select>
+
+	<select id="SelectedBoardsCount" resultType="int">
+	  	/*kr.happy.jobkorea.jmyp.dao.JMyBoardsDao.SelectedBoardsCount*/
+	SELECT 
+		COUNT(*)  AS selected_count
+	FROM
+    (    	
+    	SELECT 
+			"게시판" as board_Type, 
+			"b" as board_code,
+			wno,
+			title,
+			reg_date,
+			cmnt_level
+		FROM     tb_board	
+		<where>
+			<if	test="!isBoard.equals('true')">
+				AND 1=0
+			</if>
+			AND loginID = #{loginId}
+			<if test="(title != null) and (!title.equals(''))">			
+				AND title like concat('%',#{title},'%')
+			</if>
+			<if test="(fromDt != null) and (!fromDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+			</if>    
+			<if test="(toDt != null) and (!toDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+			</if>						
+		</where>		
+		UNION	 
+		SELECT 
+			"자료실" as board_Type, 
+			"r" as board_code,
+			wno,
+			title,
+			reg_date,
+      		"1"  as cmnt_level
+		FROM    tb_room
+		<where>
+			<if	test="!isRoom.equals('true')">
+				AND 1=0
+			</if>
+			AND loginID = #{loginId}
+			<if test="(title != null) and (!title.equals(''))">			
+				AND title like concat('%',#{title},'%')
+			</if>
+			<if test="(fromDt != null) and (!fromDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+			</if>    
+			<if test="(toDt != null) and (!toDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+			</if>			
+		</where>		
+		UNION
+		SELECT
+			"QnA" as board_Type,
+			"q" as board_code,
+			wno,
+			title,
+			reg_date,
+			cmnt_level	
+		FROM    tb_qna
+		<where>
+			<if	test="!isQnA.equals('true')">
+				AND 1=0
+			</if>
+			AND loginID = #{loginId}
+			<if test="(title != null) and (!title.equals(''))">			
+				AND title like concat('%',#{title},'%')
+			</if>
+			<if test="(fromDt != null) and (!fromDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+			</if>    
+			<if test="(toDt != null) and (!toDt.equals(''))">
+				AND DATE_FORMAT(reg_date,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+			</if>				
+		</where>
+	) BoardTotal
+   	
+	 </select>
+
+
+	
+	 
+</mapper>
+

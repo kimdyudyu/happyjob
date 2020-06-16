@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.jmyp.dao.MypageADao">
+  
+	
+	
+	<select id="DmypageBoard" resultType="kr.happy.jobkorea.jmyp.model.aMypageVO">
+	
+			select p.project_name as projectName	-- 프로젝트 이름
+			      , p.projectId as projectId
+			      , r.loginID -- 유저 ID
+			      , ut.name -- 유저 이름
+			      , p.loginID -- 기업 아이디      
+			      , ut2.comp_name as compName	-- 기업 이름      
+			      , r.cv_date as applyDate -- 프로젝트 지원 날짜
+			from TB_prjApplication r
+			     Inner join TB_Project p on r.projectId = p.projectId
+			    ,(
+			       select uu.loginID
+			             ,uu.name  
+			         from tb_userinfo uu
+			        where uu.user_type = 'D' 
+			     ) as ut
+			    ,(
+			       select uu.loginID
+			             ,uu.comp_name    
+			         from tb_userinfo uu
+			        where uu.user_type = 'C'
+			     ) as ut2     
+			where r.loginID = #{dID}
+			 and ut.loginID = r.loginID 
+			 and ut2.loginID = p.loginID
+			 
+					<if test="(searchTxt != null) and (!searchTxt.equals(''))">
+				         AND ut2.comp_name like concat('%',#{searchTxt},'%')
+				    </if>
+					<if test="(fromDt != null) and (!fromDt.equals(''))">
+				         AND r.cv_date <![CDATA[>=]]> #{fromDt}
+				    </if>    
+					<if test="(toDt != null) and (!toDt.equals(''))">
+				         AND r.cv_date <![CDATA[<=]]> #{toDt}
+				    </if> 
+
+			LIMIT #{pageIndex}, #{pageSize}
+		
+	</select>
+	
+	<select id="DBoardCnt" resultType="int">
+		select count(*)
+			from TB_prjApplication r
+			     Inner join TB_Project p on r.projectId = p.projectId
+			    ,(
+			       select uu.loginID
+			             ,uu.name  
+			         from tb_userinfo uu
+			        where uu.user_type = 'D' 
+			     ) as ut
+			    ,(
+			       select uu.loginID
+			             ,uu.comp_name    
+			         from tb_userinfo uu
+			        where uu.user_type = 'C'
+			     ) as ut2     
+			where r.loginID = #{dID}
+			 and ut.loginID = r.loginID 
+			 and ut2.loginID = p.loginID
+	        <if test="(searchTxt != null) and (!searchTxt.equals(''))">
+	             AND ut2.comp_name like concat('%',#{searchTxt},'%')
+	        </if>
+	        <if test="(fromDt != null) and (!fromDt.equals(''))">
+	             AND r.cv_date <![CDATA[>=]]> #{fromDt}
+	        </if>    
+	        <if test="(toDt != null) and (!toDt.equals(''))">
+	             AND r.cv_date <![CDATA[<=]]> #{toDt}
+	        </if> 
+	        
+		
+	</select>
+	
+	
+	
+	<select id="CmypageBoard" resultType="kr.happy.jobkorea.jmyp.model.aMypageVO">
+	
+		select project_name as projectName	-- 프로젝트 이름
+		      , receive_to_date as receiveDead  -- 지원한 날짜
+		      , projectId
+	       	  , projectId as tt
+	       	  , (
+	          		select count(tt) from TB_prjApplication where projectId = tt
+	            ) as SupplyCount
+		from TB_Project
+		where loginID = #{cID}
+		
+		<if test="(searchTxt != null) and (!searchTxt.equals(''))">
+				         AND project_name like concat('%',#{searchTxt},'%')
+				    </if>
+					<if test="(fromDt != null) and (!fromDt.equals(''))">
+				         AND receive_to_date <![CDATA[>=]]> #{fromDt}
+				    </if>    
+					<if test="(toDt != null) and (!toDt.equals(''))">
+				         AND receive_to_date <![CDATA[<=]]> #{toDt}
+				    </if> 
+		LIMIT #{pageIndex}, #{pageSize}
+		
+	</select>
+	
+	<select id="CBoardCnt" resultType="int">
+		select count(*) from TB_Project
+		where loginID = #{cID}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="supplyList" resultType="kr.happy.jobkorea.jmyp.model.aMypageVO">
+		select u.name as userName
+		      , u.loginID as loginId
+		      , IFNULL(GROUP_CONCAT(s.skill_detail),'없음') as skillAdd
+		from TB_prjApplication p
+		inner join tb_userinfo u on p.loginID = u.loginID
+		left outer join TB_USERSKILL s on s.loginID = p.loginID
+		where p.projectId = #{projectId}
+		group by u.name
+	</select>
+	
+	
+	
+	
+
+
+	
+	
+	<select id="projectDetailD" resultType="kr.happy.jobkorea.jmyp.model.aMypageVO">
+
+		select u.comp_name as compName	-- 기업이름
+			, p.note as projectNote		-- 프로젝트 상세 정보
+			, p.option_order as optionOrder	-- 필수 우대사항
+		from tb_userinfo u
+		inner join TB_Project p on p.loginID = u.loginID
+		where p.projectId = #{projectId}
+	
+	</select>
+	
+	
+	<delete id="supplyDeleteD" parameterType="String">
+		DELETE FROM TB_prjApplication 
+		WHERE projectId = #{0}
+		and loginID = #{1}
+	</delete>
+	
+	
+	
+	
+	
+	<select id="userInfo" resultType="kr.happy.jobkorea.jmyp.model.UserInfoVO">
+		select user_position as position
+				, loginID AS loginId
+				, name AS userName
+				, email AS email 
+       			, email_cop AS emailCop
+       			, sex AS userSex
+       			, birthday AS userBirthday
+       			, area AS area
+       			, tel1 AS tel1
+       			, tel2 AS tel2
+       			, tel3 AS tel3
+       			, salary AS salary
+       			, title AS title
+       			, career_year AS careerYear
+       			, career_mm AS careerMm
+		from tb_userinfo
+		where loginID = #{userID}
+		
+	
+	</select>
+	
+	
+	
+	
+</mapper>
