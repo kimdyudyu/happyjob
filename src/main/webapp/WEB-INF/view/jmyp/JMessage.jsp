@@ -18,7 +18,7 @@
 <script type="text/javascript">
 
 // 메세지리스트 페이징 설정
-var pageSizeMessageList = 5;
+var pageSizeMessageList = 6;
 var pageBlockSizeMessageList = 5;
 
 var messagedata;
