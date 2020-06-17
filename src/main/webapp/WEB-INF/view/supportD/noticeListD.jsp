@@ -19,7 +19,7 @@
          <c:set var="nRow" value="${pageSize*(currentPage-1)}" /> 
          <c:forEach items="${noticeList}" var="list">
             <tr>
-                   <td><a href="javascript:fNoticeModal(${list.nt_seq});">${nRow + 1}</a></td>
+                  <td><a href="javascript:fNoticeModal(${list.nt_seq});">${nRow + 1}</a></td>
                   <td><a href="javascript:fNoticeModal(${list.nt_seq});">${list.nt_title}</a></td>
                   
                   <td>${list.enr_date}</td>
