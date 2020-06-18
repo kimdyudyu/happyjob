@@ -1,6 +1,12 @@
 package kr.happy.jobkorea.hlteacher.service;
 
+import java.util.List;
+import java.util.Map;
+
+import kr.happy.jobkorea.hlteacher.model.lectureModel;
+
+
 public interface hlTeacherService {
-	// 임시테스트
-	//ㅁㄴㅇㄹㅇㄴㅁ리ㅏㅇㄴ모리ㅏㅗㅇㄴ;ㅣㅏㄹ
+	
+	List<Map<String, Object>> classList(Map<String, Object> paramMap);
 }
