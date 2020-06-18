@@ -59,7 +59,7 @@
    <!-- <bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://13.125.158.2:3306/fivelms" />
+		<property name="url" value="jdbc:mysql://13.125.158.2:3306/hlmsone" />
 		<property name="username" value="root" />
 		<property name="password" value="@dltmd85" />
 		<property name="validationQuery" value="select 1" />
@@ -68,7 +68,7 @@
    <bean id="mysqlDataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://13.125.158.2:3306/happy" />
+		<property name="url" value="jdbc:mysql://13.125.158.2:3306/hlmsone" />
 		<property name="username" value="root" />
 		<property name="password" value="@dltmd85" />
 		<property name="validationQuery" value="select 1" />

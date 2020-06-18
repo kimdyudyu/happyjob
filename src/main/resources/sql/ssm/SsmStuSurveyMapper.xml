@@ -58,11 +58,10 @@
 		  ,#{totalScore}  
 		  ,#{comment} 
 		  ,#{enr_user} 
-		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )   
+		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )
 		  ,#{enr_user}  
-		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )  
+		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )
 		FROM tb_survey
 		where lec_seq=#{lec_seq};
 	</insert>
-
 </mapper>

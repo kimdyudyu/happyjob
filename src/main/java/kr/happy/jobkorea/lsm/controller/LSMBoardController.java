@@ -59,7 +59,7 @@ public class LSMBoardController {
 	   }
 	   
 	   
-	   
+	   //강사가 등록한 강의를 select 수강목록/ 진도
 	   @RequestMapping("listLsmCod.do")
 	   public String listLsmCod(Model model, @RequestParam Map <String, Object> paramMap, HttpServletRequest request,
 			   HttpServletResponse response, HttpSession session) throws Exception{
