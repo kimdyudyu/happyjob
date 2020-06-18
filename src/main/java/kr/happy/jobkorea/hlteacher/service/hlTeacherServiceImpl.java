@@ -16,7 +16,7 @@ public class hlTeacherServiceImpl implements hlTeacherService{
 	hlTeacherDao hlTeacherDao;
 	
 	@Override
-	public List<Map<String, Object>> classList(Map<String, Object> paramMap) {
+	public List<lectureModel> classList(Map<String, Object> paramMap) {
 		
 		return hlTeacherDao.getClassList(paramMap);
 	}

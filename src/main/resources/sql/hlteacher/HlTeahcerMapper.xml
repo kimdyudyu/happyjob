@@ -4,19 +4,18 @@
 
 <mapper namespace="kr.happy.jobkorea.hlteacher.dao.hlTeacherDao">
 
-	<select id="getClassList" parameterType="Map" resultType="Map">
+	<select id="getClassList" parameterType="Map" resultType="kr.happy.jobkorea.hlteacher.model.lectureModel">
 			SELECT	
 					no , title , loginID ,
 					startDate , endDate ,
 					filename , pcnt , 
 					goal , plan
 			FROM	tb_lecture
-			WHERE loginID = #{loginID}
+			WHERE loginID = #{loginId}
 			    <if test="searchkey =='content' ">
 			        and title like '%${content}%'
 			    </if>
 	   		ORDER BY no
-			LIMIT #{pageIndex}, #{pageSize}
 	</select>
 
 </mapper>

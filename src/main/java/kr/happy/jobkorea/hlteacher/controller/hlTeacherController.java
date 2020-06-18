@@ -32,7 +32,7 @@ public class hlTeacherController {
    @Autowired
    hlTeacherService hlTeacherService;
    
-   @RequestMapping("lecturMgt.do")
+   @RequestMapping("lectureMgt.do")
    public String classList(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
 		System.out.println(" 리스트 호출");
@@ -41,27 +41,22 @@ public class hlTeacherController {
 		// System.out.println("param에서 넘어온 값을 찍어봅시다.: " + paramMap);
 
 		// jsp페이지에서 넘어온 파람 값 정리 (페이징 처리를 위해 필요)
-		int currentPage = Integer.parseInt((String) paramMap.get("currentPage")); // 현재페이지
-		int pageSize = Integer.parseInt((String) paramMap.get("pageSize"));
-		int pageIndex = (currentPage - 1) * pageSize;
+		//int currentPage = Integer.parseInt((String) paramMap.get("currentPage")); // 현재페이지
+		//int pageSize = Integer.parseInt((String) paramMap.get("pageSize"));
+		//int pageIndex = (currentPage - 1) * pageSize;
 
 		// 사이즈는 int형으로, index는 2개로 만들어서 -> 다시 파람으로 만들어서 보낸다.
-		paramMap.put("pageIndex", pageIndex);
-		paramMap.put("pageSize", pageSize);
+		//paramMap.put("pageIndex", pageIndex);
+		//paramMap.put("pageSize", pageSize);
 		paramMap.put("loginId", session.getAttribute("loginId"));
 		System.out.println("잘 찎히니 ? : " + session.getAttribute("loginId"));
 
 		// 서비스 호출
-		List<Map<String, Object>> classList = hlTeacherService.classList(paramMap);
+		List<lectureModel> classList = hlTeacherService.classList(paramMap);
+		System.out.println("adfadsfaddsafdsfdsafdsaf"+classList.size());
 		model.addAttribute("noticeList", classList);
 		System.out.println("노티스 톡톡 : " + classList);
 
-		// 목록 숫자 추출하여 보내기
-		//int totalCnt = classService.noticeTotalCnt(paramMap);
-		//model.addAttribute("totalCnt", totalCnt);
-
-		// System.out.println("자 컨트롤러에서 값을 가지고 jsp로 갑니다~ : " +
-		// freeboardlist.size());
 		logger.info("+ End " + className + ".classList");
 
 		return "hlteacher/lectureMgt";

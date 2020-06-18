@@ -8,5 +8,5 @@ import kr.happy.jobkorea.hlteacher.model.lectureModel;
 
 public interface hlTeacherService {
 	
-	List<Map<String, Object>> classList(Map<String, Object> paramMap);
+	List<lectureModel> classList(Map<String, Object> paramMap);
 }
