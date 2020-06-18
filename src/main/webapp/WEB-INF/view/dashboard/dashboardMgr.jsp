@@ -76,19 +76,19 @@ function init() {
 	      date: String
 	     },
 	     mounted: function() {
-										      	var that = this;
-										      $(this.$el).datepicker({
-										          'autoclose':true,
-										          'minViewMode':0, //day까지 선택할수 있게 선언
-										          'maxViewMode':2,
-										          'format':'yyyy.mm.dd' //날짜 포맷
-										      }).on('changeDate', function(e){
-														       var year = e.date.getFullYear();
-														       var month = e.date.getMonth() + 1;
-														       if(month < 10) month = '0' + month;
-														       var day = e.date.getDate();
-														       that.$emit('change',String(year)+'.'+String(month)+'.'+day);
-										      });
+		      	var that = this;
+		      $(this.$el).datepicker({
+		          'autoclose':true,
+		          'minViewMode':0, //day까지 선택할수 있게 선언
+		          'maxViewMode':2,
+		          'format':'yyyy.mm.dd' //날짜 포맷
+		      }).on('changeDate', function(e){
+						       var year = e.date.getFullYear();
+						       var month = e.date.getMonth() + 1;
+						       if(month < 10) month = '0' + month;
+						       var day = e.date.getDate();
+						       that.$emit('change',String(year)+'.'+String(month)+'.'+day);
+		      });
 	     },
 	     updated: function(){
 	            $(this.$el).datepicker('update', this.date);
@@ -198,7 +198,7 @@ function fOnloadImg(param){
 	 // 일단 기존 목록을 삭제합니다. (변경시 재부팅 용)
 	 $("#noticeList").empty();
 	 //alert("데이터!!! " + data);
-	 //console.log("data !!!! " +  data);
+	 console.log("data !!!! " +  data);
 	 
 	 //var $data = $( $(data).html() ); // data의 .html()통해서 html구문을 끌어온다.
 	 //alert("데이터 찍어보자!!!! " +  $data); // object
@@ -331,7 +331,7 @@ function fOnloadImg(param){
  function selectNoticeListvue(currentPage){
  	
 	currentPage = currentPage || 1;   // or		
-	//svm.stitle = "55555555555";
+	svm.stitle = "55555555555";
 	//console.log("selectNoticeListvue currentPage : " + currentPage);
  	var stitle = $("#stitle").val();
  	
@@ -346,7 +346,6 @@ function fOnloadImg(param){
  	}
  	
  	callAjax("/supportD/noticeListvue.do","post","json", true, param, resultCallback);
- 	
  }
  
 

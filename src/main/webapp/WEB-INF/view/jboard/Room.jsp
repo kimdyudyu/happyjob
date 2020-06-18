@@ -70,8 +70,6 @@ var popperProps = {
 		init();
 		console.log("2");
 		fNoticeList();
-		
-		
 	});
 
 	$(document).on("click","#deleterpy",function(){
