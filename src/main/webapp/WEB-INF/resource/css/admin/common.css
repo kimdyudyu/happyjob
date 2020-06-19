@@ -219,8 +219,8 @@ div.scroll {overflow:auto;}
 
 .content	label	{vertical-align: middle;}
 .content	input, .content select	{border: 1px solid #bbc2cd;padding-left:2px;}
-.content	select	{width: 180px;height: 30px;}
-.content	input.searchKeyWord	{width: 166px;height: 24px;padding:0 5px;line-height: 22px;}
+.content	select	{width: 100px;height: 25px;}
+.content	input.searchKeyWord	{width: 100px;height: 25px;padding:0 5px;line-height: 22px;}
 .content	input.inputTxt{/* display:inline-table; */width: 100%;height: 28px;border: 1px solid #cdcdcd;line-height: 23px;}
 .content	input[type="file"]{border: 0px;}
 .content	textarea {width: calc(100% - 4px);padding-left:2px;height: 70px;text-align:left;vertical-align: top;}
@@ -241,7 +241,7 @@ p.Location .btn_nav::before {content: " / ";padding: 0 3px;}
 p.Location .btn_nav:first-child::before {content: "";padding: 0px;}
 
 /* TITLE */
-div.content p.conTitle	{padding:0 24px;height:60px;margin-bottom: 10px;border: 1px solid #e2e6ed;background:#f9fafb;}
+div.content p.conTitle	{padding-top: 29px; padding:0 24px;height:60px;margin-bottom: 10px;border: 1px solid #e2e6ed;background:#f9fafb;}
 	p.conTitle > span:first-child {font-family: '나눔바른고딕',NanumBarunGothic;line-height:60px;font-size:28px;font-weight: bold;}
 	p.conTitle > span.fr {margin-top:15px;}
 	
