@@ -331,7 +331,7 @@ function fOnloadImg(param){
  function selectNoticeListvue(currentPage){
  	
 	currentPage = currentPage || 1;   // or		
-	//svm.stitle = "55555555555";
+	svm.stitle = "55555555555";
 	//console.log("selectNoticeListvue currentPage : " + currentPage);
  	var stitle = $("#stitle").val();
  	
@@ -357,7 +357,7 @@ function fOnloadImg(param){
 	 
 	 vm.items=[];
 	 vm.items=data.noticeList;
-	 
+ 
 	 console.log(data.totalCnt + " : " + currentPage);
 	 
 	// 리스트의 총 개수를 추출합니다. 
