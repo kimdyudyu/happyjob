@@ -112,7 +112,6 @@
 			COUNT(*)
 		 FROM tb_tcourse tc
 		 WHERE
-		 	
 		) AS students
 		
 	FROM tb_lecture tl
