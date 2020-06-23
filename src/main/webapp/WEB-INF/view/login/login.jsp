@@ -67,6 +67,7 @@
 		$("#loginEmail").hide();
 		$("#loginPwd").hide();
 		hUserInfoHeader();
+		hUserInfoHeader.Init("R");
 		hUserInfoVueInit();
 		hUserInfoFooter();
 		totalInit();

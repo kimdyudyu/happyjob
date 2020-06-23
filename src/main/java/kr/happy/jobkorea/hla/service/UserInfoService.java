@@ -9,6 +9,7 @@ public interface UserInfoService {
 	void				UpdateUser(Map<String, Object> paramMap) throws Exception;
 	
 	List<UserInfoModel> SelectUserInfo(Map<String, Object> paramMap);
+	List<UserInfoModel> SelectLectureList(Map<String, Object> paramMap);
 	
 	int 				getSelectedCnt(Map<String, Object> paramMap);
 	

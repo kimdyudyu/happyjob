@@ -16,6 +16,16 @@ public class UserInfoModel {
 	private String 	area;
 	private String 	birthday;
 	
+	//////////// 이력서 관련  //////////////////
+	
+	private String	no;
+	private	String	title;
+	private	String	startdate;
+	private	String	enddate;
+	
+	private	String	testname;
+	private String	score;
+	
 	public String getLoginID() {
 		return loginID;
 	}
@@ -87,6 +97,44 @@ public class UserInfoModel {
 	}
 	public void setArea(String area) {
 		this.area = area;
+	}
+	
+	//////////////이력서 관련/////////////
+	public String getNo() {
+		return no;
+	}
+	public void setNo(String no) {
+		this.no = no;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getStartdate() {
+		return startdate;
+	}
+	public void setStartdate(String startdate) {
+		this.startdate = startdate;
+	}
+	public String getEnddate() {
+		return enddate;
+	}
+	public void setEnddate(String enddate) {
+		this.enddate = enddate;
+	}
+	public String getTestname() {
+		return testname;
+	}
+	public void setTestname(String testname) {
+		this.testname = testname;
+	}
+	public String getScore() {
+		return score;
+	}
+	public void setScore(String score) {
+		this.score = score;
 	}
 
 

@@ -40,4 +40,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 		userInfoDao.UpdateUser(paramMap);
 	}
 
+	@Override
+	public List<UserInfoModel> SelectLectureList(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.SelectLectureList(paramMap);
+	}
+
 }

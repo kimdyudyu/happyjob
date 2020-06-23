@@ -102,7 +102,28 @@
 	WHERE
 		loginID = #{loginID}
 	</update>
-	
+	<select id="SelectLectureList" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectLectureList*/
+	SELECT
+		tl.title,
+		tl.startdate,
+		tl.enddate,
+		(SELECT
+			COUNT(*)
+		 FROM tb_tcourse tc
+		 WHERE
+		 	
+		) AS students
+		
+	FROM tb_lecture tl
+		<where>
+			<if test="(LectureName != null) and (!LectureName.equals(''))">			
+				AND tl.title like concat('%',#{LectureName},'%')
+			</if>
+		</where>
+			<!--ORDER BY joinDate DESC-->
+	      	LIMIT #{pageIndex}, #{pageSize}
+	</select>
 	
 
 

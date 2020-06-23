@@ -11,5 +11,6 @@ public interface UserInfoDao {
 	
 	List<UserInfoModel> SelectUserInfo(Map<String, Object> paramMap);
 	
+	List<UserInfoModel> SelectLectureList(Map<String, Object> paramMap);
 	int getSelectedCnt(Map<String, Object> paramMap);
 }
