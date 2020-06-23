@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hlt.dao.TestManageMentDAO">
+	<select id="getCourseList" resultType="kr.happy.jobkorea.hlt.model.LectureVO" >
+		SELECT  
+			no
+			,title 
+			,cast(date_format(startdate,'%Y-%m-%d') as char) startdate 
+			,cast(date_format(enddate,'%Y-%m-%d')as char) enddate
+		FROM  tb_lecture  
+   	    <where>
+   	    	loginID = #{loginID}
+			<if test="title != null and title !=''">
+   			 	and title LIKE CONCAT('%',#{title},'%')
+   			</if>   				
+   	    </where>
+   		ORDER BY CAST(no as unsigned) DESC
+		LIMIT #{pageIndex}, #{pageSize} 
+	</select>
+	
+	
+	<select id="totalCountCourse" resultType="int">
+		SELECT  
+			COUNT(*)
+		FROM  tb_lecture  
+   	    <where>
+   	    	loginID = #{loginID}
+			<if test="title != null and title !=''">
+   			 	and title LIKE CONCAT('%',#{title},'%')
+   			</if>   				
+   	    </where>
+	</select>
+	
+	<select id="getTestResult" resultType="kr.happy.jobkorea.hlt.model.LectureVO" >
+		SELECT  
+			lec.no as no
+			,lec.title as title
+			,tes.re as re
+			,tes.testname as testname
+			
+			FROM  tb_lecture  lec 
+	        left outer join tb_test tes on lec.no = tes.no
+	  <where>
+	      	<if test ="no!=null and no!=''">
+	    		lec.no = #{no}
+	    	</if>
+	    </where>
+	</select>
+	
+	
+	<select id="getTestResultDetail" resultType="kr.happy.jobkorea.hlt.model.QuestionsVO" >
+		SELECT 
+			no 
+			,re 
+			,seq 
+			,problem 
+			,answer 
+			,answer1
+			,answer2
+			,answer3
+			,answer4 
+		FROM tb_testlist 
+		WHERE no = #{no} and re ='main'
+	</select>
+	
+	<select id="getTestResultDetailRe" resultType="kr.happy.jobkorea.hlt.model.QuestionsVO" >
+		SELECT 
+			no 
+			,re 
+			,seq 
+			,problem 
+			,answer 
+			,answer1
+			,answer2
+			,answer3
+			,answer4 
+		FROM tb_testlist 
+		WHERE no = #{no} and re ='re'
+	</select>
+	
+	<select id="getTotalC" resultType="int" >
+		select 
+			count(*) 
+		from tb_tcourse 
+		where no = #{no}
+	</select>
+	
+	<select id="getTotalRe" resultType="int" >
+		select 
+			 count(loginID) 
+		from(
+			select 
+			 	no
+			 	,re
+			 	,loginID
+			 	,sum(score) 
+			 from tb_testanswer
+			 where no = #{no} and re ='main'
+			 group by no , re ,loginID 
+			 having sum(score) <![CDATA[<]]> 60
+			 order by loginID , seq
+			 )tt
+	</select>
+	
+	<delete id="deleteQuestions">
+		delete from 
+			tb_testlist 
+		where no = #{no} and re =#{re}
+	</delete>
+	
+	
+	
+	<insert id="saveQuestions">
+		INSERT INTO 
+			tb_testlist 
+		VALUES(
+			#{no}
+			,#{re}
+			,#{seq}
+			,#{problem}
+			,#{answer}
+			,#{answer1}
+			,#{answer2}
+			,#{answer3}
+			,#{answer4}
+			)
+	</insert>
+	
+	<insert id="saveQuestionsM">
+		INSERT INTO 
+			tb_testlist 
+		VALUES(
+			#{no}
+			,#{re}
+			,#{seq}
+			,#{problem}
+			,#{answer}
+			,#{answer1}
+			,#{answer2}
+			,#{answer3}
+			,#{answer4}
+			)
+	</insert>
+	
+	
+</mapper>
