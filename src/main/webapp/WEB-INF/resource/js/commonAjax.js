@@ -220,4 +220,21 @@ function comcombo(group_code, combo_name, type, selvalue){
 	     },
 	     error:function(request,status,error){ alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error); }
 	});  
-}; 
+};
+
+
+function isEmpty(value){ 
+	if( //$.trim(value) == ""
+		value == ""
+		|| value == null
+		|| value == undefined 
+		|| (value != null && typeof value == "object" 
+				&& !Object.keys(value).length )
+		||(typeof value =="string" && value.replace(/ /gi, "").length==0)
+		){	
+		return true; 
+	}else{ 
+		return false; 
+	} 
+};
+
