@@ -59,14 +59,17 @@
 	src="${CTX_PATH}/js/popFindZipCode.js"></script>
 
 <script type="text/javascript" src="${CTX_PATH}/js/login_pub.js"></script>
+<jsp:include page="/WEB-INF/view/hla/hUserInfoVue.jsp"></jsp:include>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#confirm").hide();
 		$("#loginRegister").hide();
 		$("#loginEmail").hide();
 		$("#loginPwd").hide();
-		
-
+		hUserInfoHeader();
+		hUserInfoVueInit();
+		hUserInfoFooter();
+		totalInit();
 		/* $("#btn_prelogin").click(function() {
 			$("#EMP_ID").val("admin");
 			$("#EMP_PWD").val("admin");
@@ -133,8 +136,8 @@
 		var frm = $("#CompanyForm");
 		if (loginID == null || loginID == "") {
 			frm.find("input[name=action]").val("I");
-
-			gfModalPop("#layer3");
+			console.log("ppopop");
+			gfModalPop("#userInfoPopup");
 		}
 	}
 
@@ -970,7 +973,7 @@
 					<a href="javascript:fLoginProc();" id="btn_prelogin"><strong>[관리자로그인]</strong></a>
 					<a href="javascript:fLoginProc();" id="btn_prelogin2"><strong>[학생로그인]</strong></a>
 					<a href="javascript:fPopModalLsmCod();" id="RegisterBtn" name="modal"><strong>[일반 회원가입]</strong></a>
-					<a href="javascript:fPopModalcompCod();" id="compBtn" name="modal"><strong>[기업 회원가입]</strong></a>
+					<a href="javascript:fPopModalcompCod();" id="compBtn" name="modal"><strong>[학생 회원가입]</strong></a>
 					<a href="javascript:findIdPwd();"><strong>[아이디/비밀번호 찾기]</strong></a>
 				</fieldset>
 			</div>
@@ -1294,7 +1297,7 @@
 	</form>
 	
 	<!-- 기업 회원가입 -->
-	<form id="CompanyForm" action="" method="post">
+	<!-- <form id="CompanyForm" action="" method="post">
 		<input type="hidden" name="action" id="action" value="">
 		<div id="layer3" class="layerPop layerType3" style="width: 1000px;">
 			<dl>
@@ -1302,7 +1305,6 @@
 					<strong>기업회원 가입</strong>
 				</dt>
 				<dd class="container">
-					<!-- s : 여기에 내용입력 -->
 					<table class="row">
 						<caption>caption</caption>
 						<colgroup>
@@ -1317,7 +1319,7 @@
 								<th scope="row" style="width:100px;">아이디 <span class="font_red">*</span></th>
 								<td><input type="text" class="idtxt" name="loginID" id="compId" style="width:100px; height:20px;"/>
 								<a href="javascript:compidCheck();" class="btnType blue" id="checkId" name="btn"> <span>중복 체크</span></a>
-								<!-- <button class="idCheck" id="checkId" name="checkId" onclick="idCheck();">중복 체크</button> -->
+
 								</td>
 								<th scope="row" style="width:100px;">비밀번호 <span class="font_red">*</span></th>
 								<td colspan="3"><input type="password" class="passtxt" name="password" id="compPwd" style="width:100px; height:20px;"/></td>
@@ -1378,8 +1380,8 @@
 			</dl>
 			<a href="" class="closePop"><span class="hidden">닫기</span></a>
 		</div>
-	</form>
-
+	</form> -->
+	<jsp:include page="/WEB-INF/view/hla/hUserInfoFormat.jsp"></jsp:include>
 	<!-- 아이디 비밀번호 찾기 모달 -->
 	<form id="sendForm" action="" method="post">
 		<input type="hidden" name="authNumId" id="authNumId" value="" /> 

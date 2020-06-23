@@ -71,7 +71,8 @@ public class LoginController {
       result.addAttribute("listCtrCod", listCtrCod);            // 국가 코드
       result.addAttribute("listPnnCtr", listPnnCtr);            // 전화번호 국가
           logger.info("+ End LoginController.login.do");
-
+          
+      //return "/register/register";    
       return "/login/login";
    }
 
