@@ -23,8 +23,12 @@ var UserListVue;
 
 $(function(){		
 	InitUserList();
-
 	UserListVue.UserList();
+	hUserInfoHeader();
+	hUserInfoHeader.Init("U");
+	hUserInfoVueInit();
+	hUserInfoFooter();
+	totalInit();
 });
 
 function InitUserList() {
@@ -62,8 +66,7 @@ function InitUserList() {
 				//console.log("여기왔나요? 1");
 				var resultCallback = function(data) {
 					UserInfoListCallback(data, pageIndex);
-				};
-				
+				};				
 				
 				callAjax("/hla/hUserInfoList.do", "post", "json", true, param, resultCallback);
   			},
@@ -75,11 +78,7 @@ function InitUserList() {
   		}
 	});
 	
-	hUserInfoHeader();
-	hUserInfoHeader.Init("U");
-	hUserInfoVueInit();
-	hUserInfoFooter();
-	totalInit();
+
 	
 	var fromDate = $("#fromDate").datepicker({ 
 		dateFormat: 'yy-mm-dd'
@@ -197,7 +196,7 @@ function UserInfoListCallback(data, pageIndex)
 									</thead>
 									<tbody>
 										<template v-for="(User, index) in vUserDatas">
-											<tr @click="showDetail(User.loginID)">
+											<tr>
 												<!--  <td class="hidden">{{ Message.msg_code }}</td>-->
 												<td>{{ index + 1}}</td>									
 												<td>{{ User.name }}</td>

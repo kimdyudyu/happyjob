@@ -46,4 +46,40 @@ public class UserInfoServiceImpl implements UserInfoService {
 		return userInfoDao.SelectLectureList(paramMap);
 	}
 
+	@Override
+	public int getLectureCnt(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.getLectureCnt(paramMap);
+	}
+
+	@Override
+	public List<UserInfoModel> SelectStudentList(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.SelectStudentList(paramMap);
+	}
+
+	@Override
+	public int getStudentCnt(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.getStudentCnt(paramMap);
+	}
+
+	@Override
+	public List<UserInfoModel> ResumeLectureList(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.ResumeLectureList(paramMap);
+	}
+
+	@Override
+	public List<UserInfoModel> ResumeTestList(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.ResumeTestList(paramMap);
+	}
+
+	@Override
+	public UserInfoModel SelectAUserInfo(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.SelectAUserInfo(paramMap);
+	}
+
 }

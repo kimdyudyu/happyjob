@@ -13,6 +13,8 @@
 
 <jsp:include page="/WEB-INF/view/common/common_include.jsp"></jsp:include>
 <jsp:include page="/WEB-INF/view/hla/hUserInfoVue.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/view/hla/hResumeTablesVue.jsp"></jsp:include>
+
 <script type="text/javascript">
 
 
@@ -22,27 +24,34 @@ var pageBlockSizeLectureList = 5;
 var LectureListVue;
 
 $(function(){		
-	InitLectureList();
+	InitResumePage();
 	LectureListVue.LectureList();
+	ResumeTablesInit();
+	hResumeVue.SetUse('Y');
 });
 
-function InitLectureList() {
+function InitResumePage() {
 	
 	LectureListVue = new Vue({
 		el: '#LectureTable',
 		data: {
 				vSearchLectureNm	: ''
 				,vLectures			: []
+				,vStudents			: []
+				,vCurrentLecture	: ''
 		}
   		,methods: {
   			Init : function()
   			{
   				
   			},
-  			showDetail : function(index){
-  				//gfModalPop("#userInfoPopup");
+  			showDetail : function(LectureNo){
+  				this.vCurrentLecture = LectureNo;
+  				this.StudentList(LectureNo);
   			},
   			showResume : function(loginID){
+  				this.SetResumeData(loginID);
+  				hResumeVue.SetResumeTable(loginID);
   				gfModalPop("#userInfoPopup");
   			},
   			LectureList : function(pageIndex)
@@ -52,16 +61,48 @@ function InitLectureList() {
 				var param = {
 							pageIndex 		: pageIndex
 						,	pageSize 		: pageSizeLectureList
-						,	LectureName		: vSearchLectureNm
+						,	LectureName		: this.vSearchLectureNm
 				}
 				
-				//console.log("여기왔나요? 1");
+				console.log("여기왔나요? 1");
 				var resultCallback = function(data) {
 					LectureListCallback(data, pageIndex);
 				};
 				
 				
-				//callAjax("/hla/hUserInfoList.do", "post", "json", true, param, resultCallback);
+				callAjax("/hla/hLectureList.do", "post", "json", true, param, resultCallback);
+  			},
+  			StudentList : function(LectureNo, pageIndex)
+  			{
+				pageIndex = pageIndex || 1;
+				
+				var param = {
+							pageIndex 		: pageIndex
+						,	pageSize 		: pageSizeLectureList
+						,	LectureNo		: this.vCurrentLecture
+				}
+				
+				console.log("여기왔나요? 1" + LectureNo);
+				var resultCallback = function(data) {
+					StudentListCallback(data, pageIndex);
+				};
+				
+				
+				callAjax("/hla/hStudentList.do", "post", "json", true, param, resultCallback);
+  			},
+  			SetResumeData : function(loginID)
+  			{
+  				var param = {
+						loginID			: loginID
+					,	action			: "R"
+				}
+			
+				
+				var resultCallback = function(data) {
+  					SetResumeCallback(data);
+  				};			
+			
+				callAjax("/hla/hCRUDUser.do", "post", "json", true, param, resultCallback);
   			}
   		}
 	});
@@ -79,6 +120,8 @@ function LectureListCallback(data, pageIndex)
 	LectureListVue.vLectures=data.LectureList;		
 	console.log(data);
 	var SelectedCnt = data.SelectedCnt;
+	
+	
 	// 페이지 네비게이션 생성
 	var paginationHtml = getPaginationHtml(pageIndex, SelectedCnt, pageSizeLectureList, pageBlockSizeLectureList, 'LectureListVue.LectureList');
 	//console.log("paginationHtml : " + paginationHtml);
@@ -89,13 +132,39 @@ function LectureListCallback(data, pageIndex)
 	$("#currentPage").val(pageIndex);
 }
 
+function StudentListCallback(data, pageIndex)
+{
+	LectureListVue.vStudents=[];
+	LectureListVue.vStudents=data.StudentList;		
+	console.log(data);
+	var SelectedCnt = data.SelectedCnt;	
+	
+	// 페이지 네비게이션 생성
+	var paginationHtml = getPaginationHtml(pageIndex, SelectedCnt, pageSizeLectureList, pageBlockSizeLectureList, 'LectureListVue.StudentList');
+	console.log("paginex : " + pageIndex);
+	//alert(paginationHtml);
+	$("#sPagination").empty().append( paginationHtml );
+	
+	// 현재 페이지 설정
+	$("#scurrentPage").val(pageIndex);
+}
+
+function SetResumeCallback(data)
+{
+	param = [];
+	param = data.userInfo;
+	hUserInfoVue.setUserData(param);
+}
+
+
+
 
 </script>
 </head>
 <body>
 <form id="UserInfoForm" action="" method="">
 	<input type="hidden" id="currentPage" value="1">
-		
+	<input type="hidden" id="scurrentPage" value="1">
 	<div id="wrap_area">
 			<jsp:include page="/WEB-INF/view/common/header.jsp"></jsp:include>
 			<div id="container">
@@ -114,7 +183,10 @@ function LectureListCallback(data, pageIndex)
 						<div class="LectureTable" id="LectureTable">
 							<p class="conTitle">
 								<span>이력서 관리</span>
-							</p>				    	
+							</p>
+							<h1 class="conTitle">
+								<span>강의 정보</span>
+							</h1>										    	
 				   	 		<table class="col" >
 				   	 			<caption>caption</caption>
 				   	 			<tbody>        
@@ -149,17 +221,48 @@ function LectureListCallback(data, pageIndex)
 									</thead>
 									<tbody>
 										<template v-for="(Lecture, index) in vLectures">
-											<tr @click="showDetail(index)">												
+											<tr @click="showDetail(Lecture.no)">												
 												<td>{{ index + 1}}</td>									
 												<td>{{ Lecture.title }}</td>
-												<td>{{ Lecture.startdate + '~' + Lecture.enddate }}</td>
+												<td>{{ Lecture.startdate + ' ~ ' + Lecture.enddate }}</td>
 												<td>{{ Lecture.students }}</td>
 											</tr>													
 										</template>
 									</tbody>
 								</table>	
 							</div>	
-							<div class="paging_area"  id="Pagination"> </div>		
+							<div class="paging_area"  id="Pagination"> </div>
+							
+							<h2 class="conTitle">
+								<span>학생 정보</span>
+							</h2>										    	
+				
+							<div class="table-thead-box">
+								<table class="col">
+									<colgroup>
+										<col width="5%">
+										<col width="45%">
+										<col width="45%">
+									</colgroup>
+									<thead>
+										<tr>
+											<th class="th_info" >번호</th>
+											<th class="th_info" >학생명</th>
+											<th class="th_info" >생년월일</th>
+										</tr>
+									</thead>
+									<tbody>
+										<template v-for="(Student, index) in vStudents">
+											<tr @click="showResume(Student.loginID)">												
+												<td>{{ index + 1}}</td>									
+												<td>{{ Student.name }}</td>
+												<td>{{ Student.birthday }}</td>
+											</tr>													
+										</template>
+									</tbody>
+								</table>	
+							</div>	
+							<div class="paging_area"  id="sPagination"> </div>		
 						</div>
 					</div>
 				</li>	

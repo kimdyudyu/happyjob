@@ -1,90 +1,50 @@
 <script type="text/javascript">
-var hResumeLectureVue;
-var hResumeTestVue;
+var hResumeVue;
 
 function ResumeTablesInit()
 {
-	hResumeLectureVue = new Vue({
+	hResumeVue = new Vue({
 		el: '#resumeLecture',
 		data : {
-			/*	vLoginID		: ''
-			,	vLectureNo		: ''	
-			,	vLectureName	: ''
-			,	vTeacherName	: ''
-			,	vStartDate		: ''
-			,	vEndDate		: ''
-			,	vAttend			: 0
-			,	vAbsent			: 0
-			,*/	
-			vLectures		: []
+				vIsUse		: 'N'
+			,	vLectures	: []
+			,	vTestList	: []
 		}
 		,methods : {
 			Init : function()
 			{
-				/*this.vLectureName 	= '';
-				this.vTeacherName 	= '';
-				this.vStartDate 	= '';
-				this.vEndDate 		= '';
-				this.vAttend		= 0;
-				this.vAbsent 		= 0;*/
-				this.vLectures 	= [];
-				
+				this.vLectures 		= [];
+				this.vTestDatas 	= [];				
 			},
-			LetureList : function()
+			SetResumeTable : function(loginID)
 			{				
 				var param = {
-					loginID : loginID
-				}
-				
+					loginID : loginID //this.vCurrentID
+				}				
 				//console.log("여기왔나요? 1");
 				var resultCallback = function(data) {
-					LectureListCallback(data);
+					ResumeTableCallback(data);
 				};
 							
-				//callAjax("/hla/hUserInfoList.do", "post", "json", true, param, resultCallback);
-			}
-		}
-	});
-
-	hResumeTestVue = new Vue({
-		el: '#resumeTest',
-		data : {
-				vTestDatas		: []
-		}
-		,methods : {
-			Init : function()
+				callAjax("/hla/hSetResumeTable.do", "post", "json", true, param, resultCallback);
+			},
+			SetUse : function(usetype)
 			{
-				this.vTestDatas 	= [];
-			},
-			LetureList : function()
-			{				
-				var param = {
-					loginID : loginID
-				}
-				
-				//console.log("여기왔나요? 1");
-				var resultCallback = function(data) {
-					TestListCallback(data);
-				};
-							
-				//callAjax("/hla/hUserInfoList.do", "post", "json", true, param, resultCallback);
+				this.vIsUse = usetype;
 			}
 		}
 	});
 	
 }
 
-function LectureListCallback(data)
+function ResumeTableCallback(data)
 {
-	hResumeLectureVue.vLectures=[];
-	hResumeLectureVue.vLectures=data.LectureList;		
-
+	console.log(data);
+	hResumeVue.vLectures=[];
+	hResumeVue.vLectures=data.LectureList;
+	hResumeVue.vTestList=[];
+	hResumeVue.vTestList=data.TestList;
 }
 
-function TestListCallback(data)
-{
-	hResumeTestVue.vTestDatas=[];
-	hResumeTestVue.vTestDatas=data.TestList;
-}
 
 </script>

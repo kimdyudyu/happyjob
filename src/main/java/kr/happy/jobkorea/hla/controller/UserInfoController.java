@@ -103,7 +103,7 @@ public class UserInfoController {
 	{		
 		String result = "SUCCESS";
 		String resultMsg = "가입되었습니다.";
-		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
 		logger.info(" registUser - paramMap : " + paramMap);
 		
 		String action = paramMap.get("action").toString();
@@ -122,6 +122,9 @@ public class UserInfoController {
 		}
 		else if(action.equals("R"))
 		{
+			UserInfoModel userInfo = userInfoService.SelectAUserInfo(paramMap);
+			
+			resultMap.put("userInfo", userInfo);
 		}
 		else
 		{
@@ -130,7 +133,7 @@ public class UserInfoController {
 		}
 			
 		
-		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
 		
 		resultMap.put("result", result);
 		resultMap.put("resultMsg", resultMsg);
@@ -154,21 +157,79 @@ public class UserInfoController {
 		paramMap.put("pageIndex", pageIndex);
 		paramMap.put("pageSize", pageSize);
 		
-		List<UserInfoModel> UserInfoList = userInfoService.SelectUserInfo(paramMap);
+		List<UserInfoModel> LectureList = userInfoService.SelectLectureList(paramMap);
 		
-		int SelectedCnt = userInfoService.getSelectedCnt(paramMap);
+		int SelectedCnt = userInfoService.getLectureCnt(paramMap);
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		resultMap.put("UserInfoList", UserInfoList);
+		resultMap.put("LectureList", LectureList);
 		resultMap.put("SelectedCnt", SelectedCnt);
 		
 		
 		logger.info("SelectUserInfo - resultMap : " + resultMap);
-		logger.info("+ End " + className + ".SelectUserInfo");
+		logger.info("+ End " + className + ".SelectLectureList");
 		
 		return resultMap;
-	}	
+	}
+	
+	@RequestMapping("/hStudentList.do")
+	@ResponseBody
+	public Map<String, Object> SelectStudentList(Model model, @RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+	{		
+		logger.info("+ Start " + className + ".SelectStudentList");
+		
+		logger.info("SelectStudentList - paramMap1 : " + paramMap);
+		
+		int currentPage = Integer.parseInt((String)paramMap.get("pageIndex"));	// 현재 페이지 번호
+		int pageSize = Integer.parseInt((String)paramMap.get("pageSize"));			// 페이지 사이즈
+		int pageIndex = (currentPage-1)*pageSize;
+		
+		paramMap.put("pageIndex", pageIndex);
+		paramMap.put("pageSize", pageSize);
+		
+		List<UserInfoModel> StudentList = userInfoService.SelectStudentList(paramMap);
+		
+		int SelectedCnt = userInfoService.getStudentCnt(paramMap);
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("StudentList", StudentList);
+		resultMap.put("SelectedCnt", SelectedCnt);
+		
+		
+		logger.info("SelectUserInfo - resultMap : " + resultMap);
+		logger.info("+ End " + className + ".SelectStudentList");
+		
+		return resultMap;
+	}
+	
+	@RequestMapping("/hSetResumeTable.do")
+	@ResponseBody
+	public Map<String, Object> SetResumeTable(Model model, @RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+	{		
+		logger.info("+ Start " + className + ".SetResumeTable");
+		
+		logger.info("SetResumeTable - paramMap1 : " + paramMap);
+		
+		List<UserInfoModel> LectureList  = userInfoService.ResumeLectureList(paramMap);
+		List<UserInfoModel> TestList	 = userInfoService.ResumeTestList(paramMap);
+		//List<UserInfoModel> TestScores	 = userInfoService.reResumeTestList(paramMap);
+		
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+		resultMap.put("LectureList", LectureList);
+		resultMap.put("TestList", TestList);
+		
+		
+		logger.info("SelectUserInfo - resultMap : " + resultMap);
+		logger.info("+ End " + className + ".SetResumeTable");
+		
+		return resultMap;
+	}
 	
 	
 }

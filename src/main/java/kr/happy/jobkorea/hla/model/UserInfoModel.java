@@ -22,9 +22,12 @@ public class UserInfoModel {
 	private	String	title;
 	private	String	startdate;
 	private	String	enddate;
+	private String	teachername;
 	
 	private	String	testname;
 	private String	score;
+	private int		students;
+	private int		totalscore;
 	
 	public String getLoginID() {
 		return loginID;
@@ -135,6 +138,24 @@ public class UserInfoModel {
 	}
 	public void setScore(String score) {
 		this.score = score;
+	}
+	public int getStudents() {
+		return students;
+	}
+	public void setStudents(int students) {
+		this.students = students;
+	}
+	public String getTeachername() {
+		return teachername;
+	}
+	public void setTeachername(String teachername) {
+		this.teachername = teachername;
+	}
+	public int getTotalScore() {
+		return totalscore;
+	}
+	public void setTotalScore(int totalscore) {
+		this.totalscore = totalscore;
 	}
 
 

@@ -11,6 +11,17 @@ public interface UserInfoDao {
 	
 	List<UserInfoModel> SelectUserInfo(Map<String, Object> paramMap);
 	
+	UserInfoModel 		SelectAUserInfo(Map<String, Object> paramMap);
+	
 	List<UserInfoModel> SelectLectureList(Map<String, Object> paramMap);
-	int getSelectedCnt(Map<String, Object> paramMap);
+	int 				getSelectedCnt(Map<String, Object> paramMap);
+	int 				getLectureCnt(Map<String, Object> paramMap);
+	
+	int 				getStudentCnt(Map<String, Object> paramMap);
+	List<UserInfoModel> SelectStudentList(Map<String, Object> paramMap);
+	
+	List<UserInfoModel> ResumeLectureList(Map<String, Object> paramMap);
+	
+	List<UserInfoModel> ResumeTestList(Map<String, Object> paramMap);
+	//int 				ResumeTestScore(Map<String, Object> paramMap);
 }

@@ -1,8 +1,12 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 
 var hUserInfoHeader;
 var hUserInfoVue;
 var hUserInfoFooter;
+var hUserInfoForm;
 
 /*$(function(){	
 	//RegisterInit();
@@ -16,7 +20,7 @@ function hUserInfoHeader()
 	hUserInfoHeader = new Vue({
 		el: '#userInfoHeader',
 		data: {
-			vformUseType		: 	'I' //이력서 수정X, 그냥 수정 사용, 회원가입 타입은 3가지? Update, Read ,Create
+			vformUseType		: 	'I' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
 		}
 		,methods: {
 			Init : function(UseType)
@@ -33,7 +37,7 @@ function hUserInfoFooter()
 	hUserInfoFooter = new Vue({
 		el: '#userInfoFooter',
 		data: {
-			vformUseType		: 	'' //이력서 수정X, 그냥 수정 사용, 회원가입 타입은 3가지? Update, Read ,Create
+			vformUseType		: 	'' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
 		}
 		,methods: {
 			Init : function()
@@ -46,12 +50,23 @@ function hUserInfoFooter()
 
 function hUserInfoVueInit() {
 	
+	/*hUserInfoForm = new Vue({
+		el: '#TotaluserInfoForm',
+	 	component : {
+				'lectInfo' : lectInfo
+		},
+		data : {
+			
+		}
+		
+	})*/
+	
 	console.log("hUserInfoVueInit");
 	hUserInfoVue = new Vue({
 		el: '#hUserInfoVue',
 		data: {
-				vformUseType		: 	'' //이력서 수정X, 그냥 수정 사용, 회원가입 타입은 3가지? Update, Read ,Create
-			,	vUserType			: 	'C' // C학생, D 교사, A 관리자
+				vformUseType		: 	'' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
+			,	vUserType			: 	'C' // Cíì, D êµì¬, A ê´ë¦¬ì
 			,	vUserId				: 	''
 			,	vUserPw 			: 	''
 			,	vUserName 			: 	''
@@ -120,7 +135,7 @@ function hUserInfoVueInit() {
 					async : false,
 					data : param,
 					success : function(data) {
-//						alert("회원 가입이 완료가 되었습니다");
+//						alert("íì ê°ìì´ ìë£ê° ëììµëë¤");
 //						gfCloseModal();
 						resultCallback(data);
 					}
@@ -168,7 +183,7 @@ function hUserInfoVueInit() {
 					async : false,
 					data : param,
 					success : function(data) {
-//						alert("회원 가입이 완료가 되었습니다");
+//						alert("íì ê°ìì´ ìë£ê° ëììµëë¤");
 //						gfCloseModal();
 						resultCallback(data);
 						
@@ -193,7 +208,7 @@ function hUserInfoVueInit() {
 					async : false,
 					data : param1,
 					success : function(data) {
-//						alert("회원 가입이 완료가 되었습니다");
+//						alert("íì ê°ìì´ ìë£ê° ëììµëë¤");
 //						gfCloseModal();
 						resultCallback(data);						
 					}
@@ -202,8 +217,12 @@ function hUserInfoVueInit() {
 			setUserData : function(Data)
 			{
 				console.log(Data);
-				var mailSplit = Data.email.split('@');
-				
+				if(Data.email)
+				{
+					var mailSplit = Data.email.split('@');
+					this.vUserEmail1 = mailSplit[0];
+					this.vUserEmail2 = mailSplit[1];
+				}
 				this.vUserType = Data.user_type;
 				this.vUserId = Data.loginID;
 				this.vUserPw = Data.password;
@@ -215,16 +234,75 @@ function hUserInfoVueInit() {
 				this.vUserAddress = Data.area;
 				this.vUserJoinDate = Data.joinDate;
 				this.vUserBirthDate = Data.birthday;
-				this.vUserEmail1 = mailSplit[0];
-				this.vUserEmail2 = mailSplit[1];
-			}
+
+			},
+			RegistValidation : function()
+			{
+				
+				if(this.vUserId == '')
+				{
+					alert("아이디를 입력해주세요");
+					return false;
+				}
+				if(this.vUserPw == '')
+				{
+					alert("비밀번호를 입력해주세요");
+					return false;
+				}
+				if(this.vUserName == '')
+				{
+					alert("이름을 입력해주세요");
+					return false;
+				}
+				if(this.vUserGender == '')
+				{
+					alert("성별을 선택해주세요");
+					return false;
+				}
+				if(this.vUserPhone1 == '')
+				{
+					alert("연락처를 입력해주세요");
+					return false;
+				}
+				if(this.vUserPhone2 == '')
+				{
+					alert("연락처를 입력해주세요");
+					return false;
+				}
+				if(this.vUserPhone3 == '')
+				{
+					alert("연락처를 입력해주세요");
+					return false;
+				}
+				if(this.vUserAddress == '')
+				{
+					alert("거주지를 선택해주세요");
+					return false;
+				}
+				if(this.vUserEmail1 == '')
+				{
+					alert("이메일을 입력해주세요");
+					return false;
+				}
+				if(this.vUserEmail2 == '')
+				{
+					alert("이메일을 입력해주세요");
+					return false;
+				}
+				if(this.vUserBirthDate == '')
+				{
+					alert("생년월일을 선택해주세요");
+					return false;
+				}
+				return true;
+			}			
 		}
 	
 	});
 
 	
 	
-	//시작일
+	//ììì¼
 	var userBirth = $("#userBirth").datepicker({ 
 		dateFormat: 'yy-mm-dd'
 	});
@@ -265,13 +343,14 @@ function InitComboCallBack1(data)
 
 function RegistUser()
 {
-	console.log("Is Regist?");
-	hUserInfoVue.registUser();
-	hUserInfoVue.Init();
-	$("#userInfoPopup").hide();
-	
+	if(hUserInfoVue.RegistValidation())
+	{		
+		console.log("Is Regist?");
+		hUserInfoVue.registUser();
+		hUserInfoVue.Init();
+		$("#userInfoPopup").hide();
+	}
 }
-
 function UpdateUser()
 {
 	console.log("Is Update?");

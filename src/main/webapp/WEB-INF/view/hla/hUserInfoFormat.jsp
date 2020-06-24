@@ -3,8 +3,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <link rel="stylesheet" type="text/css" href="${CTX_PATH}/css/khcss/gridsetting.css" />
 
-	<div id="userInfoPopup" class="layerPop layerType2" style="width: 900px; height: 700px;">
-		<div id="" class="khpopupcontainer">
+	<div id="userInfoPopup" class="layerPop layerType2" style="overflow:scroll; width: 900px; height: 700px;">
+		<div id="TotaluserInfoForm" class="khpopupcontainer">
 			<div id="userInfoHeader">
 				<p class="conTitle">
 					<span v-if="vformUseType === 'I'">회원 가입</span>
@@ -16,7 +16,7 @@
 			<jsp:include page="/WEB-INF/view/hla/hUserInfoForm.jsp"></jsp:include>
 			<!-- -------------------이력서 관련 테이블폼--------------------------------->
 			
-			
+			<jsp:include page="/WEB-INF/view/hla/hResumeTables.jsp"></jsp:include>
 			
 			<!-- ----------------------------------------------------------- -->
 		
@@ -29,8 +29,7 @@
 					<a href="javascript:UpdateUser()"	class="btnType gray"  id="btnClose" name="btn"><span>수정</span></a>
 					<a href=""	class="btnType gray"  id="btnClose" name="btn"><span>닫기</span></a>
 				</template>
-				<template v-if="vformUseType === 'R'">
-					<jsp:include page="/WEB-INF/view/hla/hResumeTables.jsp"></jsp:include>
+				<template v-if="vformUseType === 'R'">					
 					<a href=""	class="btnType gray"  id="btnClose" name="btn"><span>닫기</span></a>
 				</template>
 			</div>
