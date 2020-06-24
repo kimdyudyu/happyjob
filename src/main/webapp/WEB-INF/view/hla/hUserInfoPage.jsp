@@ -21,14 +21,15 @@ var pageBlockSizeUserList = 5;
 
 var UserListVue;
 
-$(function(){		
-	InitUserList();
-	UserListVue.UserList();
+$(function(){
 	hUserInfoHeader();
-	hUserInfoHeader.Init("U");
+	hUserInfoHeaderVue.Init("U");
 	hUserInfoVueInit();
 	hUserInfoFooter();
 	totalInit();
+	InitUserList();
+	UserListVue.UserList();
+
 });
 
 function InitUserList() {
@@ -38,16 +39,19 @@ function InitUserList() {
 		data: {
 				vFromDate 			: ''
 			,	vToDate   			: ''
-			,	vUserName 			: ''
+			,	vUserName			: ''
 			,	vUserType	 		: '' // C 학생 , D 강사
 			,	vUserDatas			: []
+			,	vPageType			: ''
 		}
   		,methods: {
-  			Initialize : function()
+  			Init : function()
   			{
-  				
+  				this.vPageType = $("#calltype").val();
+  				//alert(this.vPageType);
   			},
   			showDetail : function(loginID){
+  				
   				gfModalPop("#userInfoPopup");
   			},
   			UserList : function(pageIndex)
@@ -60,6 +64,7 @@ function InitUserList() {
 						,	UserName		: this.vUserName
 						,	fromDt   		: this.vFromDate
 						,	toDt	 		: this.vToDate
+						,	user_type		: this.vPageType
 						//,	MsgKinds		: $('input[name="msgKinds"]:checked').val()
 				}
 				
@@ -72,13 +77,29 @@ function InitUserList() {
   			},
   			UpdatePopup : function(Data)
   			{
+  				hUserInfoHeader();
+  				hUserInfoHeaderVue.Init("U");
+  				hUserInfoVueInit();
+  				hUserInfoFooter();
+  				totalInit();
+  				
   				hUserInfoVue.setUserData(Data);
+  				gfModalPop("#userInfoPopup");
+  			},
+  			RegistTeacher : function()
+  			{
+  				hUserInfoHeader();
+  				hUserInfoHeaderVue.Init("I");
+  				hUserInfoVueInit();
+  				hUserInfoFooter();
+  				totalInit();
+  				hUserInfoVue.SetUserType("D");
   				gfModalPop("#userInfoPopup");
   			}
   		}
 	});
 	
-
+	UserListVue.Init();
 	
 	var fromDate = $("#fromDate").datepicker({ 
 		dateFormat: 'yy-mm-dd'
@@ -103,7 +124,6 @@ function UserInfoListCallback(data, pageIndex)
 	UserListVue.vUserDatas=[];
 	UserListVue.vUserDatas=data.UserInfoList;		
 	console.log(data);
-	console.log("JoinDate" + UserListVue.vUserDatas[0].joinDate);
 	var SelectedCnt = data.SelectedCnt;
 	// 페이지 네비게이션 생성
 	var paginationHtml = getPaginationHtml(pageIndex, SelectedCnt, pageSizeUserList, pageBlockSizeUserList, 'UserListVue.UserList');
@@ -124,6 +144,9 @@ function UserInfoListCallback(data, pageIndex)
 <body>
 	<form id="UserInfoForm" action="" method="">
 		<input type="hidden" id="currentPage" value="1">
+		<input type="hidden" id="calltype" value="${calltype}">
+		
+		
 		
 		<div id="wrap_area">
 			<jsp:include page="/WEB-INF/view/common/header.jsp"></jsp:include>
@@ -142,8 +165,12 @@ function UserInfoListCallback(data, pageIndex)
 						</p>
 						<div class="UserTableVue" id="UserTableVue">
 							<p class="conTitle">
-								<span>인원 관리</span> <span class="fr"> <a class="btnType blue" style="cursor:pointer"  v-on:click="SendMessagePop('a')" >
-								<span>신규 등록</span></a>
+								<span>인원 관리</span> 
+								<template v-if=" vPageType === 'D' ">
+									<span class="fr"> 
+									<a class="btnType blue" style="cursor:pointer"  v-on:click="RegistTeacher()" >
+									<span>신규 등록</span></a>
+								</template>
 								</span>
 							</p>				    	
 				   	 		<table class="col" >

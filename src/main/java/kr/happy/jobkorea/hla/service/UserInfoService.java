@@ -18,5 +18,5 @@ public interface UserInfoService {
 	
 	List<UserInfoModel> ResumeLectureList(Map<String, Object> paramMap);
 	List<UserInfoModel> ResumeTestList(Map<String, Object> paramMap);
-	
+	List<UserInfoModel> IDValidation(Map<String, Object> paramMap);
 }

@@ -3,10 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 
-var hUserInfoHeader;
+var hUserInfoHeaderVue;
 var hUserInfoVue;
-var hUserInfoFooter;
-var hUserInfoForm;
+var hUserInfoFooterVue;
 
 /*$(function(){	
 	//RegisterInit();
@@ -16,15 +15,16 @@ var hUserInfoForm;
 
 function hUserInfoHeader()
 {
-	console.log("hUserInfoHeader");
-	hUserInfoHeader = new Vue({
+	//alert("hinit");
+	//console.log("hUserInfoHeader");
+	hUserInfoHeaderVue = new Vue({
 		el: '#userInfoHeader',
 		data: {
 			vformUseType		: 	'I' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
 		}
 		,methods: {
 			Init : function(UseType)
-			{
+			{				
 				this.vformUseType = UseType;
 			}
 		}
@@ -33,40 +33,29 @@ function hUserInfoHeader()
 
 function hUserInfoFooter()
 {
-	console.log("hUserInfoFooter");
-	hUserInfoFooter = new Vue({
+	//alert("finit");
+	//console.log("hUserInfoFooter");
+	hUserInfoFooterVue = new Vue({
 		el: '#userInfoFooter',
 		data: {
 			vformUseType		: 	'' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
 		}
 		,methods: {
 			Init : function()
-			{
-				this.vformUseType = hUserInfoHeader.vformUseType;
+			{				
+				this.vformUseType = hUserInfoHeaderVue.vformUseType;
 			}
 		}
 	});
 }
 
 function hUserInfoVueInit() {
-	
-	/*hUserInfoForm = new Vue({
-		el: '#TotaluserInfoForm',
-	 	component : {
-				'lectInfo' : lectInfo
-		},
-		data : {
-			
-		}
-		
-	})*/
-	
-	console.log("hUserInfoVueInit");
+	//alert("uinit");
 	hUserInfoVue = new Vue({
-		el: '#hUserInfoVue',
-		data: {
+		el: '#divUserInfoVue'
+		,data: {
 				vformUseType		: 	'' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
-			,	vUserType			: 	'C' // Cíì, D êµì¬, A ê´ë¦¬ì
+			,	vUserType			: 	'' // Cíì, D êµì¬, A ê´ë¦¬ì
 			,	vUserId				: 	''
 			,	vUserPw 			: 	''
 			,	vUserName 			: 	''
@@ -81,10 +70,11 @@ function hUserInfoVueInit() {
 			,	vUserEmail2			: 	''
 			,	vAddressCombo		:	[]
 			,	vDomainCombo		:	[]
+			,	vIdCheck			:   false
 		}
 		,methods: {
 			Init : function()
-			{
+			{				
 				this.vformUseType = '';
 				this.vUserType = '';
 				this.vUserId = '';
@@ -99,13 +89,13 @@ function hUserInfoVueInit() {
 				this.vUserBirthDate = '';
 				this.vUserEmail1 = '';
 				this.vUserEmail2 = '';
+				this.vIdCheck = false;
 				//this.vAddressCombo = [];
 				//this.vDomainCombo = [];
-				this.vformUseType = hUserInfoHeader.vformUseType;
+				this.vformUseType = hUserInfoHeaderVue.vformUseType;
 			},
 			registUser : function()
-			{
-				
+			{				
 				var param = {
 				 	loginID 	: 	this.vUserId,
 				 	user_type 	: 	this.vUserType,
@@ -140,6 +130,10 @@ function hUserInfoVueInit() {
 						resultCallback(data);
 					}
 				});
+			},
+			SetUserType : function(usertype)
+			{
+				this.vUserType = usertype;
 			},
 			UpdateUser : function(){
 				var param = {
@@ -223,7 +217,7 @@ function hUserInfoVueInit() {
 					this.vUserEmail1 = mailSplit[0];
 					this.vUserEmail2 = mailSplit[1];
 				}
-				this.vUserType = Data.user_type;
+				//this.vUserType = Data.user_type;
 				this.vUserId = Data.loginID;
 				this.vUserPw = Data.password;
 				this.vUserName = Data.name;
@@ -236,9 +230,29 @@ function hUserInfoVueInit() {
 				this.vUserBirthDate = Data.birthday;
 
 			},
-			RegistValidation : function()
+			hidCheck : function()
 			{
+				alert("idc");
+				var param = {
+						loginID : this.vUserId
+				};
+				var resultCallback = function(data) {
+					CheckIdCallback(data);
+				};				
 				
+				$.ajax({
+					url : "/hla/hIdCheck.do",
+					type : "post",
+					dataType : "json",
+					async : true,
+					data : param,
+					success : function(data) {
+						resultCallback(data);						
+					}
+				});
+			},
+			RegistValidation : function()
+			{				
 				if(this.vUserId == '')
 				{
 					alert("아이디를 입력해주세요");
@@ -321,11 +335,25 @@ function hUserInfoVueInit() {
 	})
 
 };
+function CheckIdCallback(data)
+{
+	hUserInfoVue.vIdCheck = data.result;
+	if(data.result)
+	{		
+		alert(data.resultMsg);
+		return true;
+	}
+	else
+	{
+		alert(data.resultMsg);
+		return false;
+	}
+}
 
 function totalInit()
 {
 	hUserInfoVue.Init();
-	hUserInfoFooter.Init();
+	hUserInfoFooterVue.Init();
 	hUserInfoVue.setComboBox();
 }
 
@@ -344,11 +372,19 @@ function InitComboCallBack1(data)
 function RegistUser()
 {
 	if(hUserInfoVue.RegistValidation())
-	{		
-		console.log("Is Regist?");
-		hUserInfoVue.registUser();
-		hUserInfoVue.Init();
-		$("#userInfoPopup").hide();
+	{	
+		if(hUserInfoVue.vIdCheck)
+		{
+			console.log("Is Regist?");
+			hUserInfoVue.registUser();
+			hUserInfoVue.Init();
+			$("#userInfoPopup").hide();
+			//alert(hUserInfoVue.vUserType);
+		}
+		else
+		{
+			alert("아이디 중복체크 해주세요");
+		}
 	}
 }
 function UpdateUser()

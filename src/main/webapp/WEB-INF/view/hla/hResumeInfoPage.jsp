@@ -35,7 +35,7 @@ function InitResumePage() {
 	LectureListVue = new Vue({
 		el: '#LectureTable',
 		data: {
-				vSearchLectureNm	: ''
+				 vSearchLectureNm	: ''
 				,vLectures			: []
 				,vStudents			: []
 				,vCurrentLecture	: ''
@@ -104,11 +104,12 @@ function InitResumePage() {
 			
 				callAjax("/hla/hCRUDUser.do", "post", "json", true, param, resultCallback);
   			}
+  			
   		}
 	});
 	
 	hUserInfoHeader();
-	hUserInfoHeader.Init("R");
+	hUserInfoHeaderVue.Init("R");
 	hUserInfoVueInit();
 	hUserInfoFooter();
 	totalInit();
@@ -195,10 +196,10 @@ function SetResumeCallback(data)
 											<span>강의명</span>
 										</td>
 										<td>
-											<input id="LectureName" style="height: 20px; width: 500px;" type="text" name="user_Name" size="20" v-model="vSearchLectureNm" @keyup.enter="LectureList()">
+											<input id="LectureName" style="height: 20px; width: 500px;" type="text" name="LectureName" size="20" v-model="vSearchLectureNm" @keyup.enter="LectureList()">
 										</td>
 										<td rowspan="2">
-									    	<a style="cursor:pointer" class="btnType blue" v-on:click="UserList()" name="modal" id="SearchBtn" @keyup.enter=""><span>검색</span></a>
+									    	<a style="cursor:pointer" class="btnType blue" v-on:click="LectureList()" name="modal" id="SearchBtn" ><span>검색</span></a>
 										</td>								
 									</tr>
 								</tbody>

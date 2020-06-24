@@ -82,4 +82,10 @@ public class UserInfoServiceImpl implements UserInfoService {
 		return userInfoDao.SelectAUserInfo(paramMap);
 	}
 
+	@Override
+	public List<UserInfoModel> IDValidation(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return userInfoDao.IDValidation(paramMap);
+	}
+
 }

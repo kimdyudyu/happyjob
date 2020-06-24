@@ -67,7 +67,7 @@
 		$("#loginEmail").hide();
 		$("#loginPwd").hide();
 		hUserInfoHeader();
-		hUserInfoHeader.Init("I");
+		hUserInfoHeaderVue.Init("I");
 		hUserInfoVueInit();
 		hUserInfoFooter();
 		totalInit();
@@ -138,6 +138,12 @@
 		if (loginID == null || loginID == "") {
 			frm.find("input[name=action]").val("I");
 			console.log("ppopop");
+			hUserInfoHeader();
+			hUserInfoHeaderVue.Init("I");
+			hUserInfoVueInit();
+			hUserInfoFooter();
+			totalInit();
+			hUserInfoVue.SetUserType("C");
 			gfModalPop("#userInfoPopup");
 		}
 	}

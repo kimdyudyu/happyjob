@@ -23,6 +23,9 @@
 			<if test="(UserName != null) and (!UserName.equals(''))">			
 				AND name like concat('%',#{UserName},'%')
 			</if>
+			<if test="(user_type != null) and (!user_type.equals(''))">			
+				AND user_type = #{user_type}
+			</if>
 			<if test="(fromDt != null) and (!fromDt.equals(''))">
 				AND DATE_FORMAT(joinDate,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
 			</if>    
@@ -219,6 +222,15 @@
 		AND
 		testinfo.re = testanswer.re  
 		GROUP BY testinfo.testname;
+	</select>
+	
+	<select id="IDValidation" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.ResumeTestList*/
+	SELECT
+		loginID
+	FROM tb_userinfo
+	WHERE
+		loginID = #{loginID}
 	</select>
 
 

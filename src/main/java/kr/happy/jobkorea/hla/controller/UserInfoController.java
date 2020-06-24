@@ -48,12 +48,26 @@ public class UserInfoController {
 	// Get class name for logger
 	private final String className = this.getClass().toString();
 	
-	@RequestMapping("/hUserInfo.do")
+	@RequestMapping("/hTeacherInfo.do")
 	public String InitUserInfo(Model model) throws Exception {
 		logger.info("+ Start " + className + ".UserInfoPage");
 		//logger.info("jmjm   - paramMap : ");
+		
+		model.addAttribute("calltype", "D");
+		
 		return "/hla/hUserInfoPage";
 	}
+	
+	@RequestMapping("/hStudentInfo.do")
+	public String InitUserInfo2(Model model) throws Exception {
+		logger.info("+ Start " + className + ".UserInfoPage");
+		//logger.info("jmjm   - paramMap : ");
+		
+		model.addAttribute("calltype", "C");	
+		
+		return "/hla/hUserInfoPage";
+	}
+	
 	
 	@RequestMapping("/hResumeInfo.do")
 	public String InitResumeInfo(Model model) throws Exception {
@@ -227,6 +241,45 @@ public class UserInfoController {
 		
 		logger.info("SelectUserInfo - resultMap : " + resultMap);
 		logger.info("+ End " + className + ".SetResumeTable");
+		
+		return resultMap;
+	}
+	
+	@RequestMapping("/hIdCheck.do")
+	@ResponseBody
+	public Map<String, Object> IdCheck(Model model, @RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+	{		
+		logger.info("+ Start " + className + ".IdCheck");
+		
+		logger.info("IdCheck - paramMap1 : " + paramMap);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		boolean result = false;
+		String resultMsg = "";		
+		//List<UserInfoModel> LectureList  = userInfoService.ResumeLectureList(paramMap);
+		//List<UserInfoModel> TestList	 = userInfoService.ResumeTestList(paramMap);
+		//List<UserInfoModel> TestScores	 = userInfoService.reResumeTestList(paramMap);
+		
+		List<UserInfoModel> CheckID  = userInfoService.IDValidation(paramMap);
+		
+		if(CheckID.isEmpty())
+		{
+			result = true;
+			resultMsg = "사용가능합니다.";
+		}
+		else
+		{
+			result = false;
+			resultMsg = "중복되었습니다.";			
+		}
+		
+		
+		resultMap.put("result", result);
+		resultMap.put("resultMsg", resultMsg);
+		
+		
+		logger.info("IdCheck - resultMap : " + resultMap);
+		logger.info("+ End " + className + ".IdCheck");
 		
 		return resultMap;
 	}

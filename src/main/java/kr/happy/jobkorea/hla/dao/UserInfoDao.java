@@ -24,4 +24,6 @@ public interface UserInfoDao {
 	
 	List<UserInfoModel> ResumeTestList(Map<String, Object> paramMap);
 	//int 				ResumeTestScore(Map<String, Object> paramMap);
+	
+	List<UserInfoModel> IDValidation(Map<String, Object> paramMap);
 }

@@ -2,12 +2,12 @@
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
-		<div id="hUserInfoVue" class="regcontainer">
-		   <div class="divpicture">{{ vformUseType }}</div>
+		<div id="divUserInfoVue" class="regcontainer">
+		   <div class="divpicture">{{ vUserId }}</div>
 		   <div class="box2">아이디<br>
 		   		<template v-if="vformUseType === 'I'">
 			   		<input id="userId" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
-			   		<a href="" class="btnType blue" id="idCheck" name="btn"> <span>중복 체크</span></a></td>
+			   		<a style="cursor:pointer" class="btnType blue" v-on:click="hidCheck()"><span>중복 체크</span></a>
 			   	</template>
 			   	<template v-if="vformUseType === 'U'  || vformUseType === 'R'">
 			   		<input id="userId" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
