@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.LectureListAdminDao">
+	<select id="lectureListAdminList" resultType="kr.happy.jobkorea.hla.model.LectureListAdminModel">
+		SELECT
+			l.no no
+			,l.title title
+			,u.name name
+			,u.loginID loginID
+			,l.room room
+			,l.pcnt pcnt
+			<!-- ,l.etc -->
+		from
+			tb_lecture l
+			,tb_userinfo u
+		where
+			l.loginID=u.loginID
+			and u.user_type='D'
+			<if test="searchKey == 'lecture_no' and searchWord != '' ">
+			AND l.no like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_title' and searchWord != '' ">
+			AND l.title like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_id' and searchWord != '' ">
+			AND l.loginID like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_name' and searchWord != '' ">
+			AND u.name like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_room' and searchWord != '' ">
+			AND l.room like concat('%',#{searchWord},'%')
+			</if>
+	</select>
+	<select id="lectureListAdminCount" resultType="int">
+		select
+			count(*)
+		from
+			tb_lecture l
+			,tb_userinfo u
+		where
+			l.loginID=u.loginID
+			and u.user_type='D'
+			<if test="searchKey == 'lecture_no' and searchWord != '' ">
+			AND l.no like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_title' and searchWord != '' ">
+			AND l.title like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_id' and searchWord != '' ">
+			AND l.loginID like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_name' and searchWord != '' ">
+			AND u.name like concat('%',#{searchWord},'%')
+			</if>
+			<if test="searchKey == 'lecture_room' and searchWord != '' ">
+			AND l.room like concat('%',#{searchWord},'%')
+			</if>
+	</select>
+	
+	<select id="lectureStudentList" resultType="kr.happy.jobkorea.hla.model.LectureListAdminModel">
+		select
+			t.seq
+			,l.no
+			,u.name
+			,u.loginID
+			,t.restyn 
+			,l.title
+			,l.startdate 
+			,l.enddate 
+			,l.attend
+		FROM 
+			tb_userinfo u
+			,tb_tcourse t
+			,tb_lecture l
+		where
+			u.loginID =t.loginID
+			and l.no=t.no
+			and l.no=#{no}
+	</select>
+	
+	<select id="lectureStudentListCount" resultType="int">
+		select
+			count(*)
+		FROM 
+			tb_userinfo u
+			,tb_tcourse t
+			,tb_lecture l
+		where
+			u.loginID =t.loginID
+			and l.no=t.no
+			and l.no=#{no}
+	</select>
+	
+	<update id="restyn">
+		update
+			tb_tcourse
+		set
+			restyn='y'
+		where
+			seq=#{seq}
+	</update>
+</mapper>

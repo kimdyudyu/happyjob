@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.LectureRoomDao">
+	<select id="lectureRoomList" resultType="kr.happy.jobkorea.hla.model.LectureRoomModel">
+		SELECT
+			room
+			,name
+			,room_size
+			,ccount
+			,etc
+		from
+			tb_roominfo
+		where
+			1=1
+			<if test="searchword != '' ">
+    			AND name like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+		order by
+			room
+		LIMIT
+			#{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="lectureRoomTotalCnt" resultType="int">
+		select
+			count(room) 
+		from
+			tb_roominfo
+		where
+			1=1
+			<if test="searchword != '' ">
+    			AND name like concat('%',#{searchword},'%')	        		    
+   			</if> 
+	</select>
+	
+	<insert id="lectureRoomInsert">
+		insert into
+			tb_roominfo(
+			room
+			,name
+			,room_size
+			,ccount
+			,etc
+			,date 
+		)
+		values(
+			(SELECT IFNULL(MAX(room) + 1, 1) FROM tb_roominfo r)
+			,#{name_save}
+			,#{size_save}
+			,#{ccount_save}
+			,#{etc_save}
+			,now()
+		)
+	</insert>
+	
+	<select id="lectureRoomDetail" resultType="kr.happy.jobkorea.hla.model.LectureRoomModel">
+		select
+			room
+			,name
+			,room_size
+			,ccount
+			,etc
+		FROM 
+			tb_roominfo 
+		WHERE 
+			room =#{room}
+	</select>
+	
+	<delete id="lectureRoomDelete">
+	delete from
+		tb_roominfo
+	where
+		room=#{room}
+	</delete>
+	
+	<update id="lectureRoomUpdate">
+		update
+			tb_roominfo
+		set
+			name=#{name}
+			,ccount=#{ccount}
+			<if test='etc != ""'>
+			,etc=#{etc}
+			</if>
+			<if test='etc == ""'>
+			,etc=''
+			</if>
+			,room_size=#{room_size}
+		where
+			room=#{room}
+	</update>
+</mapper>

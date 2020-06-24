@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.CareerInfoDao">
+<!-- 그룹코드 목록 조회 -->
+	<select id="careerInfoList" resultType="kr.happy.jobkorea.hla.model.CareerInfoModel">
+		/*kr.happy.jobkorea.system.dao.ComnCodDao.listComnGrpCod*/
+		SELECT
+			qa.seq seq
+			,qa.name name
+			,qa.hire_date hire_date
+			,qa.resign_date resign_date
+			,qa.cop_name cop_name
+			,qa.work_yn work_yn
+		FROM	tb_employment qa, tb_userinfo ui
+		WHERE 1=1
+		  AND qa.loginID = ui.loginID
+			<if test="startdate != null and startdate !='' ">
+   				AND qa.hire_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="enddate != null and enddate !='' ">
+   				AND qa.resign_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   			</if>
+    		<if test="searchword != null and searchword !='' ">
+    			AND qa.cop_name like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+		ORDER BY
+			 qa.seq desc
+		LIMIT
+			#{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="careerInfoListTotalCnt" resultType="int">
+		select
+			count(qa.seq) 
+		from
+			tb_employment qa
+			,tb_userinfo ui
+		 WHERE
+		 	qa.loginID = ui.loginID
+   			<if test="startdate != null and startdate !='' ">
+   				AND qa.hire_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="enddate != null and enddate !='' ">
+   				AND qa.resign_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   			</if>
+    		<if test="searchword != null and searchword !='' ">
+    			AND qa.cop_name like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+	</select>
+	
+	<insert id="careerInfoInsert">
+		insert into
+			tb_employment(
+			seq
+			,loginID
+			,name
+			,hire_date
+			<if test='resign_date_save != "" '>			
+			,resign_date
+			</if>
+			,cop_name
+			,work_yn
+			,date
+		)
+		values(
+			(SELECT IFNULL(MAX(seq) + 1, 1) FROM tb_employment e)
+			,#{loginID_save}
+			,#{name_save}
+			,#{hire_date_save}
+			<if test='resign_date_save != "" '>
+			,#{resign_date_save}
+			</if>
+			,#{cop_name_save}
+			,#{work_yn_save}
+			,now()
+		)
+	</insert>
+	<select id="careerInfoListDetail" resultType="kr.happy.jobkorea.hla.model.CareerInfoModel">
+		select
+			seq
+			,name
+			,loginID
+			,hire_date
+			,resign_date
+			,cop_name
+			,work_yn 
+		FROM 
+			tb_employment 
+		WHERE 
+			seq =#{seq}
+	</select>
+	
+	<delete id="careerInfoDelete">
+		DELETE FROM
+			tb_employment
+		WHERE
+			seq = #{seq}
+	</delete>
+	
+	<update id="careerInfoUpdate">
+		update
+			tb_employment
+		set
+			hire_date=#{hire_date}
+			<if test='resign_date != ""'>
+			,resign_date=#{resign_date}
+			</if>
+			<if test='resign_date == ""'>
+			,resign_date=null
+			</if>
+			,cop_name=#{cop_name}
+			,work_yn=#{work_yn}
+		where
+			seq=#{seq}
+	</update>
+</mapper>

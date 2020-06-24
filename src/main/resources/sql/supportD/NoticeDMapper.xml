@@ -34,8 +34,10 @@
 	<!-- 공지 사항 리스트 뿌리기 -->
 	<select id="noticeList" resultType="kr.happy.jobkorea.supportD.model.NoticeDModel">
 		SELECT
-		nt_seq, nt_title, enr_user, enr_date
+		<!-- nt_seq, nt_title, enr_user, enr_date -->
+		nt_no,nt_title,nt_note,filename,filepath,filesize,write_date,loginID
 		FROM tb_notice
+		<!-- 
 		<where>
 			<if test="(searchType != null) and (!searchType.equals(''))">
 				<choose>
@@ -55,6 +57,7 @@
 		</where>
 		ORDER BY enr_date DESC
 		LIMIT #{pageIndex}, #{pageSize}
+		 -->
 	</select>
 
 	<sql id="search">

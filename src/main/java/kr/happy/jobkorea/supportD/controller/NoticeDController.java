@@ -1,8 +1,5 @@
-package kr.happy.jobkorea.supportD.controller;
+/*package kr.happy.jobkorea.supportD.controller;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +33,7 @@ public class NoticeDController {
 	// Get class name for logger
 	private final String className = this.getClass().toString();
 
-	/* 자유게시판 -초기화면 */
+	 자유게시판 -초기화면 
 	@RequestMapping("notice.do")
 	public String initNotice(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
@@ -54,13 +51,11 @@ public class NoticeDController {
 		return "supportD/noticeD";
 	}
 
-	/* 공지사항 리스트 뿌리기 */
+	 공지사항 리스트 뿌리기 
 	@RequestMapping("noticeList.do")
 	public String noticeList(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
-		
-		
-		
+
 		logger.info("+ Start " + className + ".noticeList");
 		logger.info("   - paramMap : " + paramMap);
 		// System.out.println("param에서 넘어온 값을 찍어봅시다.: " + paramMap);
@@ -95,12 +90,12 @@ public class NoticeDController {
 		return "supportD/noticeListD";
 	}
 
-	/* 공지사항 리스트 뿌리기 */
+	 공지사항 리스트 뿌리기 
 	@RequestMapping("noticeListvue.do")
 	@ResponseBody
 	public Map<String, Object> noticeListvue(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
-
+		logger.info("paramMap~ " + paramMap);
 		logger.info("+ Start " + className + ".noticeListvue");
 		logger.info("   - paramMap : " + paramMap);
 		// System.out.println("param에서 넘어온 값을 찍어봅시다.: " + paramMap);
@@ -131,7 +126,7 @@ public class NoticeDController {
 		return resultMap;
 	}
 
-	/* 공지사항 상세 정보 뿌리기 */
+	 공지사항 상세 정보 뿌리기 
 	@RequestMapping("detailNoticeList.do")
 	@ResponseBody
 	public Map<String, Object> detailList(Model model, @RequestParam Map<String, Object> paramMap,
@@ -168,4 +163,4 @@ public class NoticeDController {
 		return resultMap;
 	}
 
-}
+}*/
