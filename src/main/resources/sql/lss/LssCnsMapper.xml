@@ -3,32 +3,26 @@
 
 <mapper namespace="kr.happy.jobkorea.lss.dao.LssCnsDao">
    
-<select id="lecList" resultType="Map">
-	SELECT 
-				lt.lec_seq,
-				lt.lec_nm,
-				lt.lec_enr,
-				lt.lec_contents,
-				lt.lec_tm,
-				lt.lec_gl,
-				lt.lec_pl,
-      			TO_DAYS(substring_index(lec_ed,' ',1)) - TO_DAYS(substring_index(lec_st,' ',1)) total,
-				(substring_index(lt.lec_st,' ','1'))stDay,
-				(substring_index(lt.lec_ed,' ','1'))edDay,
-				lt.enr_user,
-				lt.upd_user,
-				lt.rm_seq,
-				lt.enr_date,
-       			rl.user_id,
-    		    uf.user_email,
-    		    uf.user_addr
-	FROM tb_lecture lt
-  		 LEFT JOIN tb_request_list rl
-    		  ON lt.lec_seq = rl.lec_seq
-   		 	LEFT JOIN tb_userinfo uf
-    		   ON rl.user_id = uf.loginID
-    WHERE lt.user_id =#{loginId}	
-    GROUP BY lt.lec_seq
+<select id="LecList" resultType="Map" parameterType="Map">
+					SELECT
+								
+								tb_lecture.title,
+								tb_lecture.loginID,
+								Date_Format(tb_lecture.enddate,'%Y.%m.%d') AS end_date,
+								Date_Format(tb_lecture.startdate,'%Y.%m.%d') AS start_date,
+								tb_lecture.room,
+								tb_process.processrate
+						 FROM tb_lecture, tb_tcourse, tb_userinfo, tb_process
+						WHERE (@rownum:=0)=0
+							   and tb_lecture.no = tb_tcourse.no
+     					       and tb_userinfo.loginID = tb_tcourse.loginID
+       					       and tb_process.no = tb_lecture.no
+     					       and tb_process.seq = (
+                                      select max(ps.seq)
+                                        from tb_process ps
+                                       where ps.no = tb_lecture.no
+                                   )           
+				      and tb_tcourse.loginID = #{loginID}
 </select>
 	
 	<select id="selectSList" resultType="Map">

@@ -1,5 +1,6 @@
 package kr.happy.jobkorea.lsm.dao;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,11 +26,28 @@ public interface LSMBoardDao {
 	/* 과제 등록 */
 	public int insertLsmCod(Map<String, Object> paramMap);
 	
+	public Map<String, Object> lsmModal(Map<String, Object> paramMap);
+	
 	/* 과제등록시 강의번호 호출 */
 	public List<Integer> selectLecSeq ();
 	
 	/* 과제등록시 강의명 호출 */
 	public List<String> selectLecNm ();
+	
+	/* 강사명 호출*/
+	public List<String> selectLecTName();
+	
+	//강의 시작일 조회해서 넘기기
+	public List<Date> selectLecStartDate();
+
+	//강의 종료일 조회해서 넘기기
+	public List<Date> selectLecEndDate();
+	
+	//강의실 조회해서 넘기기
+	public List<String> selectLecRoom();
+
+	//진도 조회해서 넘기기
+	public List<String> selectLecProgress();
 	
 	/* 과제 삭제*/
 	public int deleteLsmCod(Map<String,Object>paramMap);

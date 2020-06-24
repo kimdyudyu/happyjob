@@ -47,12 +47,13 @@
 									</colgroup>
 									<thead>
 										<tr>
-											<th data-field="no">번호</th>
-											<th data-field="lec_nm">과목명</th>
-											<th data-field="enr_user">강사</th>
-											<th data-field="lec_st">강의시작일</th>
-											<th data-field="lec_ed">강의종료일</th>
-											<th data-field="rm_seq">강의실</th>
+	
+											<th data-field="title">과목명</th>
+											<th data-field="teacher">강사</th>
+											<th data-field="Start_date">강의 시작일</th>
+											<th data-field="End_date">강의 종료일</th>
+											<th data-field= "Process_Rate">진도</th>
+											<th data-field="loginID">수강생</th>
 											
 											<th data-field="qna_cnt">설문참여</th>
 										</tr>
@@ -60,12 +61,12 @@
 									
 									<tbody v-for="(row, index) in items" v-if="items.length">
 										<tr>
-											<td>{{ index + 1}}</td>
-											<td>{{ row.lec_nm }}</td>
+											<td>{{ row.title }}</td>
 											<td>{{ row.teacher }}</td>
-											<td>{{ row.lec_st }}</td>
-											<td>{{ row.lec_ed }}</td>
-											<td>{{ row.rm_seq }}</td>
+											<td>{{ row.Start_date }}</td>
+											<td>{{ row.End_date }}</td>
+											<td>{{ row.Process_Rate }}</td>
+											<td>{{ row.loginID }}</td>
 											
 											<td v-if="row.YY" >완료</td>
 											<td v-else ><a type="button" class="btnType blue" @click.prevent="dosurvey(row)">참여</a></td>

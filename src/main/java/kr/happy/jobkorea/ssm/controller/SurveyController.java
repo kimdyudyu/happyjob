@@ -23,8 +23,9 @@ import kr.happy.jobkorea.ssm.service.StuSurveyService;
 
 
 @Controller
-@RequestMapping("/manageC")
+@RequestMapping("/manageZ/")
 public class SurveyController {
+	
 	// Set logger
 		private final Logger logger = LogManager.getLogger(this.getClass());
 
@@ -32,25 +33,30 @@ public class SurveyController {
 		//private final String className = this.getClass().toString();
 
 		@Autowired
-		StuSurveyService stuSurvey;
+		StuSurveyService StuSurveyService;
 		
-		@RequestMapping("/lectureList.do")
+		@RequestMapping("/LecList.do")
 		@ResponseBody
-		public Map<String,Object> listTaskSend(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
+		public Map<String,Object> listTaskSend(Model model, @RequestParam HashMap<String, Object> paramMap, HttpServletRequest request,
 				HttpServletResponse response, HttpSession session) throws Exception {
 
-			logger.info("++Start lectureList.do ");
+			logger.info("++Start LecList.do ");
 			logger.info("++paramMap : "+paramMap);
 			
+			// 아이디 세션 불러오기
+			String loginID = (String)session.getAttribute("loginID");
+			paramMap.put("loginID", loginID);
 			
-			List<Map<String,Object>> list= stuSurvey.getLecList(paramMap);
+			
+			// 목록 조회
+			List<Map<String,Object>> SurveyList= StuSurveyService.getLecList(paramMap);
 			
 			Map<String,Object> resultMap = new HashMap<>();
-			
-			resultMap.put("list",list);
+			resultMap.put("SurveyList",SurveyList);
 			
 			logger.info("++paramMap : "+resultMap);
 			logger.info("++End lectureList.do ");
+			
 			return resultMap;
 		}
 		
@@ -70,7 +76,7 @@ public class SurveyController {
 //			
 //			
 //			logger.info("++End lectureList.do ");
-			return "ssm/survey/doSurvey";
+			return "ssm/survey/surveyhome";
 		}
 		
 		@RequestMapping("savesurvey.do")
@@ -90,7 +96,7 @@ public class SurveyController {
 			
 			Map<String,Object> resultMap = new HashMap<>();
 			
-			stuSurvey.savesurvey(paramMap);
+			StuSurveyService.savesurvey(paramMap);
 			
 			
 			

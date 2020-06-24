@@ -1,5 +1,6 @@
 package kr.happy.jobkorea.lsm.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,8 @@ public interface LSMBoardService {
 	/**  강사들이 올린 리스트 조회  **/
 	public List<Map<String,Object>> selectLsmBoardList (Map<String,Object> paramMap) throws Exception;
 
+	public Map<String, Object> lsmModal(Map<String, Object> paramMap);
+	
 	public int countListLsmCod(Map<String, Object> paramMap) throws Exception;
 
 	/* 단건 조회*/
@@ -29,6 +32,23 @@ public interface LSMBoardService {
 	
 	/* 강의명 호출*/
 	public List<String> selectLecNm () throws Exception;
+	
+	/* 강사명 호출*/
+	public List<String> selectLecTName () throws Exception;
+	
+
+	//강의 시작일 조회해서 넘기기
+	public List<Date> selectLecStartDate() throws Exception;
+
+	//강의 종료일 조회해서 넘기기
+	public List<Date> selectLecEndDate() throws Exception;
+	
+	//강의실 조회해서 넘기기
+	public List<String> selectLecRoom() throws Exception;
+
+	//진도 조회해서 넘기기
+	public List<String> selectLecProgress() throws Exception;
+	
 	
 	/* 과제 삭제 */
 	public int deleteLsmCod(Map<String,Object>paramMap) throws Exception;
