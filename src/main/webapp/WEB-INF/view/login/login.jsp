@@ -566,7 +566,7 @@
 		
 		var data = {
 			email : $("#emailPwdText").val(),
-			loginID : $("#emailIdText").val(),
+			loginId : $("#emailIdText").val(),
 			"data-code" : $("#emailPwdText").attr("data-code")
 
 		};
@@ -705,7 +705,7 @@
 
 		
 		var data = {
-				"loginID" :loginID
+				"loginID" : loginID
 		};
 		console.log(data);
 		
@@ -719,9 +719,7 @@
 				if(loginID.length < 1){
 					alert("아이디를 입력해주세요.");
 				}
-			
 				else if (data.cnt > 0){
-					
 					alert("아이디가 존재합니다.");
 				}else{
 					alert("아이디가 존재하지 않습니다.");

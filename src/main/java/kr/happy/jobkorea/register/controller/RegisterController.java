@@ -244,11 +244,12 @@ public class RegisterController {
 	@ResponseBody
 	public int selectRegisterFindPwd(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-
+		
+		logger.info("paramMap : " + paramMap);
 		int flag = 0;
 
-		String user_email = (String) paramMap.get("email");
-		String loginId = (String) paramMap.get("loginId");
+		String user_email = (String)paramMap.get("email");
+		String loginId = (String)paramMap.get("loginId");
 
 		if (paramMap.get("data-code").equals("P")) {
 			RegisterModel rgmParam = new RegisterModel();
@@ -256,14 +257,13 @@ public class RegisterController {
 			rgmParam.setLoginID(loginId);
 			RegisterModel rgmPwd = registerService.selectFindPwdRegister(rgmParam);
 
-			if (rgmPwd == null) {
+			if (StringUtils.isEmpty(rgmPwd)) {
 				flag = 1;
 			} else {
 				MailSend ms = new MailSend();
 				String authNum = ms.RegisterFindPwdEmailSend(user_email);
 				flag = Integer.parseInt(authNum);
 			}
-
 		} else {
 			flag = 1; // 가입한 아이디가 없음
 		}
@@ -299,7 +299,7 @@ public class RegisterController {
 	public Map<String, Object> selectIdCheck(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		String loginId = (String) paramMap.get("loginId");
+		String loginId = (String)paramMap.get("loginID");
 		
 		int count = 0;
 		Map<String, Object> map = new HashMap<String, Object>();
