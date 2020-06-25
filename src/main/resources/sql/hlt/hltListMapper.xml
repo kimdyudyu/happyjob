@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hlt.dao.hltListDao">
+	<select id="getClassList" parameterType="Map" resultType="kr.happy.jobkorea.hlt.model.lectureModel">
+	
+		SELECT	
+				no  ,title ,category ,
+				loginID ,filename,
+				date_format(startdate, '%Y.%m.%d') as startdate ,date_format(enddate, '%Y.%m.%d') as enddate, 
+				pcnt, goal, plan
+		FROM	tb_lecture
+   		WHERE loginID = #{loginId}	
+   			    <if test='selected == "TITLE"'>
+   			        and title like '%${keyword}%'
+   			    </if>
+   			    <if test="startdate != null and startdate != ''">
+   			    	and startdate <![CDATA[ >= ]]> STR_TO_DATE( #{startdate}, '%Y.%m.%d' )
+   			    </if>
+   			    <if test="enddate != null and enddate != ''">
+   			    	and enddate <![CDATA[ <= ]]> STR_TO_DATE( #{enddate}, '%Y.%m.%d' )
+   			    </if>
+   		ORDER BY no
+	</select>
+	
+	<select id="detailList" parameterType="Map" resultType="kr.happy.jobkorea.hlt.model.lectureModel">
+		SELECT 
+			l.no, l.title, l.loginID,
+			date_format(l.startdate, '%Y.%m.%d') as startdate,
+		    date_format(l.enddate, '%Y.%m.%d') as enddate,
+		    l.plan as note, p.processrate
+		FROM tb_lecture as l
+	    	left outer join tb_process as p
+	    on l.no = p.no
+	    where l.no = #{no}
+	    order by no desc
+	    limit 1
+	</select>
+	
+	<select id="getClassPerson" parameterType="String" resultType="Int">
+		SELECT COUNT(*)
+		FROM 
+		(select * FROM tb_tcourse where no = 1) as A
+	</select>
+
+	<select id="hltManageList" parameterType="Map" resultType="kr.happy.jobkorea.hlt.model.lectureModel">
+      SELECT
+         l.no, l.category, l.title, l.loginID, p.processrate, date_format(p.lecdate, '%Y.%m.%d') as lecdate, p.seq, p.note
+      FROM
+         tb_lecture as l
+          left outer join
+              (  
+                 select p1.no,p1.seq,p1.processrate,p1.note,p1.lecdate
+                     from tb_process as p1,
+                          ( select no,max(processrate) as processrate 
+                              from tb_process 
+                          group by no) as p2
+                    where p1.processrate = p2.processrate 
+                      and p1.no = p2.no
+                 
+                ) as p
+       on l.no = p.no
+      WHERE loginID = #{loginID}
+         <if test="selected =='content' ">
+         	and l.title like CONCAT('%',#{keyword},'%')
+         </if>
+		 <if test="startdate != null and startdate != ''">
+	    	and p.lecdate <![CDATA[ >= ]]> STR_TO_DATE( #{startdate}, '%Y.%m.%d' )
+	     </if>
+	     <if test="enddate != null and enddate != ''">
+	    	and p.lecdate <![CDATA[ <= ]]> STR_TO_DATE( #{enddate}, '%Y.%m.%d' )
+	     </if>
+  	  order by l.no
+	</select>
+	
+	<delete id="hltDeleteNo" parameterType="Map">
+		DELETE from tb_process where seq =  
+			(select a.seq from
+				(SELECT
+        			no,MAX(processrate) as processrate,MAX(seq) as seq, lecdate 
+       			FROM tb_process where no = #{no}) as a)
+	</delete>
+	
+	<update id="ModalUpdate" parameterType="Map">
+		UPDATE tb_process
+		SET  seq = #{seq}
+			<if test="processrate != null">
+				,processrate = #{processrate}
+			</if>
+			<if test="lecdate != null">
+				,lecdate = date_format(#{lecdate}, '%Y-%m-%d')
+			</if>
+			<if test="note != null">
+				,note = #{note}
+			</if>
+		WHERE no = #{no}
+		AND seq = #{seq}
+	</update>
+	
+	<insert id="ModalInsert" parameterType="Map">
+		INSERT INTO tb_process
+			(no,seq,processrate,note,lecdate)
+		values
+			(#{no},#{seq}+1,#{processrate},#{note},#{lecdate})
+	</insert>
+	
+	<select id="evaluationList" parameterType="Map" resultType="kr.happy.jobkorea.hlt.model.lectureModel">
+		select
+			B.no, ifnull(A.survey,123) as survey, B.category, 
+			B.title, B.loginID,
+			date_format(B.startdate, '%Y.%m.%d') as startdate ,date_format(B.enddate, '%Y.%m.%d') as enddate
+		FROM tb_lecture B
+		right outer join
+			(
+				select no,round(AVG(survey),2) as survey 
+			 	FROM tb_survey
+				where no in 
+					(
+						select no from tb_lecture 
+				 		where 
+				 		loginID = #{loginID}
+				 		<if test="selected =='content' ">
+					 		and title like CONCAT('%',#{keyword},'%')
+					 	</if>
+				 	)
+			 	group by no
+			 ) A
+		on B.no = A.no
+	</select>
+	
+	<select id="DetailSurveyList" parameterType="Map" resultType="kr.happy.jobkorea.hlt.model.lectureModel">
+		select
+		  *
+		from tb_survey
+		where no = #{no}
+	</select>
+</mapper>
