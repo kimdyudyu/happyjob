@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hlt.dao.TeacherTmDao">
+	<select id="tmList" resultType="Map" >
+		
+		select ts.no, ts.seq, ts.loginID, ts.nt_title, DATE_FORMAT(ts.reg_date, '%Y-%m-%d') as reg_date, ts.filename
+		from tb_task ts 
+		left outer join
+		tb_lecture le
+		on ts.no = le.no
+		where le.loginID = #{sessionVal}
+   				<if test="searchkey =='all' ">
+
+   			    </if>
+   			    <if test="searchkey =='loginId' ">
+   			        and ts.loginID like '%${searchword}%'
+   			    </if>   			    
+   			    <if test="searchkey =='nt_title' ">
+   			        and ts.nt_title like '%${searchword}%'
+   			    </if>   				
+   		ORDER BY ts.no
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	
+	 
+	 <!-- 공지사항 목록 총 갯수 조회 -->
+	<select id="totalCountRoom" resultType="int">
+		SELECT COUNT(*) AS tot_cnt 
+		FROM tb_task ts
+		left outer join
+		tb_lecture le
+		on ts.no = le.no
+		where le.loginID like '${sessionVal}'
+   			<if test="searchword != null and searchword !='' ">
+   				and ${searchkey} like '%${searchword}%'
+   			</if>
+	</select>
+	
+	<select id="selectTmFile" resultType="Map">
+		SELECT no, nt_title, nt_note, filename, filepath, filesize, reg_date, loginID
+		FROM tb_task 
+		where no=#{no}
+	</select>
+</mapper>

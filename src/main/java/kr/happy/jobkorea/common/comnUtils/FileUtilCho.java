@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.eclipse.jdt.internal.compiler.lookup.Scope.Substitutor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -87,22 +88,22 @@ public class FileUtilCho {
             if (!multipartFile.isEmpty()) {
             	
             
-            	String file_nm = multipartFile.getOriginalFilename();
-                String fileExtension = file_nm.substring(file_nm.lastIndexOf(".")+1);
-                String file_loc = rootFilePath+itemFilePath + file_nm;
+            	String filename = multipartFile.getOriginalFilename();
+                String fileExtension = filename.substring(filename.lastIndexOf(".")+1);
+                String filepath = rootFilePath+itemFilePath.substring(0, itemFilePath.length()-1);
                
                /* String thumbnailFileName = tmpFileName +"_thumbnail."+fileExtension;*/
-                String file_Size = Long.toString(multipartFile.getSize());
+                String fileSize = Long.toString(multipartFile.getSize());
                 
                 
-                map.put("file_nm", file_nm);
-                map.put("file_size", file_Size);
-                map.put("file_loc", file_loc);
+                map.put("filename", filename);
+                map.put("filesize", fileSize);
+                map.put("filepath", filepath);
                 map.put("fileExtension", fileExtension);
                
                 logger.info("file 정보 : " + map);
                 
-                File orgFile = new File(file_loc);
+                File orgFile = new File(filepath);
                 multipartFile.transferTo(orgFile);
                 
               

@@ -28,16 +28,17 @@ public class MailSend {
 	// 메일 전송 메서드
 	public String RegisterFindIdEmailSend(String user_email) {
 		String host = "smtp.gmail.com";
-		final String username = "yoosejong1995@gmail.com";
-		final String password = "tpwhd13d!@";
+		final String username = "dghe91";
+		final String password = "wdh120809!!@@";
 		int port = 465;
 		String authNum = null;
 
 		Properties props = System.getProperties();
 
 		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.user", "dghe91@gmail.com");
 		props.put("mail.smtp.port", port);
-		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.auth", true);
 		props.put("mail.smtp.ssl.enable", true);
 		props.put("mail.smtp.ssl.trust", host);
 
@@ -54,7 +55,7 @@ public class MailSend {
 		try {
 			MimeMessage message = new MimeMessage(session);
 			try {
-				message.setFrom(new InternetAddress("yoosejong1995@gmail.com", "<happy> 수강신청 사이트 인증번호입니다.", "utf-8"));
+				message.setFrom(new InternetAddress("dghe91@gmail.com", "<happy> 수강신청 사이트 인증번호입니다.", "utf-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -93,16 +94,17 @@ public class MailSend {
 	public String RegisterFindPwdEmailSend(String user_email) {
 
 		String host = "smtp.gmail.com";
-		final String username = "yoosejong1995@gmail.com";
-		final String password = "tpwhd13d!@";
+		final String username = "dghe91";
+		final String password = "wdh120809!!@@";
 		int port = 465;
 		String authNum = null;
 
 		Properties props = System.getProperties();
 
 		props.put("mail.smtp.host", host);
+		props.put("mail.smtp.user", "dghe91@gamil.com");
 		props.put("mail.smtp.port", port);
-		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.auth", true);
 		props.put("mail.smtp.ssl.enable", true);
 		props.put("mail.smtp.ssl.trust", host);
 
@@ -119,7 +121,7 @@ public class MailSend {
 		try {
 			MimeMessage message = new MimeMessage(session);
 			try {
-				message.setFrom(new InternetAddress("yoosejong1995@gmail.com", "<happy> 수강신청 사이트 인증번호입니다.", "utf-8"));
+				message.setFrom(new InternetAddress("dghe91@gmail.com", "<happy> 수강신청 사이트 인증번호입니다.", "utf-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
@@ -146,9 +148,4 @@ public class MailSend {
 		return authNum;
 
 	}
-
-	
-
-	
-
 }
