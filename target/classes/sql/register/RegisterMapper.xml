@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.register.dao.RegisterDao">
+	<!-- 회원 가입 -->
+	<!-- 등급, 제목, 희망근무, 경력내용 추가 -->
+	<insert id="insertRegister">
+		insert into tb_userinfo (loginID, 
+								password, 
+								name, 
+								user_type, 
+								email,
+								email_cop, 
+								area, 
+								tel1,
+								tel2,
+								tel3,
+								birthday,
+								sex,
+								career_year,
+								career_mm,
+								skill_add,
+								singular_facts,
+								user_position,
+								consult_yn,
+								salary,
+								join_date,
+								title,
+								grade,
+								comp_area1,
+								comp_area2,
+								comp_area3,
+								career_contents)
+			VALUES (#{loginID},
+					#{password}, 
+					#{name}, 
+					#{user_type}, 
+					#{email}, 
+					#{email_cop},
+					#{area},
+					#{tel1},
+					#{tel2},
+					#{tel3},
+					#{birthday},
+					#{sex},
+					#{career_year},
+					#{career_mm}, 
+					#{skill_add}, 
+					#{singular_facts},
+					#{user_position},
+					#{consult_yn},
+					#{salary},
+					#{join_date},
+					#{title},
+					#{grade},
+					#{comp_area1},
+					#{comp_area2},
+					#{comp_area3},
+					#{career_contents})
+	</insert>
+	
+	<insert id="insertSkill">
+		insert into TB_USERSKILL (
+			skill_code,
+			skill_detail,
+			loginID)
+			
+		VALUES (#{skill_code},
+				#{skill_detail},
+				#{loginID})	
+	</insert>
+	
+	<insert id="insertComp">
+		insert into tb_userinfo (loginID,
+								password,
+								user_type,
+								comp_name,
+								birthday,
+								email,
+								email_cop,
+								mgr_name,
+								mgr_tel1,
+								mgr_tel2,
+								mgr_tel3,
+								comp_info)
+		
+		VALUES(#{loginID},
+			   #{password},
+			   #{user_type},
+			   #{comp_name},
+			   #{birthday},
+			   #{email},
+			   #{email_cop},
+			   #{mgr_name},
+			   #{mgr_tel1},
+			   #{mgr_tel2},
+			   #{mgr_tel3},
+			   #{comp_info})
+	
+	</insert>
+	
+	
+	
+	<!-- 아이디 찾기 -->
+	<select id="selectFindIdRegister" resultType="kr.happy.jobkorea.register.model.RegisterModel">
+		select
+		loginID as loginId,
+		password,
+		user_email
+			from
+			tb_userinfo
+			where user_email = #{user_email}
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="selectFindPwdRegister" resultType="kr.happy.jobkorea.register.model.RegisterModel">
+		select
+		loginID as loginId,
+		password,
+		user_email
+			from
+			tb_userinfo
+			where user_email = #{user_email}
+			and loginID = #{loginId}
+	</select>
+	<!-- 아이디 체크 -->
+	<select id="selectIdCheck" resultType="Integer">
+		select count(*)
+		loginID
+		from tb_userinfo
+		where loginID = #{loginId}
+	</select>
+	
+	<select id="idCheck" resultType="int">
+		select count(*)			 
+		from tb_userinfo
+		where loginID = #{loginId}
+	</select>
+	
+</mapper>
