@@ -69,8 +69,10 @@
 				
 				$("#searchkey").change(function(){
 					if($(this).val() == "all"){
+						$("#searchword").val('');
 						$("#searchword").attr({"placeholder" : "전체목록을 조회합니다.", "readonly" : true});
 					}else{
+						$("#searchword").val('');
 						$("#searchword").attr({"placeholder" : "입력하세요.", "readonly" : false});
 					}
 				});
