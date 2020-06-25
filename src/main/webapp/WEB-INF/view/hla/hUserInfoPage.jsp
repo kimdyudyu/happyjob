@@ -22,11 +22,12 @@ var pageBlockSizeUserList = 5;
 var UserListVue;
 
 $(function(){
-	hUserInfoHeader();
+	/*hUserInfoHeader();
 	hUserInfoHeaderVue.Init("U");
 	hUserInfoVueInit();
 	hUserInfoFooter();
-	totalInit();
+	totalInit();*/
+	UserInfoFormInit();
 	InitUserList();
 	UserListVue.UserList();
 
@@ -77,22 +78,14 @@ function InitUserList() {
   			},
   			UpdatePopup : function(Data)
   			{
-  				hUserInfoHeader();
-  				hUserInfoHeaderVue.Init("U");
-  				hUserInfoVueInit();
-  				hUserInfoFooter();
-  				totalInit();
   				
+  				SetFormUseType("U");
   				hUserInfoVue.setUserData(Data);
   				gfModalPop("#userInfoPopup");
   			},
   			RegistTeacher : function()
   			{
-  				hUserInfoHeader();
-  				hUserInfoHeaderVue.Init("I");
-  				hUserInfoVueInit();
-  				hUserInfoFooter();
-  				totalInit();
+  				SetFormUseType("I");
   				hUserInfoVue.SetUserType("D");
   				gfModalPop("#userInfoPopup");
   			}

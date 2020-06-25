@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
+<link rel="stylesheet" type="text/css" href="${CTX_PATH}/css/khcss/gridsetting.css" />
 		<div id="divUserInfoVue" class="regcontainer">
-		   <div class="divpicture">{{ vUserId }}</div>
+		   <div class="divpicture">{{ vformUseType }}</div>
 		   <div class="box2">아이디<br>
 		   		<template v-if="vformUseType === 'I'">
-			   		<input id="userId" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
+			   		<input id="iuserId" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
 			   		<a style="cursor:pointer" class="btnType blue" v-on:click="hidCheck()"><span>중복 체크</span></a>
 			   	</template>
 			   	<template v-if="vformUseType === 'U'  || vformUseType === 'R'">
-			   		<input id="userId" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
+			   		<input id="suserId" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserId }}</span>
 			   	</template>
 		   </div>
@@ -21,10 +20,10 @@
 		   </template>
 		   <div class="box4">이름<br>
 		   		<template v-if="vformUseType != 'R'">
-		   			<input id="userName" style="height: 30px; width: 200px; font-size: 20px;" type="text" name="userName" v-model="vUserName">
+		   			<input id="iuserName" style="height: 30px; width: 200px; font-size: 20px;" type="text" name="userName" v-model="vUserName">
 		   		</template>
 		   		<template v-if="vformUseType === 'R'">
-		   			<input id="userName" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userName" v-model="vUserName">
+		   			<input id="suserName" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userName" v-model="vUserName">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserName }}</span>
 		   		</template>
 		   </div>
@@ -37,26 +36,26 @@
 				    </select>
 			    </template>
 			    <template v-if="vformUseType === 'R'">
-			    	<input id="UserGender" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="UserGender" v-model="vUserGender">
+			    	<input id="sUserGender" class="hidden" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="UserGender" v-model="vUserGender">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserGender }}</span>
 			    </template>
 		   </div>
 		   <div class="box6">연락처<br>
 		   		<template v-if="vformUseType != 'R'">
-			   		<input id="userPhone1" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone1" v-model="vUserPhone1">
+			   		<input id="iuserPhone1" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone1" v-model="vUserPhone1">
 			   		<span>-</span>
-			   		<input id="userPhone2" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone2" v-model="vUserPhone2">
+			   		<input id="iuserPhone2" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone2" v-model="vUserPhone2">
 			   		<span>-</span>
-			   		<input id="userPhone3" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone3" v-model="vUserPhone3">
+			   		<input id="iuserPhone3" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone3" v-model="vUserPhone3">
 		   		</template>
 		   		<template v-if="vformUseType === 'R'">
-		   			<input id="userPhone1" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone1" v-model="vUserPhone1">
+		   			<input id="suserPhone1" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone1" v-model="vUserPhone1">
 		   			<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserPhone1 }}</span>
 			   		<span>-</span>
-			   		<input id="userPhone2" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone2" v-model="vUserPhone2">
+			   		<input id="suserPhone2" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone2" v-model="vUserPhone2">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserPhone2 }}</span>
 			   		<span>-</span>
-			   		<input id="userPhone3" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone3" v-model="vUserPhone3">
+			   		<input id="suserPhone3" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="userPhone3" v-model="vUserPhone3">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserPhone3 }}</span>
 		   		</template>
 		   </div>
@@ -70,7 +69,7 @@
 				   </select>	
 			    </template>
 			    <template v-if="vformUseType === 'R'">
-			    	<input id="UserAddress" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="UserAddress" v-model="vUserAddress">
+			    	<input id="sUserAddress" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="UserAddress" v-model="vUserAddress">
 			   		<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserAddress }}</span>
 			    </template>
 		   </div>
@@ -82,13 +81,13 @@
 		   			<input type="text" style="height: 30px; width: 200px" id="userBirth" name="userBirth" data-date-format='yyyy-mm-dd' autocomplete=off v-model="vUserBirthDate">
 	   			</template>
 	   			<template v-if="vformUseType === 'R'">
-	   				<input id="UserBirthDate" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="UserBirthDate" v-model="vUserBirthDate">
+	   				<input id="sUserBirthDate" class="hidden" style="height: 30px; width: 70px; font-size: 20px;" type="text" name="UserBirthDate" v-model="vUserBirthDate">
 	   				<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserBirthDate }}</span>
 	   			</template>
 		   </div>
 		   <div class="box11">이메일<br>
 		   		<template v-if="vformUseType != 'R'">
-			   		<input id="userEmail1" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail1" v-model="vUserEmail1">
+			   		<input id="iuserEmail1" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail1" v-model="vUserEmail1">
 			   		<span>@</span>
 			   		<select style="height: 30px; width: 100px; font-size: 20px;" v-model="vUserEmail2"> <!--  v-model="selected" --> 
 						<option disabled value="">Please select one</option>
@@ -98,10 +97,10 @@
 				    </select>
 			    </template>
 			    <template v-if="vformUseType === 'R'">
-			    	<input id="userEmail1" class="hidden" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail1" v-model="vUserEmail1">
+			    	<input id="suserEmail1" class="hidden" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail1" v-model="vUserEmail1">
 			    	<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserEmail1 }}</span>
 			    	<span>@</span>
-			    	<input id="userEmail2" class="hidden" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail2" v-model="vUserEmail2">
+			    	<input id="suserEmail2" class="hidden" style="height: 30px; width: 100px; font-size: 20px;" type="text" name="userEmail2" v-model="vUserEmail2">
 			    	<span style="height: 30px; width: 150px; font-size: 20px;">{{ vUserEmail2 }}</span>
 			    </template>
 		   </div>

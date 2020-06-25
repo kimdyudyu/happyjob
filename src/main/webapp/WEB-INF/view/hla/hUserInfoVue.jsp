@@ -25,7 +25,7 @@ function hUserInfoHeader()
 		,methods: {
 			Init : function(UseType)
 			{				
-				this.vformUseType = UseType;
+				//this.vformUseType = UseType;
 			}
 		}
 	});
@@ -43,7 +43,7 @@ function hUserInfoFooter()
 		,methods: {
 			Init : function()
 			{				
-				this.vformUseType = hUserInfoHeaderVue.vformUseType;
+				//this.vformUseType = hUserInfoHeaderVue.vformUseType;
 			}
 		}
 	});
@@ -122,7 +122,7 @@ function hUserInfoVueInit() {
 					url : "/hla/hCRUDUser.do",
 					type : "post",
 					dataType : "json",
-					async : false,
+					async : true,
 					data : param,
 					success : function(data) {
 //						alert("íì ê°ìì´ ìë£ê° ëììµëë¤");
@@ -163,8 +163,8 @@ function hUserInfoVueInit() {
 						"group_code" : "areaCD"
 				};
 				var resultCallback = function(data) {
-					console.log("setcombo2");
-					console.log(data);
+					//console.log("setcombo2");
+					//console.log(data);
 					InitComboCallBack(data);
 					//console.log(this.vAddressCombo[0].dtl_cod_nm);
 				};
@@ -232,24 +232,30 @@ function hUserInfoVueInit() {
 			},
 			hidCheck : function()
 			{
-				alert("idc");
-				var param = {
-						loginID : this.vUserId
-				};
-				var resultCallback = function(data) {
-					CheckIdCallback(data);
-				};				
-				
-				$.ajax({
-					url : "/hla/hIdCheck.do",
-					type : "post",
-					dataType : "json",
-					async : true,
-					data : param,
-					success : function(data) {
-						resultCallback(data);						
-					}
-				});
+				if(this.vUserId != '')
+				{
+					var param = {
+							loginID : this.vUserId
+					};
+					var resultCallback = function(data) {
+						CheckIdCallback(data);
+					};				
+					
+					$.ajax({
+						url : "/hla/hIdCheck.do",
+						type : "post",
+						dataType : "json",
+						async : true,
+						data : param,
+						success : function(data) {
+							resultCallback(data);						
+						}
+					});
+				}
+				else
+				{
+					alert("아이디를 입력해주세요");
+				}
 			},
 			RegistValidation : function()
 			{				
@@ -335,6 +341,13 @@ function hUserInfoVueInit() {
 	})
 
 };
+function SetFormUseType(usetype)
+{
+	hUserInfoHeaderVue.vformUseType = usetype;
+	hUserInfoVue.vformUseType = usetype;
+	hUserInfoFooterVue.vformUseType = usetype;	
+}
+
 function CheckIdCallback(data)
 {
 	hUserInfoVue.vIdCheck = data.result;
@@ -350,8 +363,12 @@ function CheckIdCallback(data)
 	}
 }
 
-function totalInit()
+function UserInfoFormInit()
 {
+	hUserInfoHeader();
+	hUserInfoFooter();
+	hUserInfoVueInit();
+	hUserInfoHeaderVue.Init();
 	hUserInfoVue.Init();
 	hUserInfoFooterVue.Init();
 	hUserInfoVue.setComboBox();
@@ -393,5 +410,10 @@ function UpdateUser()
 	hUserInfoVue.UpdateUser();
 	hUserInfoVue.Init();
 	$("#userInfoPopup").hide();	
-}	
+}
+
+function UpdateMe()
+{
+	hUserInfoVue.UpdateUser();
+}
 </script>

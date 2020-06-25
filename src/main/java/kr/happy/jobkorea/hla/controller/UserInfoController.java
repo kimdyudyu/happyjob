@@ -66,8 +66,7 @@ public class UserInfoController {
 		model.addAttribute("calltype", "C");	
 		
 		return "/hla/hUserInfoPage";
-	}
-	
+	}	
 	
 	@RequestMapping("/hResumeInfo.do")
 	public String InitResumeInfo(Model model) throws Exception {
@@ -75,7 +74,14 @@ public class UserInfoController {
 		//logger.info("jmjm   - paramMap : ");
 		return "/hla/hResumeInfoPage";
 	}
+	///hla/hUpdateMyInfo.do
 	
+	@RequestMapping("/hUpdateMyInfo.do")
+	public String UpdateMyInfo(Model model) throws Exception {
+		logger.info("+ Start " + className + ".hUpdateMyInfo");
+		//logger.info("jmjm   - paramMap : ");
+		return "/hla/hUpdateMyInfo";
+	}
 	
 	@RequestMapping("/hUserInfoList.do")
 	@ResponseBody
@@ -140,15 +146,17 @@ public class UserInfoController {
 			
 			resultMap.put("userInfo", userInfo);
 		}
+		else if(action.equals("UR"))
+		{
+			paramMap.put("loginID", session.getAttribute("loginId").toString());
+			UserInfoModel userInfo = userInfoService.SelectAUserInfo(paramMap);			
+			resultMap.put("userInfo", userInfo);
+		}
 		else
 		{
 			logger.info(" action - paramMap : " + action);
 			resultMsg = "에러";
-		}
-			
-		
-		
-		
+		}		
 		resultMap.put("result", result);
 		resultMap.put("resultMsg", resultMsg);
 		

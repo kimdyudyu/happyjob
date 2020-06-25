@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="${CTX_PATH}/css/khcss/gridsetting.css" />
 
 	<div id="userInfoPopup" class="layerPop layerType2" style="overflow:scroll; width: 900px; height: 700px;">
-		<div class="khpopupcontainer">
+		<div id="TotaluserInfoForm" class="khpopupcontainer">
 			<div id="userInfoHeader">
 				<p class="conTitle">
 					<span v-if="vformUseType === 'I'">회원 가입</span>

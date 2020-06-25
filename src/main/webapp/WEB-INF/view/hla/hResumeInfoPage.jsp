@@ -23,7 +23,8 @@ var pageBlockSizeLectureList = 5;
 
 var LectureListVue;
 
-$(function(){		
+$(function(){
+	UserInfoFormInit();
 	InitResumePage();
 	LectureListVue.LectureList();
 	ResumeTablesInit();
@@ -50,6 +51,7 @@ function InitResumePage() {
   				this.StudentList(LectureNo);
   			},
   			showResume : function(loginID){
+  				SetFormUseType("R");
   				this.SetResumeData(loginID);
   				hResumeVue.SetResumeTable(loginID);
   				gfModalPop("#userInfoPopup");
@@ -108,11 +110,11 @@ function InitResumePage() {
   		}
 	});
 	
-	hUserInfoHeader();
+	/*hUserInfoHeader();
 	hUserInfoHeaderVue.Init("R");
 	hUserInfoVueInit();
 	hUserInfoFooter();
-	totalInit();
+	totalInit();*/
 }
 
 function LectureListCallback(data, pageIndex)
@@ -163,7 +165,7 @@ function SetResumeCallback(data)
 </script>
 </head>
 <body>
-<form id="UserInfoForm" action="" method="">
+<!--  <form id="UserInfoForm" action="" method="">-->
 	<input type="hidden" id="currentPage" value="1">
 	<input type="hidden" id="scurrentPage" value="1">
 	<div id="wrap_area">
@@ -270,7 +272,7 @@ function SetResumeCallback(data)
 			</ul>				
 		</div>
 	</div>
-</form>	
+<!--  </form>	-->
 	
 	<jsp:include page="/WEB-INF/view/hla/hUserInfoFormat.jsp"></jsp:include>
 	

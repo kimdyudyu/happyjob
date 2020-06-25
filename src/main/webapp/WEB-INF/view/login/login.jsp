@@ -66,11 +66,11 @@
 		$("#loginRegister").hide();
 		$("#loginEmail").hide();
 		$("#loginPwd").hide();
-		hUserInfoHeader();
-		hUserInfoHeaderVue.Init("I");
+		/*hUserInfoHeader();
 		hUserInfoVueInit();
 		hUserInfoFooter();
-		totalInit();
+		totalInit();*/
+		UserInfoFormInit();
 		/* $("#btn_prelogin").click(function() {
 			$("#EMP_ID").val("admin");
 			$("#EMP_PWD").val("admin");
@@ -138,11 +138,12 @@
 		if (loginID == null || loginID == "") {
 			frm.find("input[name=action]").val("I");
 			console.log("ppopop");
-			hUserInfoHeader();
+			/*hUserInfoHeader();
 			hUserInfoHeaderVue.Init("I");
 			hUserInfoVueInit();
 			hUserInfoFooter();
-			totalInit();
+			totalInit();*/
+			SetFormUseType("I");
 			hUserInfoVue.SetUserType("C");
 			gfModalPop("#userInfoPopup");
 		}

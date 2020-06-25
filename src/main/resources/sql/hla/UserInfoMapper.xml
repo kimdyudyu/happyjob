@@ -122,7 +122,7 @@
 		tel2 = #{tel2},
 		tel3 = #{tel3},
 		area = #{area},
-		birthday = #{birthday}	
+		birthday = REPLACE( #{birthday} , '-', '')
 	WHERE
 		loginID = #{loginID}
 	</update>
