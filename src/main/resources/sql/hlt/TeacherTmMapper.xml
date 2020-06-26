@@ -34,8 +34,8 @@
 		tb_lecture le
 		on ts.no = le.no
 		where le.loginID like '${sessionVal}'
-   			<if test="searchword != null and searchword !='' ">
-   				and ${searchkey} like '%${searchword}%'
+   			<if test="searchword != null and searchword !='' and searchkey !='all' ">
+   				and ts.${searchkey} like '%${searchword}%'
    			</if>
 	</select>
 	

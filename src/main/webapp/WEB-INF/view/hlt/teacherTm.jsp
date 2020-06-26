@@ -57,6 +57,16 @@
 			$(function(){
 				init();
 				tmList();
+				
+				$("#searchkey").change(function(){
+					if($(this).val() == "all"){
+						$("#searchword").val('');
+						$("#searchword").attr({"placeholder" : "전체목록을 조회합니다.", "readonly" : true});
+					}else{
+						$("#searchword").val('');
+						$("#searchword").attr({"placeholder" : "입력하세요.", "readonly" : false});
+					}
+				});
 			});
 			
 			function printList(data,currentPage){
@@ -271,8 +281,8 @@
 										<option value="loginId">학생명</option>
 										<option value="nt_title">제목</option>
 									</select>
-									<input type="text" id="searchword" name="searchword" placeholder="입력하세요" 
-										style="height: 28px;"  @keyup.enter="searchbtn">
+									<input type="text" id="searchword" name="searchword" placeholder="전체목록을 조회합니다."
+										style="height: 28px;"  @keyup.enter="searchbtn" readonly="readonly">
 		
 									<!-- a태그에 @click 이벤트 같은걸? 걸어주면 href가 나중에 실행되는듯!!리로드현상해결.  -->
 									<!-- <a class="btnType blue" href=""  name="search" id="searchBtn" @click="searchbtn"><span>검색</span></a> -->
