@@ -89,20 +89,20 @@ public class FileUtilCho {
             
             	String file_nm = multipartFile.getOriginalFilename();
                 String fileExtension = file_nm.substring(file_nm.lastIndexOf(".")+1);
-                String file_loc = rootFilePath+itemFilePath + file_nm;
+                String filepath = rootFilePath+itemFilePath.substring(0, itemFilePath.length()-1);
                
                /* String thumbnailFileName = tmpFileName +"_thumbnail."+fileExtension;*/
                 String file_Size = Long.toString(multipartFile.getSize());
                 
                 
-                map.put("file_nm", file_nm);
-                map.put("file_size", file_Size);
-                map.put("file_loc", file_loc);
+                map.put("filename", file_nm);
+                map.put("filesize", file_Size);
+                map.put("filepath", filepath);
                 map.put("fileExtension", fileExtension);
                
                 logger.info("file 정보 : " + map);
                 
-                File orgFile = new File(file_loc);
+                File orgFile = new File(filepath);
                 multipartFile.transferTo(orgFile);
                 
               

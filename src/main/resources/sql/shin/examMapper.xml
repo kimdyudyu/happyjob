@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.manageC.dao.examDao">
+
+	
+	<select id="examList" resultType="kr.happy.jobkorea.manageC.model.examModel">
+		 SELECT t.no , t.re , t.testname , IFNULL(a.score, 101) AS point
+      	 FROM tb_test as t
+         LEFT OUTER JOIN 
+        	(SELECT no, re, loginID, sum(score) AS score 
+         	 FROM tb_testanswer 
+         	 WHERE loginID = #{loginId}
+         	 GROUP BY no,re) AS a
+     	 ON t.no = a.no AND t.re = a.re
+      	 WHERE t.no IN ( SELECT no
+                 		 FROM tb_tcourse 
+                		 WHERE loginId = #{loginId})
+         <if test="title != null">
+         	AND t.re = #{title}
+         </if>
+		 LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	
+	<select id="examTotalCnt" resultType="int">
+		SELECT count(*) as totalcnt
+		FROM tb_test
+		WHERE no IN ( SELECT no
+					  FROM tb_tcourse 
+					  WHERE loginId = #{loginId} )
+	</select>
+	
+	<select id="search_score" resultType="int">
+		SELECT ifnull(SUM(score), 101)
+		FROM tb_testanswer
+		WHERE no = #{no} AND loginId = #{loginId}
+		<if test="re == '재시험'">
+			AND re = 're'
+		</if>
+		<if test="re == '본시험'">
+			AND re = 'main'
+		</if>		
+	</select>
+
+
+	
+	<select id="testList" resultType="kr.happy.jobkorea.manageC.model.examModel">
+		SELECT
+		no, re, seq, problem, answer1, answer2, answer3, answer4, answer
+		FROM tb_testlist
+		WHERE no = #{no}
+		<if test="re == '재시험'">
+			AND re = 're'
+		</if>
+		<if test="re == '본시험'">
+			AND re = 'main'
+		</if>				  
+	</select>
+	
+	<select id="tscore" resultType="int">
+		SELECT SUM(score)
+		FROM tb_testanswer
+		WHERE no = #{no} AND loginId = #{loginId}
+		<if test="re == '재시험'">
+			AND re = 're'
+		</if>
+		<if test="re == '본시험'">
+			AND re = 'main'
+		</if>				  
+	</select>
+	
+	<select id="tresult" resultType="kr.happy.jobkorea.manageC.model.examAnswerModel">
+		SELECT answer
+		FROM tb_testanswer
+		WHERE no = #{no} AND loginId = #{loginId}
+		<if test="re == '재시험'">
+			AND re = 're'
+		</if>
+		<if test="re == '본시험'">
+			AND re = 'main'
+		</if>		  
+	</select>
+	
+	<select id="answerList" resultType="kr.happy.jobkorea.manageC.model.examModel">
+		SELECT answer
+		FROM tb_testlist
+		WHERE no = #{no} AND re = #{re}	  
+	</select>
+	
+	<insert id="calculate">
+		INSERT INTO tb_testanswer
+		            (
+		            no,
+		            re,
+		            seq,
+		            loginID,
+		            answer,
+		            score		            
+		            )		            
+		VALUES 
+		<if test="seq1 != null">
+			  (#{no},
+			   #{re},
+			   1, 
+			   #{loginId},
+			   #{seq1},
+			   <if test="seq1 == answer0">
+			   20),
+			   </if>
+			   <if test="seq1 != answer0">
+			   0),
+			   </if>
+	   </if>
+	   <if test="seq2 != null">
+	   		  (#{no},
+			   #{re},
+			   2, 
+			   #{loginId},
+			   #{seq2},
+			   <if test="seq2 == answer1">
+			   20),
+			   </if>
+			   <if test="seq2 != answer1">
+			   0),
+			   </if>
+	   </if>
+	   <if test="seq3 != null">
+	   		  (#{no},
+			   #{re},
+			   3, 
+			   #{loginId},
+			   #{seq3},
+			   <if test="seq3 == answer2">
+			   20),
+			   </if>
+			   <if test="seq3 != answer2">
+			   0),
+			   </if>
+	   </if>
+	   <if test="seq4 != null">
+	   		  (#{no},
+			   #{re},
+			   4,
+			   #{loginId},
+			   #{seq4},
+			   <if test="seq4 == answer3">
+			   20),
+			   </if>
+			   <if test="seq4 != answer3">
+			   0),
+			   </if>
+	   </if>
+	   <if test="seq5 != null">
+	   		  (#{no},
+			   #{re},
+			   5, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq5 == answer4">
+			   20)
+			   </if>
+			   <if test="seq5 != answer4">
+			   0)
+			   </if>
+	   </if>
+	   <if test="seq6 != null">
+	   		  (#{no},
+			   #{re},
+			   6, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq6 == answer5">
+			   20)
+			   </if>
+			   <if test="seq6 != answer5">
+			   0)
+			   </if>
+	   </if>
+	   <if test="seq7 != null">
+	   		  (#{no},
+			   #{re},
+			   7, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq7 == answer6">
+			   20)
+			   </if>
+			   <if test="seq7 != answer6">
+			   0)
+			   </if>
+	   </if>
+	   <if test="seq8 != null">
+	   		  (#{no},
+			   #{re},
+			   8, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq8 == answer7">
+			   20)
+			   </if>
+			   <if test="seq8 != answer7">
+			   0)
+			   </if>
+	   </if>
+	   <if test="seq9 != null">
+	   		  (#{no},
+			   #{re},
+			   9, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq9 == answer8">
+			   20)
+			   </if>
+			   <if test="seq9 != answer8">
+			   0)
+			   </if>
+	   </if>
+	   <if test="seq10 != null">
+	   		  (#{no},
+			   #{re},
+			   10, 
+			   #{loginId},
+			   #{seq5},
+			   <if test="seq10 == answer9">
+			   20)
+			   </if>
+			   <if test="seq10 != answer9">
+			   0)
+			   </if>
+	   </if>
+	</insert>
+</mapper>
