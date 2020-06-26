@@ -162,7 +162,7 @@ function UserInfoListCallback(data, pageIndex)
 								<template v-if=" vPageType === 'D' ">
 									<span class="fr"> 
 									<a class="btnType blue" style="cursor:pointer"  v-on:click="RegistTeacher()" >
-									<span>신규 등록</span></a>
+									<span>강사 등록</span></a>
 								</template>
 								</span>
 							</p>				    	

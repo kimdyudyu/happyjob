@@ -409,7 +409,8 @@ function UpdateUser()
 	console.log("Is Update?");
 	hUserInfoVue.UpdateUser();
 	hUserInfoVue.Init();
-	$("#userInfoPopup").hide();	
+	$("#userInfoPopup").hide();
+	location.reload();
 }
 
 function UpdateMe()
