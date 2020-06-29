@@ -1,4 +1,4 @@
-package kr.happy.jobkorea.system.controller;
+/*package kr.happy.jobkorea.system.controller;
 
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +35,7 @@ public class NoticeController {
 	// Get class name for logger
 	private final String className = this.getClass().toString();
 
-	/* 자유게시판 -초기화면 */
+	 자유게시판 -초기화면 
 	@RequestMapping("noticeMgr.do")
 	public String initNotice(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
@@ -54,7 +54,7 @@ public class NoticeController {
 	}
 	
 	
-	/* 공지사항 리스트 뿌리기 */
+	 공지사항 리스트 뿌리기 
 	@RequestMapping("noticeList.do")
 	public String noticeList(Model model, @RequestParam Map<String,Object> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
@@ -89,7 +89,7 @@ public class NoticeController {
 		return "system/noticeList";	
 	}
 	
-	/* 공지사항 상세 정보 뿌리기 */
+	 공지사항 상세 정보 뿌리기 
 	@RequestMapping("detailNoticeList.do")
 	@ResponseBody
 	public Map<String,Object> detailList(Model model, @RequestParam Map<String,Object> paramMap, HttpServletRequest request,
@@ -128,7 +128,7 @@ public class NoticeController {
 	
 	
 	
-	/* 공지사항 등록하기 */
+	 공지사항 등록하기 
 	@RequestMapping("noticeSave.do")
 	@ResponseBody
 	public Map<String,Object> savaList(Model model, @RequestParam Map<String,Object> paramMap, HttpServletRequest request,
@@ -180,3 +180,4 @@ public class NoticeController {
 	
 
 }
+*/

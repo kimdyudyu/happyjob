@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.NoticeDao">
+	<select id="noticeList" resultType="kr.happy.jobkorea.hla.model.NoticeModel">
+		SELECT
+			n.loginID loginID
+			,n.nt_no nt_no
+			,n.nt_title nt_title
+			,n.write_date write_date
+		FROM
+			tb_notice2 n
+			,tb_userinfo u
+		where
+			n.loginID=u.loginID 
+			and u.user_type='A'
+			<if test="startdate !='' ">
+   				AND n.write_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="enddate !='' ">
+   				AND n.write_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="searchkeyword == 'titleNote' and searchword != '' ">
+    			and (nt_title like CONCAT('%', #{searchword}, '%')
+					or nt_note like CONCAT('%', #{searchword}, '%'))        		    
+   			</if> 
+    		<if test="searchkeyword == 'title' and searchword != '' ">
+    			AND n.nt_title like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+    		<if test="searchkeyword == 'note' and searchword != '' ">
+    			AND n.nt_note like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+		order by
+			nt_no desc
+		LIMIT
+			#{pageIndex}, #{pageSize}
+	</select>
+	<select id="noticeTotalCnt" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			tb_notice2 n
+			,tb_userinfo u
+		where
+			n.loginID=u.loginID 
+			and u.user_type='A'
+			<if test="startdate !='' ">
+   				AND write_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="enddate !='' ">
+   				AND write_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="searchkeyword == 'titleNote' and searchword != '' ">
+    			and (nt_title like CONCAT('%', #{searchword}, '%')
+					or nt_note like CONCAT('%', #{searchword}, '%'))        		    
+   			</if>  	 
+   			<if test="searchkeyword == 'title' and searchword != '' ">
+    			AND nt_title like concat('%',#{searchword},'%')	        		    
+   			</if>  	 
+    		<if test="searchkeyword == 'note' and searchword != '' ">
+    			AND nt_note like concat('%',#{searchword},'%')	        		    
+   			</if>  	
+	</select>
+	
+	<insert id="noticeInsert">
+		insert into
+			tb_notice2(
+			nt_no
+			,nt_title
+			,nt_note
+			,write_date
+			,loginID 
+		)
+		values(
+			(SELECT IFNULL(MAX(nt_no) + 1, 1) FROM tb_notice2 n)
+			,#{nt_title_insert}
+			,#{nt_note_insert}
+			,now()
+			,#{loginID_insert}
+		)
+	</insert>
+	
+	<select id="noticeDetail" resultType="kr.happy.jobkorea.hla.model.NoticeModel">
+		select
+			nt_no
+			,nt_title
+			,nt_note
+		FROM 
+			tb_notice2
+		WHERE 
+			nt_no =#{nt_no}
+	</select>
+	
+	<delete id="noticeDelete">
+		DELETE FROM
+			tb_notice2
+		WHERE
+			nt_no = #{nt_no}
+	</delete>
+	
+	<update id="noticeUpdate">
+		update
+			tb_notice2
+		set
+			nt_title = #{nt_title}
+			,nt_note = #{nt_note}
+		where
+			nt_no = #{nt_no}
+	</update>
+</mapper>

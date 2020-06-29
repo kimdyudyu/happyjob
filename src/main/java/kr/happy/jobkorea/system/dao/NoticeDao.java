@@ -1,4 +1,4 @@
-package kr.happy.jobkorea.system.dao;
+/*package kr.happy.jobkorea.system.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -33,3 +33,4 @@ public interface NoticeDao {
 
 
 }
+*/

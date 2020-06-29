@@ -1,4 +1,4 @@
-package kr.happy.jobkorea.system.service;
+/*package kr.happy.jobkorea.system.service;
 
 import java.util.List;
 import java.util.Map;
@@ -71,3 +71,4 @@ public class NoticeServiceImpl implements NoticeService {
 
 
 }
+*/

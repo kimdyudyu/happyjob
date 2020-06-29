@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.ToolDao">
+
+	<select id="toolList" resultType="kr.happy.jobkorea.hla.model.ToolModel">
+		SELECT	
+			room
+			,name
+			,ccount
+			,etc
+			,room_size
+		FROm
+			tb_roominfo	
+		where
+			1=1
+			<if test="searchword != ''">
+			AND name like concat('%',#{searchword},'%')
+			</if>
+		ORDER BY 
+			room
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="toolCount" resultType="int">
+		SELECT
+			count(room)
+		FROM
+			tb_roominfo
+		where
+			1=1
+			<if test="searchword != ''">
+			AND name like concat('%',#{searchword},'%')
+			</if>
+	</select>
+	
+	<select id="toollist" resultType="kr.happy.jobkorea.hla.model.ToolModel">
+		SELECT	
+			room
+			,seq
+			,tool_name
+			,tool_ccount
+			,tool_etc
+		FROM
+			tb_toolinfo
+		where
+			room = #{room}	
+		ORDER BY 
+			seq
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="toolcount" resultType="int">
+		SELECT
+			count(seq)
+		FROM
+			tb_toolinfo
+		where
+			room = #{room}
+	</select>
+	
+	<insert id="toolInsert">
+		insert into
+			tb_toolinfo(
+			room
+			,seq
+			,tool_name
+			,tool_ccount
+			,tool_etc
+			,date
+		)
+		values(
+			#{room_insert}
+			,(SELECT IFNULL(MAX(seq) + 1, 1) FROM tb_toolinfo t)
+			,#{tool_name_insert}
+			,#{tool_ccount_insert}
+			,#{tool_etc_insert}
+			,now()
+		)
+	</insert>
+	<select id="toolDetail" resultType="kr.happy.jobkorea.hla.model.ToolModel">
+		select
+			room
+			,seq
+			,tool_name
+			,tool_ccount
+			,tool_etc 
+		FROM 
+			tb_toolinfo 
+		WHERE
+			room = #{room}
+			and seq =#{seq}
+	</select>
+	
+	<delete id="toolDelete">
+	delete from
+		tb_toolinfo
+	where
+		room = #{room}
+		and seq = #{seq}
+	</delete>
+	
+	<update id="toolUpdate">
+		update
+			tb_toolinfo
+		set
+			tool_name = #{tool_name}
+			,tool_ccount = #{tool_ccount}
+			<if test="tool_etc != ''">
+			,tool_etc = #{tool_etc}
+			</if>
+			<if test="tool_etc == ''">
+			,tool_etc = ''
+			</if>
+		where
+			room = #{room}
+			and seq = #{seq}
+	</update>
+</mapper>
