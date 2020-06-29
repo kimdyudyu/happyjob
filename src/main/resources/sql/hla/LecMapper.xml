@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.happy.jobkorea.hla.dao.LecDao">
+
+	<select id="lectList" resultType="kr.happy.jobkorea.hla.model.LecListModel">
+		SELECT
+		lec.no
+		, lec.title
+		,
+		lec.loginID
+		, date_format(lec.startdate, '%Y-%m-%d') as st_date
+		,
+		date_format(lec.enddate, '%Y-%m-%d') as ed_date
+		FROM
+		tb_lecture as lec
+
+	</select>
+
+
+	<select id="lectPeopleInfo" resultType="kr.happy.jobkorea.hla.model.LecListModel">
+		select tc.no
+		, tc.loginID
+		, lt.title
+		, ui.name
+		, ui.email
+		, ui.area
+		, (select dc.detail_name from
+		tb_detail_code dc where dc.group_code =
+		'areaCD' and dc.detail_code =
+		ui.area) area_name
+		FROM
+		tb_tcourse tc, tb_lecture lt, tb_userinfo ui
+		where
+		tc.no = lt.no
+		and
+		tc.loginID = ui.loginID
+		and
+		tc.no = #{no}
+
+
+
+	</select>
+
+
+	<select id="studentCnsInfo" resultType="Map">
+		select
+		date_format(cns.reg_date, '%Y-%m-%d' ) as reg_date,
+		cns.regId,
+		tc.loginID,
+		cns.counsel,
+		lt.no,
+		cns.cnsNo,
+		us.name
+		from
+		tb_counsel cns,
+		tb_tcourse tc,
+		tb_userinfo us,
+		tb_lecture lt
+		where
+		tc.loginID = cns.loginID
+		and
+		us.loginID = tc.loginID
+		and
+		us.loginID = #{loginID}
+		group
+		by cns.loginID;
+
+	</select>
+
+	<!-- 상담내용 디테일 -->
+	<select id="cnsDetail" resultType="Map">
+		select lt.title,
+		ui.name,
+		cs.regId,
+		date_format(cs.reg_date, '%Y-%m-%d' )
+		as reg_date,
+		cs.counsel,
+		cs.cnsNo,
+		lt.no
+		from
+		tb_userinfo ui,
+		tb_counsel cs,
+		tb_lecture lt
+
+		where
+		cs.cnsNo = #{cnsNo}
+		and
+		ui.loginID = cs.loginID
+		and
+		cs.no = lt.no
+		<!-- group by lt.title -->
+	</select>
+
+
+	<update id="updateCns">
+		update tb_counsel
+		set
+		counsel = #{counsel},
+		regId =
+		#{regId}
+		where cnsNo = #{cnsNo}
+	</update>
+
+
+	<insert id="insertCns">
+<!-- 	 <selectKey keyProperty="reg_date" resultType="java.util.Date" order="AFTER">
+   		select reg_date FROM tb_counsel
+  	 </selectKey> -->
+		insert into
+		tb_counsel
+		(cnsNo,
+		no,
+		loginID,
+		counsel,
+		regId,
+		reg_date)
+		values
+		((SELECT IFNULL(MAX(cnsNo) + 1, 1) FROM
+		tb_counsel tc),
+		#{no},
+		#{loginID},
+		#{counsel},
+		#{regId},
+		#{reg_date})
+
+
+
+	</insert>
+
+
+
+
+	<!-- <select id="lectPeopleInfo" resultType="kr.happy.jobkorea.hla.model.LecListModel">
+		SELECT ui.loginID , ui.name , ui.user_email , uc.lec_yon FROM tb_userinfo
+		AS ui LEFT OUTER JOIN tb_request_list AS uc ON ui.loginID = uc.user_id
+		WHERE
+		uc.lec_seq = #{lec_seq};
+	</select>
+	<select id="classtListAct" resultType="kr.happy.jobkorea.hla.model.LecListModel">
+		SELECT lec.lec_seq , lec.lec_nm , lec.lec_gl , lec.lec_pl , lec.lec_contents
+		, ui.loginID , ui.name , ui.user_email , date_format(lec.lec_enr, '%Y.
+		%m.
+		%d') as lec_enr , date_format(lec.lec_st, '%Y. %m. %d') as lec_st ,
+		date_format(lec.lec_ed,
+		'%Y. %m. %d') as lec_ed FROM tb_lecture AS lec LEFT OUTER JOIN tb_userinfo
+		AS ui ON lec.user_id = ui.loginID ORDER BY lec.lec_seq; </select>
+	<insert id="applyForClass"> INSERT INTO tb_request_list ( lec_seq , user_id )
+		VALUES
+		( #{lec_seq} , #{user_id} )
+	</insert> -->
+</mapper>
