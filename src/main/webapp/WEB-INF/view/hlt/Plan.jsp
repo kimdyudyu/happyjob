@@ -302,7 +302,9 @@
 			 //$("#loginID").attr("readonly", true); // 작성자 수정불가 
 			 
 			  $("#startdate").val(object.startdate);
-			 $("#startdate").attr("readonly", true); // 처음 작성된 날짜 수정불가 
+	          $("#startdate").attr("readonly", true);
+	          $("#enddate").val(object.enddate);
+	          $("#enddate").attr("readonly", true);// 처음 작성된 날짜 수정불가 
 			 
 			 console.log("gggg"+object);
 			 console.log(object.title);
