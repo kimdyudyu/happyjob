@@ -32,20 +32,66 @@
    	    </where>
 	</select>
 	
-	<select id="getTestResult" resultType="kr.happy.jobkorea.hlt.model.LectureVO" >
-		SELECT  
-			lec.no as no
-			,lec.title as title
-			,tes.re as re
-			,tes.testname as testname
-			
-			FROM  tb_lecture  lec 
-	        left outer join tb_test tes on lec.no = tes.no
-	  <where>
-	      	<if test ="no!=null and no!=''">
-	    		lec.no = #{no}
-	    	</if>
-	    </where>
+	<select id="getTestResult" resultType="Map" >
+		select no , title , testname , status , targetCount from
+			(select lec.no
+				,lec.title
+				, test.testname 
+				, case 
+				  when test.re ='main' then '본시험'
+				  else '재시험'
+				  end as 'status'
+				 ,case
+				 when test.re = 'main' then targetCount
+				 else reCount
+				 end as 'targetCount'
+				from tb_lecture lec 
+				inner join tb_tcourse tcour on lec.no = tcour.no
+				inner join tb_test test on lec.no = test.no
+				left outer join (select no 
+				                       ,count(loginID) as targetCount
+				                      from tb_tcourse
+				                      group by no)aa on lec.no = aa.no
+				left outer join(
+					select no , count(loginID) as reCount from 
+				      (select 
+				         no
+				        ,re
+				        ,loginID
+				        ,sum(score) 
+				        FROM tb_testanswer group by no ,re ,loginID
+				        having sum(score) <![CDATA[<]]>60)aa group by no
+				      )zz on lec.no = zz.no
+				group by lec.no,lec.title, test.testname ,status)tt
+			  <where>
+			      	<if test ="no!=null and no!=''">
+			    		no = #{no}
+			    	</if>
+			    </where>
+			</select>
+	
+	
+	<select id="existMain" resultType="Map" >
+		SELECT 
+			no 
+			,re 
+			,seq 
+			,loginID
+			,answer 
+			,score
+		FROM tb_testanswer
+		WHERE no = #{no} and re ='main'
+	</select>
+	<select id="existRe" resultType="Map" >
+		SELECT 
+			no 
+			,re 
+			,seq 
+			,loginID
+			,answer 
+			,score
+		FROM tb_testanswer
+		WHERE no = #{no} and re ='re'
 	</select>
 	
 	
@@ -143,5 +189,213 @@
 			)
 	</insert>
 	
+	<select id="getSelectedTest" resultType="Map">
+		select no , title , re ,tt.testname ,enddate, re_nm , status , pcnt ,llcnt , NOcnt 
+		FROM
+			(select tt.no
+				      ,lt.title
+				      ,tt.re
+				      ,tt.testname
+			        ,lt.enddate
+				      ,case when tt.re = 'main' then '본시험'
+				            else '재시험'
+				       end as re_nm
+				      ,case
+				        when lt.enddate <![CDATA[>]]> now() then '진행중'
+				        when lt.enddate <![CDATA[<]]> now() then '완료'
+				      end as status
+				     ,case when tt.re = 'main' then ifnull(test.cnt,0)
+				            else ifnull(reatble.cnt,0)
+				       end  pcnt  
+				     ,ifnull(antable.llcnt,0) llcnt
+				     ,case when tt.re = 'main' then ifnull(test.cnt,0) - ifnull(antable.llcnt,0)
+				            else ifnull(reatble.cnt,0) - ifnull(antable.llcnt,0)
+				       end  NOcnt  
+				  from tb_lecture lt, tb_test tt
+				      left outer join (
+				                         select ll.no, countS as cnt
+				                           from (
+				                                  select tc.no, count(tc.loginID) as countS
+				                                    from tb_tcourse tc
+				                                   group by tc.no
+				                                ) ll
+				                      ) test on test.no = tt.no
+				      left outer join (
+				                        select no , count(loginID) as cnt from(
+                                   (select ta.no, ta.loginID, sum(ta.score) AS score
+                                  	from tb_testanswer ta
+                                  where ta.re = 'main'
+                                  group by ta.no, ta.loginID
+                                  having sum(ta.score)<![CDATA[<]]>60))uu  group by no
+				                
+				                      ) reatble on reatble.no = tt.no
+				      left outer join (
+				                  select no , re , count(loginID) llcnt from
+			                      (select ta.no, ta.re, loginID
+				                          from tb_testanswer ta
+				                         group by ta.no, ta.re , loginID)aa group by no , re 
+				                      ) antable on antable.no = tt.no and antable.re = tt.re                      
+				 where tt.no = lt.no ) tt
+		 		<where>
+					<if test="status!=null and (status eq 'ongoing')">
+						tt.enddate <![CDATA[>]]> now()
+					</if>
+					<if test="status!=null and (status eq 'finished')">
+						tt.enddate <![CDATA[<]]> now()
+					</if>
+					
+				 </where>
+				 LIMIT #{pageIndex}, #{pageSize}
+		  
+	</select>
+	
+	
+	<select id="getTotalCount" resultType="int">
+		select count(*) from 
+  (select no , title , re ,tt.testname ,enddate, re_nm , status , pcnt ,llcnt , NOcnt 
+		FROM
+			(select tt.no
+				      ,lt.title
+				      ,tt.re
+				      ,tt.testname
+			        ,lt.enddate
+				      ,case when tt.re = 'main' then '본시험'
+				            else '재시험'
+				       end as re_nm
+				      ,case
+				        when lt.enddate <![CDATA[>]]> now() then '진행중'
+				        when lt.enddate <![CDATA[<]]>now() then '완료'
+				      end as status
+				     ,case when tt.re = 'main' then ifnull(test.cnt,0)
+				            else ifnull(reatble.cnt,0)
+				       end  pcnt  
+				     ,ifnull(antable.llcnt,0) llcnt
+				     ,case when tt.re = 'main' then ifnull(test.cnt,0) - ifnull(antable.llcnt,0)
+				            else ifnull(reatble.cnt,0) - ifnull(antable.llcnt,0)
+				       end  NOcnt  
+				  from tb_lecture lt, tb_test tt
+				      left outer join (
+				                         select ll.no, countS as cnt
+				                           from (
+				                                  select tc.no, count(tc.loginID) as countS
+				                                    from tb_tcourse tc
+				                                   group by tc.no
+				                                ) ll
+				                      ) test on test.no = tt.no
+				      left outer join (
+				                        select no , count(loginID) as cnt from(
+                                   (select ta.no, ta.loginID, sum(ta.score) AS score
+                                  	from tb_testanswer ta
+                                  where ta.re = 'main'
+                                  group by ta.no, ta.loginID
+                                  having sum(ta.score)<![CDATA[<]]>60))uu  group by no
+				                
+				                      ) reatble on reatble.no = tt.no
+				      left outer join (
+				                  select no , re , count(loginID) llcnt from
+			                      (select ta.no, ta.re, loginID
+				                          from tb_testanswer ta
+				                         group by ta.no, ta.re , loginID)aa group by no , re 
+				                      ) antable on antable.no = tt.no and antable.re = tt.re                      
+				 where tt.no = lt.no ) tt)zz
+			 <where>
+					<if test="status!=null and (status eq 'ongoing')">
+						zz.enddate <![CDATA[>]]> now()
+					</if>
+					<if test="status!=null and (status eq 'finished')">
+						zz.enddate <![CDATA[<]]> now()
+					</if>
+			</where>
+	</select>
+	
+
+	
+	
+	<select id="getTestStudentCount" resultType="Map">
+		SELECT no, studentCount ,re ,TestDis FROM(
+			SELECT aa.no as no,count(aa.loginID) as studentCount , test.re as re,1 as TestDis 
+			FROM(
+			  SELECT no , loginID 
+			  FROM tb_tcourse 
+			  group by no , loginID)aa inner join tb_test test on aa.no = test.no
+			  where re ='main'
+			  group by no 
+			union all
+			SELECT 
+			  no  ,count(loginID) ,re , 2 as TestDis 
+			FROM
+			(SELECT
+			    no,re,loginID , sum(score)
+			  FROM tb_testanswer
+			  where re ='main'
+			  group by no , re , loginID
+			  having sum(score) <![CDATA[<]]> 60
+			  )tt
+			  group by no , re )uu
+			  where no in
+			  <foreach collection="list" item="item"  open="(" close=")" separator=",">
+            	#{item}
+            	</foreach>
+			  group by no , re , studentCount , testDis
+	</select>
+	
+	
+	<select id="getTookTestStudentCount" resultType="int">
+		select 
+			  no 
+			  ,re 
+			  ,testCount FROM
+			(SELECT no, re, count(loginID) as testCount FROM
+			(SELECT 
+			  no 
+			  ,re 
+			  ,loginID FROM tb_testanswer
+			  where re ='main' 
+			  group by no, re , loginID)tt
+			  group by no, re 
+			  union all
+			  (SELECT no, re, count(loginID) as testCount FROM
+			(SELECT 
+			  no 
+			  ,re 
+			  ,loginID FROM tb_testanswer
+			  where re ='re' 
+			  group by no, re , loginID)tt
+			  group by no, re ))tt
+			  where no in
+			  <foreach collection="list" item="item"  open="(" close=")" separator=",">
+            	#{item}
+            	</foreach>
+	</select>
+	
+	
+	<select id="getUserInfoD" resultType="Map">
+			select info.name 
+			  , sum(test.score) as score
+			  , test.re 
+			  , case when sum(test.score) > 60 then '합격'
+			  else '불합격'
+			  end as 'status'
+			  from tb_userinfo info 
+			  inner join tb_testanswer test on info.loginID = test.loginID
+			   where test.no =#{no}
+			  group by info.name , test.re
+ 
+	</select>
+	
+	<select id="getUserInfoCount" resultType="int">
+	select count(*) from 
+		(select info.name 
+			  , sum(test.score) as score
+			  , test.re 
+			  , case when sum(test.score) > 60 then '합격'
+			  else '불합격'
+			  end as 'status'
+			  from tb_userinfo info 
+			  inner join tb_testanswer test on info.loginID = test.loginID
+			   where test.no = #{no}
+			  group by info.name , test.re)aa
+					
+	</select>
 	
 </mapper>

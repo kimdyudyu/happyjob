@@ -84,7 +84,6 @@
 						<col width="100px">
 						<col width="100px">
 						<col width="100px">
-						<col width="100px">
 					</colgroup>
 					<thead>
 						<tr>
@@ -95,11 +94,20 @@
 							<th>보기2</th>
 							<th>보기3</th>
 							<th>보기4</th>
-							<th colspan="2">점수</th>
 						</tr>
 					</thead>
 					<tbody id="makingQuestionList">
-						
+						<template v-for="(item, index) in items" v-if="items.length">
+						<tr @click="testResultF(item)">
+							<td id={{item.seq}} class='questionList'>{{item.seq}}</td>
+							<td>{{item.problem}}</td>
+							<td>{{item.answer}}</td>
+							<td>{{item.answer1}}</td>
+							<td>{{item.answer2}}</td>
+							<td>{{item.answer3}}</td>
+							<td>{{item.answer4}}</td>
+						</tr>
+						</template>
 					</tbody>
 					<tfoot>
 						<tr>

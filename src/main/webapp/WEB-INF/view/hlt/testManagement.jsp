@@ -49,7 +49,7 @@ var testVue;
 var questionVue;
 var infoVue;
 var questBox;
-
+var existStatus;
 var testMain;
 var testRe;
 var endDate;
@@ -110,16 +110,16 @@ function init() {
 		methods : {
 			testResultF:function(item){
 				
-				
 				infoVue.no=item.no;
-				infoVue.re=item.re;
+				infoVue.re = (item.status=="본시험") ? "main":"re";
+				
 				questBox=[];
 				$('#saveQuestion').text("저장");
 				
 				$('#makingQuestionList').empty();
 				
 				var listV;
-				if(item.re == "main"){ //본시험 click
+				if(item.status == "본시험"){ //본시험 click
 					
 					alert("mainClick");
 					
@@ -147,7 +147,7 @@ function init() {
 							 +"<td>"+item.answer1+"</td><td>"+item.answer2+"</td>"
 							 +"<td>"+item.answer3+"</td><td>"+item.answer4+"</td></tr>"
 					});	
-					
+					//console.log(tag);
 					$('#makingQuestionList').append(tag);
 					$('#saveQuestion').text("수정");
 				}
@@ -186,6 +186,11 @@ function init() {
 	questBox=[];
 	testMain=[];
 	testRe=[];
+	existStatus={
+		main :"",
+		re : ""
+	}
+	
 	
 	$(document).on("click",".questionList",function(){
 		var seq =  $(this).attr('id');
@@ -217,6 +222,9 @@ function init() {
 	
 	
 	$('#saveQuestion').on('click',function(){
+		
+		console.log("infoVue :::  ",infoVue);
+	
 		//수정일 경우 기간이 지나면 수정 불가
 		//대상자수가 1명이라도 있으면 수정 불가
 		var status = $("#saveQuestion").text();
@@ -241,15 +249,23 @@ function init() {
 	    console.log("param:::: !! ",param);
 	    
 	    var resultCallbackQuestion = function(data){
-			if(data.result =="success") alert("등록 성공");
-			else if(data.result=="modifysuccess") alert("수정성공");
+			if(data.result =="success") {
+				alert("등록 성공");
+				getCourseList();
+			}
+			else if(data.result=="modifysuccess") {
+				alert("수정성공");
+				getCourseList();
+			}
+			
 			else{
 				alert("Error");
 			}
 	    	
 			gfCloseModal();
 		};		
-		
+		console.log("existStatus ????? :   ");
+		console.log(existStatus);
 		if(isEmpty(questBox)){
 			alert("문제가 등록되지 않았습니다");
 			return false;
@@ -259,42 +275,33 @@ function init() {
 			gfCloseModal();
 			return false;
 		}*/
-		else if(status=="수정"){
-			alert("1212");
-			$.ajax({
-	        	url: "/hlt/modifyQuesions.do",
-	        	type: 'POST',
-	        	data: param,
-	        	dataType : 'json',
-	        	contentType : "application/json; charset=UTF-8",
-	        	async: true,
-	        	success: function(returnData){
-	        		alert(JSON.stringify(returnData));
-	        	
-	        		resultCallbackQuestion(returnData);
-	        	},
-	    	});
 		
-		}else{//그냥 등록일 경우
-			
-	    	$.ajax({
-	        	url: "/hlt/saveQuesions.do",
+	
+		else if((status=="수정" && infoVue.re=="main" && !isEmpty(existStatus.main))){
+			alert("본시험 응시인원이 있습니다 ");
+			return false;
+		}else if((status=="수정" && infoVue.re=="re" && !isEmpty(existStatus.re))){
+			alert("재시험 응시인원이 있습니다 ");
+			return false;
+		}else{
+			var url = (status=="수정") ? 
+					"/hlt/modifyQuesions.do" 
+					:"/hlt/saveQuesions.do"
+			$.ajax({
+	        	url: url,
 	        	type: 'POST',
 	        	data: param,
 	        	dataType : 'json',
 	        	contentType : "application/json; charset=UTF-8",
 	        	async: true,
 	        	success: function(returnData){
-	        	
 	        		alert(JSON.stringify(returnData));
+	        	
 	        		resultCallbackQuestion(returnData);
 	        	},
 	    	});
-	
-		//callAjax("/hlt/saveQuesions.do","post","json", true, param, resultCallback);
 		
 		}
-		
 	});
 }
 
@@ -328,12 +335,13 @@ function getCourseList(currentPage){
 		
 		$("#pagingnavi2").empty().append(paginationHtml);
 		
-		//endDate가 필요 ! 
 		courseVueList.items=data.list;
+		
+		console.log("////////////////////////////////////////////////");
+		console.log(courseVueList.items);
  }
  
  function getTestResultList(item){
-		alert(item.no);
 		endDate = item.enddate;
 		var no = item.no;
 		var param = {
@@ -351,13 +359,9 @@ function getCourseList(currentPage){
  }
  
  function getTestListResult(data){
-	
-	 console.log("data.list : ", data.list);
-	 console.log("data.totalC : ", data.totalC);
-	 console.log("data.totalRe : ", data.totalRe);
-	 
-	 data.list[0].countStudent = data.totalC;
-	 data.list[1].countStudent = data.totalRe;
+	console.log("data : ",data)
+	 existStatus.main=data.resultMain;
+	 existStatus.re=data.resultRe;
 	 
 	 testMain = data.listDetail;
 	 testRe = data.listDetailR;

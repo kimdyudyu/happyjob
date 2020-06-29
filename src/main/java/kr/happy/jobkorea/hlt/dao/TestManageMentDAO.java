@@ -10,9 +10,9 @@ public interface TestManageMentDAO {
 
 	List<LectureVO> getCourseList(Map<String, Object> paramMap);
 
-	int totalCountCourse();
+	int totalCountCourse(Map<String, Object> paramMap);
 
-	List<LectureVO> getTestResult(Map<String, Object> paramMap);
+	List<Map<String, Object>> getTestResult(Map<String, Object> paramMap);
 
 	void saveQuestions(Map<String, Object> map);
 
@@ -29,5 +29,23 @@ public interface TestManageMentDAO {
 	void deleteQuestions(Map<String, Object> map);
 
 	void saveQuestionsM(Map<String, Object> map);
+
+	List<Map<String, Object>> getSelectedTest(Map<String, Object> paramMap);
+
+	List<Map<String, Object>> getTestStudentCount(Map<String, Object> list);
+
+	List<Map<String, Object>> getNoList(List<Map<String, Object>> list);
+
+	List<Map<String, Object>> getTookTestStudentCount(Map<String, Object> parmarr);
+
+	int getTotalCount(Map<String, Object> paramMap);
+
+	List<Map<String, Object>> getUserInfoD(Map<String, Object> paramMap);
+
+	int getUserInfoCount(Map<String, Object> paramMap);
+
+	List<Map<String, Object>> existMain(Map<String, Object> paramMap);
+
+	List<Map<String, Object>> existRe(Map<String, Object> paramMap);
 
 }

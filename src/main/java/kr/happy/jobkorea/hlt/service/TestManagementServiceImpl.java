@@ -29,12 +29,14 @@ public class TestManagementServiceImpl implements TestManagementService {
 	}
 
 	@Override
-	public int totalCountCourse() {
-		return testManageMentDAO.totalCountCourse();
+	public int totalCountCourse(Map<String, Object> paramMap) {
+		// TODO Auto-generated method stub
+		return testManageMentDAO.totalCountCourse(paramMap);
 	}
 
+
 	@Override
-	public List<LectureVO> getTestResult(Map<String, Object> paramMap) {
+	public List<Map<String, Object>> getTestResult(Map<String, Object> paramMap) {
 		return testManageMentDAO.getTestResult(paramMap);
 	}
 
@@ -48,6 +50,7 @@ public class TestManagementServiceImpl implements TestManagementService {
 		
 		while(itr.hasNext()){
 			Map<String, Object> map = itr.next();
+			//System.out.println("11111111111111111111111111111111111111111111111111111111111111111111");
 			logger.info(map);
 			testManageMentDAO.saveQuestions(map);
 
@@ -91,5 +94,52 @@ public class TestManagementServiceImpl implements TestManagementService {
 
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> getSelectedTest(Map<String, Object> paramMap) {
+		return testManageMentDAO.getSelectedTest(paramMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> getNoList(List<Map<String, Object>> list) {
+		return testManageMentDAO.getNoList(list);
+	}
+
+	@Override
+	public List<Map<String, Object>> getTestStudentCount(Map<String, Object> list) {
+		return testManageMentDAO.getTestStudentCount(list);
+	}
+
+	@Override
+	public int getTotalCount(Map<String, Object> paramMap) {
+		return testManageMentDAO.getTotalCount(paramMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> getTookTestStudentCount(Map<String, Object> parmarr) {
+		// TODO Auto-generated method stub
+		return testManageMentDAO.getTookTestStudentCount(parmarr);
+	}
+
+	@Override
+	public List<Map<String, Object>> getUserInfoD(Map<String, Object> paramMap) {
+		return testManageMentDAO.getUserInfoD(paramMap);
+	}
+
+	@Override
+	public int getUserInfoCount(Map<String, Object> paramMap) {
+		return testManageMentDAO.getUserInfoCount(paramMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> existMain(Map<String, Object> paramMap) {
+		return testManageMentDAO.existMain(paramMap);
+	}
+
+	@Override
+	public List<Map<String, Object>> existRe(Map<String, Object> paramMap) {
+		return testManageMentDAO.existRe(paramMap);
+	}
+
 
 }

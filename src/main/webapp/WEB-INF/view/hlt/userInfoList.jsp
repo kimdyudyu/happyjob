@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 
 <!-- 시험 모달팝업 -->
-<div id="testresultList" class="layerPop layerType2"
+<div id="uesrinfoVueD" class="layerPop layerType2"
 	style="width: 1100px; hight: 1000px;">
 
 	<div class="bootstrap-table">
@@ -23,19 +23,19 @@
 					</colgroup>
 					<thead>
 						<tr>
-							<th>과정명</th>
-							<th>시험명</th>
+							<th>학생명</th>
+							<th>점수</th>
 							<th>구분</th>
-							<th>대상자수</th>
+							<th>상태</th>
 						</tr>
 					</thead>
 					<tbody>
 						<template v-for="(item, index) in items" v-if="items.length">
-						<tr @click="testResultF(item)">
-							<td>{{item.title}}</td>
-							<td>{{item.testname}}</td>
+						<tr @click="userInfoF(item)">
+							<td>{{item.name}}</td>
+							<td>{{item.score}}</td>
+							<td>{{item.re}}</td>
 							<td>{{item.status}}</td>
-							<td>{{item.targetCount}}</td>
 
 						</tr>
 						</template>
@@ -43,6 +43,8 @@
 				</table>
 				
 			</div>
+			<div class="paging_area" id="userPaging"></div>
+					
 		</div>
 	</div>
 	<a href="" class="closePop"><span class="hidden">닫기</span></a>

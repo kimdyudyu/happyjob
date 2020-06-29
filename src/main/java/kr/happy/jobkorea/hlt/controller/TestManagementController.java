@@ -68,7 +68,7 @@ public class TestManagementController {
 		Map<String,Object> resultMap = new HashMap<>();
 		resultMap.put("list",list);
 		
-		int totalCount = testManagementService.totalCountCourse();
+		int totalCount = testManagementService.totalCountCourse(paramMap);
 		
 		resultMap.put("totalCountList", totalCount);
 		resultMap.put("pageSize", pageSize);
@@ -93,18 +93,21 @@ public class TestManagementController {
 		
 		paramMap.put("loginID", loginID);
 		
-		List<LectureVO> list = testManagementService.getTestResult(paramMap);
-		int totalC = testManagementService.getTotalC(paramMap);
-		int totalRe = testManagementService.getTotalRe(paramMap);
+		List<Map<String,Object>> list = testManagementService.getTestResult(paramMap);
+		List<Map<String,Object>> reusltMain = testManagementService.existMain(paramMap);
+		List<Map<String,Object>> resultRe = testManagementService.existRe(paramMap);
+		
 		List<QuestionsVO> listDetail = testManagementService.getTestResultDetail(paramMap);
 		List<QuestionsVO> listDetailR = testManagementService.getTestResultDetailRe(paramMap);
 		
 		Map<String,Object> resultMap = new HashMap<>();
 		resultMap.put("list",list);
-		resultMap.put("totalC",totalC);
-		resultMap.put("totalRe",totalRe);
 		resultMap.put("listDetail",listDetail);
 		resultMap.put("listDetailR",listDetailR);
+		resultMap.put("resultMain",(reusltMain.size()>0)?"Exist":"");
+		resultMap.put("resultRe",(resultRe.size()>0)?"Exist":"");
+		
+		logger.info(resultMap);
 		
 		return resultMap;
 	}
