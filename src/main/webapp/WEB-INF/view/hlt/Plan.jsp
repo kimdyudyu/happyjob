@@ -19,10 +19,10 @@
 	/* onload 이벤트  */
 	$(function(){
 		// 자유게시판 리스트 뿌리기 함수 
-		selectNoticeList();
+		selectplanList();
 		
 		// 버튼 이벤트 등록 (저장, 수정, 삭제, 모달창 닫기)
-		fButtonClickEvent();
+		//fButtonClickEvent();
 	});
 	
 	/* 버튼 이벤트 등록 - 저장, 수정, 삭제  */
@@ -42,7 +42,7 @@
 				//alert("삭제버튼 클릭!!!이벤트!!");		
 				break;
 			case 'btnClose' : gfCloseModal();  // 모달닫기 
-			selectNoticeList(); // 첫페이지 다시 로딩 
+			selectplanList(); // 첫페이지 다시 로딩 
 				break;
 			case 'btnUpdateNotice' : fUpdateNotice();  // 수정하기
 				break;
@@ -57,7 +57,7 @@
 	}
 	
 	/* 공지사항 리스트 불러오기  */
-	function selectNoticeList(currentPage){
+	function selectplanList(currentPage){
 		
 		currentPage = currentPage || 1;   // or		
 		
@@ -69,10 +69,10 @@
 		}
 		
 		var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
-			noticeListResult(data, currentPage); 
+			planListResult(data, currentPage); 
 		}
 		
-		callAjax("/system/noticeList.do","post","text", true, param, resultCallback);
+		callAjax("/supportD/planList.do","post","text", true, param, resultCallback);
 		
 	}
 	
@@ -87,17 +87,17 @@
 	
 
 	 /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
-	 function noticeListResult(data, currentPage){
+	 function planListResult(data, currentPage){
 		 
 		 // 일단 기존 목록을 삭제합니다. (변경시 재부팅 용)
-		 $("#noticeList").empty();
+		 $("#planList").empty();
 		 //alert("데이터!!! " + data);
 		 //console.log("data !!!! " +  data);
 		 
 		 //var $data = $( $(data).html() ); // data의 .html()통해서 html구문을 끌어온다.
 		 //alert("데이터 찍어보자!!!! " +  $data); // object
 		 
-		 $("#noticeList").append(data);
+		 $("#planList").append(data);
 	
 		 
 		 // 리스트의 총 개수를 추출합니다. 
@@ -110,7 +110,7 @@
 		 // 파라미터를 참조합시다. 
 	     var list = $("#tmpList").val();
 		 //var listnum = $("#tmpListNum").val();
-	     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSize,noticePageBlock, 'selectNoticeList',[list]);
+	     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSize,noticePageBlock, 'selectplanList',[list]);
 		 
 	     console.log("pagingnavi : " + pagingnavi);
 		 // 비운다음에 다시 append 
@@ -127,36 +127,40 @@
 	      currentPage = currentPage || 1;
 	         
 	         var title = $('#title');
-	         var from_date = $('#from_date');
-	         var to_date = $('#to_date');
+	         var name = $('#name');
+	         var subject = $('#subject');
+	         var startdate = $('#startdate');
+	         var enddate = $('#enddate');
 	         
 	         var param = {
 	                   title : title.val()
-	               ,   from_date : from_date.val()
-	               ,   to_date : to_date.val()
+	               ,   name : name.val()
+	               ,   subject : subject.val()
+	               ,   startdate : startdate.val()
+	               ,   enddate : enddate.val()
 	               ,   currentPage : currentPage
 	               ,   pageSize : noticePageSize
 	         }
 	         
 	         var resultCallback = function(data) {
-	        	 noticeListResult(data, currentPage); 
+	        	 planListResult(data, currentPage); 
 	         };
 	         
-	         callAjax("/system/noticeList.do", "post", "text", true, param, resultCallback);
+	         callAjax("/supportD/planList.do", "post", "text", true, param, resultCallback);
 	   } 
 	 
 	
 	 
 	 /* 공지사항 모달창(팝업) 실행  */
-	 function fNoticeModal(nt_no) {
-		 
+	 function fNoticeModal(no) {
 		 // 신규저장 하기 버튼 클릭시 (값이 null)
-		 if(nt_no == null || nt_no==""){
+		 if(title == null || title==""){
 			// Tranjection type 설정
 			//alert("넘을 찍어보자!!!!!!" + nt_no);
 			
 			$("#action").val("I"); // insert 
-			frealPopModal(nt_no); // 공지사항 초기화 
+			frealPopModal(no); // 공지사항 초기화 
+
 			
 			//모달 팝업 모양 오픈! (빈거) _ 있는 함수 쓰는거임. 
 			gfModalPop("#notice");
@@ -164,28 +168,33 @@
 		 }else{
 			// Tranjection type 설정
 			$("#action").val("U");  // update
-			fdetailModal(nt_no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
+			fdetailModal(no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
 		 }
 
 	 }
 	 
 	 
 	 /*공지사항 상세 조회*/
-	 function fdetailModal(nt_no){
+	 function fdetailModal(no){
 		 //alert("공지사항 상세 조회  ");
-		 
-		 var param = {nt_no : nt_no};
+		 gfModalPop("#notice");
+		 var param = {no : no};
 		 var resultCallback2 = function(data){
+			 console.log(data);
 			 fdetailResult(data);
+			 var test = data.result;
+			 console.log(test);
+			 $("#subject").text(data.result.subject);
 		 };
 		 
-		 callAjax("/system/detailNoticeList.do", "post", "json", true, param, resultCallback2);
+		 callAjax("/supportD/detailPlanList.do", "post", "json", true, param, resultCallback2);
 		 //alert("공지사항 상세 조회  22");
+		var log = $("#subject").val();
+		 console.log("값 : " + log);
 	 }
 	 
 	 /*  공지사항 상세 조회 -> 콜백함수   */
 	 function fdetailResult(data){
-
 		 //alert("공지사항 상세 조회  33");
 		 if(data.resultMsg == "SUCCESS"){
 			 //모달 띄우기 
@@ -205,14 +214,21 @@
 		 if(object == "" || object == null || object == undefined){
 			 var writer = $("#swriter").val();
 			 //var Now = new Date();
+			 console.log("gggg"+object);
+			 console.log(object.title);
+			 //$("#loginID").val(writer);
+			 //$("#loginID").attr("readonly", true);
 			 
-			 $("#loginID").val(writer);
-			 $("#loginID").attr("readonly", true);
-			 
-			 $("#write_date").val();
-			 
-			 $("#nt_title").val("");
-			 $("#nt_note").val("");
+			 $("#title").val();
+			 $("#subject").val();
+			 $("#name").val();
+			 $("#hp").val();
+			 $("#email").val();
+			 $("#room").val();
+			 $("#goal").val();
+			 $("#attendanceinfo").val();
+			 $("#plan").val();
+			
 			 
 			 $("#btnDeleteNotice").hide(); // 삭제버튼 숨기기
 			 $("#btnUpdateNotice").hide();
@@ -220,23 +236,34 @@
 			
 			 
 		 }else{
-			 
 			 //alert("숫자찍어보세 : " + object.wno);// 페이징 처리가 제대로 안되서 
-			 $("#loginID").val(object.loginID);
-			 $("#loginID").attr("readonly", true); // 작성자 수정불가 
+			 //$("#loginID").val(object.loginID);
+			 //$("#loginID").attr("readonly", true); // 작성자 수정불가 
 			 
-			 $("#write_date").val(object.write_date);
-			 $("#write_date").attr("readonly", true); // 처음 작성된 날짜 수정불가 
+			  $("#startdate").val(object.startdate);
+			 $("#startdate").attr("readonly", true); // 처음 작성된 날짜 수정불가 
 			 
-			 $("#nt_title").val(object.nt_title);
-			 $("#nt_note").val(object.nt_note);
+			 console.log("gggg"+object);
+			 console.log(object.title);
+			 //$("#loginID").val(writer);
+			 //$("#loginID").attr("readonly", true);
+			 
+			 $("#title").val(object.title);
+			 $("#subject").val(object.subject);
+			 $("#name").val(object.name);
+			 $("#hp").val(object.hp);
+			 $("#email").val(object.email);
+			 $("#room").val(object.room);
+			 $("#goal").val(object.goal);
+			 $("#attendanceinfo").val(object.attendanceinfo);
+			 $("#plan").val(object.plan);
 
 			 
-			 $("#nt_no").val(object.nt_no); // 중요한 num 값도 숨겨서 받아온다. 
+			 $("#no").val(object.no); // 중요한 num 값도 숨겨서 받아온다. 
 			 
-			 $("#btnDeleteNotice").show(); // 삭제버튼 보이기 
-			 $("#btnSaveNotice").hide();
-			 $("#btnUpdateNotice").css("display","");
+			 $("#btnDeleteplan").show(); // 삭제버튼 보이기 
+			 $("#btnSaveplan").hide();
+			 $("#btnUpdateplan").css("display","");
 			 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
 			 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
 			
@@ -271,7 +298,7 @@
 		 
 		 $("#action").val("I");  // insert
 		 
-		 callAjax("/system/noticeSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+		 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
 	 	// $("#myNotice").serialize() => 직렬화해서 name 값들을 그냥 넘김.
 	 }
 	 
@@ -297,13 +324,12 @@
 		 }
 		 
 		 gfCloseModal();	// 모달 닫기
-		 selectNoticeList(currentPage); // 목록조회 함수 다시 출력 
+		 selectplanList(currentPage); // 목록조회 함수 다시 출력 
 		 frealPopModal();// 입력폼 초기화
 	 }
 	 
 	 /* 공지사항 등록(수정) */
 	 function fUpdateNotice(){
-		 
 		 //alert("수정  함수 타는지!!!!!?? ");
 		 // validation 체크 
 		 if(!(fValidatePopup())){ return; }
@@ -314,7 +340,7 @@
 		 
 		 $("#action").val("U");  // update
 		 
-		 callAjax("/system/noticeSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+		 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
 	 	// $("#myQna").serialize() => 직렬화해서 name 값들을 그냥 넘김.
 	 }
 	 
@@ -326,11 +352,11 @@
 				 fSaveNoticeResult(data);
 			 }
 			 $("#action").val("D");  // delete
-			 callAjax("/system/noticeSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+			 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
 			 // num만 넘겨도되지만 그냥 귀찮으니깐...^^... 
 		 }else{
 			 gfCloseModal();	// 모달 닫기
-			 selectNoticeList(currentPage); // 목록조회 함수 다시 출력 
+			 selectplanList(currentPage); // 목록조회 함수 다시 출력 
 			 frealPopModal();// 입력폼 초기화
 		 }
 	 }
@@ -344,7 +370,7 @@
 <body>
 	<!-- ///////////////////// html 페이지  ///////////////////////////// -->
 
-<form id="myNotice" action="" method="">
+<form id="plist" action="" method="">
 	
 	<input type="hidden" id="currentPage" value="1">  <!-- 현재페이지는 처음에 항상 1로 설정하여 넘김  -->
 	<input type="hidden" id="tmpList" value=""> <!-- ★ 이거뭐임??? -->
@@ -376,74 +402,80 @@
 								<a href="#" class="btn_set refresh">새로고침</a>
 						</p>
 
-						<p class="conTitle">
-							<span>공지 사항 </span> <span class="fr"> 
-								<c:set var="nullNum" value=""></c:set>
-								<a class="btnType blue" href="javascript:fNoticeModal(${nullNum});" name="modal">
-								<span>신규등록</span></a>
-							</span>
-						</p>
-						
-					<!--검색창  -->
-					<table width="100%" cellpadding="5" cellspacing="0" border="1"
-                        align="left"
-                        style="border-collapse: collapse; border: 1px #50bcdf;">
-                        <tr style="border: 0px; border-color: blue">
-                           <td width="100" height="25" style="font-size: 120%">&nbsp;&nbsp;</td>
-
-                           <td width="50" height="25" style="font-size: 100%">제목</td>
-                           <td width="50" height="25" style="font-size: 100%">
-                            <input type="text" style="width: 120px" id="title" name="title"></td>                     
-                           <td width="50" height="25" style="font-size: 100%">작성일</td>
-                           <td width="50" height="25" style="font-size: 100%">
-                            <input type="date" style="width: 120px" id="from_date" name="from_date"></td>
-                           <td width="50" height="25" style="font-size: 100%">
-                            <input type="date" style="width: 120px" id="to_date" name="to_date"></td>
-                           <td width="110" height="60" style="font-size: 120%">
-                           <a href="" class="btnType blue" id="searchBtn" name="btn"><span>검  색</span></a></td> 
+					   <p class="conTitle">
+							<span class="fr" style="margin-right: 264px;"> 
+							<select>
+							   <option>제목</option>
+							   <option>강사명</option>
+							   <option>과목</option>
+							</select>
+                            <input type="text" name="searchName" style="height: 23.5px;">
+                            <a>작성일</a>                  
+                            <input type="date" style="width: 120px" id="startdate" name="startdate">
+                            <a>~</a>
+                            <input type="date" style="width: 120px" id="enddate" name="enddate">
+                            <a href="" class="btnType blue" id="searchBtn" name="btn"><span>검  색</span></a>
                             <!-- <input type="button" value="검  색  " id="searchBtn" name="btn" class="test_btn1" 
                               style="border-collapse: collapse; border: 0px gray solid; background-color: #50bcdf; width: 70px; color: white"/> -->
-                        </tr>
-                     </table>    
+                            
+						   </span>
+						</p> 
 						
+					<!--검색창  --> 
+					
+					<button></button>
+					 	
 						
 						<div class="divComGrpCodList">
 							<table class="col">
 								<caption>caption</caption>
 	
-		                            <colgroup>
-						                   <col width="50px">
-						                   <col width="200px">
-						                   <col width="60px">
-						                   <col width="50px">
-					                 </colgroup>
-								<thead>
-									<tr>
-							              <th scope="col">공지 번호</th>
-							              <th scope="col">공지 제목</th>
-							              <th scope="col">공지 날짜</th>
-							              <th scope="col">작성자</th>
-							              
-									</tr>
-								</thead>
-								<tbody id="noticeList"></tbody>
+		                            <caption>caption</caption>
+										            <colgroup>
+										                <col width="6%">
+										                <col width="15%">
+										                <col width="14%">
+										                <col width="10%">
+										                <col width="17.5%">
+										                <col width="17.5%">
+										                <col width="10%">
+										                <col width="10%">
+										            </colgroup>
+										
+										            <thead>
+										                <tr>
+										                    <th scope="col"></th>
+										                    <th scope="col">강의명</th>
+										                    <th scope="col">과목</th>
+										                    <th scope="col">강사명</th>
+										                    <th scope="col">강의시작일</th>
+										                    <th scope="col">강의종료일</th>
+										                    <th scope="col">신청인원</th>
+										                    <th scope="col">정원</th>
+										                </tr>
+										            </thead>
+										           
+										            
+								<tbody id="planList">
+									<jsp:include page="/WEB-INF/view/hlt/planlist.jsp"></jsp:include>
+								</tbody>
 							</table>
 							
 							<!-- 페이징 처리  -->
 							<div class="paging_area" id="pagingnavi">
 								<div class="paging">
-									<a class="first" href="javascript:selectNoticeList(1)">
+									<a class="first" href="javascript:selectplanList(1)">
 									<span class="hidden">맨앞</span></a>
-									<a class="pre" href="javascript:selectNoticeList(1)">
+									<a class="pre" href="javascript:selectplanList(1)">
 									<span class="hidden">이전</span></a>
 									<strong>1</strong> 
-									<a href="javascript:selectNoticeList(2)">2</a> 
-									<a href="javascript:selectNoticeList(3)">3</a> 
-									<a href="javascript:selectNoticeList(4)">4</a>
-									<a href="javascript:selectNoticeList(5)">5</a>
-									<a class="next" href="javascript:selectNoticeList(5)">
+									<a href="javascript:selectplanList(2)">2</a> 
+									<a href="javascript:selectplanList(3)">3</a> 
+									<a href="javascript:selectplanList(4)">4</a>
+									<a href="javascript:selectplanList(5)">5</a>
+									<a class="next" href="javascript:selectplanList(5)">
 									<span class="hidden">다음</span></a>
-									<a class="last" href="javascript:selectNoticeList(5)">
+									<a class="last" href="javascript:selectplanList(5)">
 									<span class="hidden">맨뒤</span></a>
 								</div>
 							</div>
@@ -463,11 +495,11 @@
 
 	<!-- 모달팝업 -->
 	<div id="notice" class="layerPop layerType2" style="width: 600px;">
-		<input type="hidden" id="nt_no" name="nt_no"> <!-- 수정시 필요한 num 값을 넘김  -->
+		<input type="hidden" id="no" name="no"> <!-- 수정시 필요한 num 값을 넘김  -->
 		
 		<dl>
 			<dt>
-				<strong>공지사항</strong>
+				<strong>강의계획서</strong>
 			</dt>
 			<dd class="content">
 				<!-- s : 여기에 내용입력 -->
@@ -476,20 +508,43 @@
 
 					<tbody>
 						<tr>
-							<th scope="row">작성자 <span class="font_red">*</span></th>
-							<td><input type="text" class="inputTxt p100" name="loginID" id="loginID" /></td>
-							<!-- <th scope="row">작성일<span class="font_red">*</span></th>
-							<td><input type="text" class="inputTxt p100" name="write_date" id="write_date" /></td> -->
+							<th scope="row">강의명</th>
+							<td><input type="text" class="inputTxt p100"name="title" id="title" /></td>
+							<th scope="row">과목</th>
+							<td>
+							<input type="text" class="inputTxt p100"name="subject" id="subject" />
+						    </td>
 						</tr>
 						<tr>
-							<th scope="row">제목 <span class="font_red">*</span></th>
-							<td colspan="3"><input type="text" class="inputTxt p100"
-								name="nt_title" id="nt_title" /></td>
+							<th scope="row">강사명</th>
+							<td><input type="text" class="inputTxt p100"name="name" id="name" readonly="readonly"  /></td>
+							<th scope="row">연락처</th>
+							<td><input type="text" class="inputTxt p100"name="hp" id="hp" readonly="readonly" /></td>
 						</tr>
 						<tr>
-							<th scope="row">내용</th>
+							<th scope="row">이메일</th>
+							<td><input type="text" class="inputTxt p100"name="email" id="email" readonly="readonly" /></td>
+							<th scope="row">강의실</th>
+							<td><input type="text" class="inputTxt p100"name="room" id="room" /></td>
+						</tr>
+						<tr>
+							<th scope="row">수업목표</th>
 							<td colspan="3">
-								<textarea class="inputTxt p100" name="nt_note" id="nt_note">
+								<textarea class="inputTxt p100" name="goal" id="goal">
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">출석정보</th>
+							<td colspan="3">
+								<textarea class="inputTxt p100" name="attendanceinfo" id="attendanceinfo">
+								</textarea>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">강의계획</th>
+							<td colspan="3">
+								<textarea class="inputTxt p100" name="plan" id="plan">
 								</textarea>
 							</td>
 						</tr>
@@ -501,7 +556,7 @@
 
 				<div class="btn_areaC mt30">
 					<a href="" class="btnType blue" id="btnSaveNotice" name="btn"><span>저장</span></a> 
-					<a href="" class="btnType blue" id="btnUpdateNotice" name="btn" style="display:none"><span>수정</span></a> 
+					<a href="" class="btnType blue" id="btnUpdateNotice" name="btn"><span>수정</span></a> 
 					<a href="" class="btnType blue" id="btnDeleteNotice" name="btn"><span>삭제</span></a> 
 					<a href=""	class="btnType gray"  id="btnClose" name="btn"><span>취소</span></a>
 				</div>

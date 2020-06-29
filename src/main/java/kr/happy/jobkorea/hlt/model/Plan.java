@@ -11,28 +11,19 @@ public class Plan {
 	private Date enddate;
 	private int pcnt;
 	private int anumber;
+	private String loginID;
+	private String email;
+	private String room;
+	private String goal;
+	private String attendanceinfo;
+	private String plan;
+	private String hp;
 	
-	
-	public Plan() {
-		
-	}
-	
-	
-	public Plan(String title, String name, String subject, Date startdate, Date enddate, int pcnt, int anumber) {
-		super();
-		this.title = title;
-		this.name = name;
-		this.subject = subject;
-		this.startdate = startdate;
-		this.enddate = enddate;
-		this.pcnt = pcnt;
-		this.anumber = anumber;
-	}
-
 
 	public String getTitle() {
 		return title;
 	}
+
 
 
 	public void setTitle(String title) {
@@ -40,9 +31,11 @@ public class Plan {
 	}
 
 
+
 	public String getName() {
 		return name;
 	}
+
 
 
 	public void setName(String name) {
@@ -50,9 +43,11 @@ public class Plan {
 	}
 
 
+
 	public String getSubject() {
 		return subject;
 	}
+
 
 
 	public void setSubject(String subject) {
@@ -60,9 +55,11 @@ public class Plan {
 	}
 
 
+
 	public Date getStartdate() {
 		return startdate;
 	}
+
 
 
 	public void setStartdate(Date startdate) {
@@ -70,9 +67,11 @@ public class Plan {
 	}
 
 
+
 	public Date getEnddate() {
 		return enddate;
 	}
+
 
 
 	public void setEnddate(Date enddate) {
@@ -80,9 +79,11 @@ public class Plan {
 	}
 
 
+
 	public int getPcnt() {
 		return pcnt;
 	}
+
 
 
 	public void setPcnt(int pcnt) {
@@ -90,9 +91,11 @@ public class Plan {
 	}
 
 
+
 	public int getAnumber() {
 		return anumber;
 	}
+
 
 
 	public void setAnumber(int anumber) {
@@ -100,10 +103,97 @@ public class Plan {
 	}
 
 
+
+	public String getLoginID() {
+		return loginID;
+	}
+
+
+
+	public void setLoginID(String loginID) {
+		this.loginID = loginID;
+	}
+
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+	public String getRoom() {
+		return room;
+	}
+
+
+
+	public void setRoom(String room) {
+		this.room = room;
+	}
+
+
+
+	public String getGoal() {
+		return goal;
+	}
+
+
+
+	public void setGoal(String goal) {
+		this.goal = goal;
+	}
+
+
+
+	public String getAttendanceinfo() {
+		return attendanceinfo;
+	}
+
+
+
+	public void setAttendanceinfo(String attendanceinfo) {
+		this.attendanceinfo = attendanceinfo;
+	}
+
+
+
+	public String getPlan() {
+		return plan;
+	}
+
+
+
+	public void setPlan(String plan) {
+		this.plan = plan;
+	}
+
+
+
+	public String getHp() {
+		return hp;
+	}
+
+
+
+	public void setHp(String hp) {
+		this.hp = hp;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "Plan [title=" + title + ", name=" + name + ", subject=" + subject + ", startdate=" + startdate
-				+ ", enddate=" + enddate + ", pcnt=" + pcnt + ", anumber=" + anumber + "]";
+				+ ", enddate=" + enddate + ", pcnt=" + pcnt + ", anumber=" + anumber + ", loginID=" + loginID
+				+ ", email=" + email + ", room=" + room + ", goal=" + goal + ", attendanceinfo=" + attendanceinfo
+				+ ", plan=" + plan + ", hp=" + hp + "]";
 	}
 	
 	
