@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import kr.happy.jobkorea.common.comnUtils.FileUtil;
 import kr.happy.jobkorea.common.comnUtils.FileUtilCho;
+import kr.happy.jobkorea.common.comnUtils.FileUtilModel;
 import kr.happy.jobkorea.hlt.dao.hlTeacherLmmDao;
 
 @Service
@@ -71,14 +73,25 @@ public class hlTeacherLmmServiceImpl implements hlTeacherLmmService{
 		
 		// 파일 저장
 		String itemFilePath = dirPath+ File.separator;
-		FileUtilCho fileUtil = new FileUtilCho(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
-		Map<String, Object> fileInfo = fileUtil.uploadFiles();
+		FileUtil fileUtil = new FileUtil(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
+		List<FileUtilModel> fileInfo = fileUtil.uploadFiles();
 		
 		// 데이터 저장
 		try {
-			param.put("fileInfo", fileInfo);
-			hlteacherLmmDao.insertLmm(param);
-			//cmntBbsDao.saveCmntBbsAtmtFil(paramMap);
+			for (FileUtilModel fileUtilModel : fileInfo) {
+
+				param.put("filename", fileUtilModel.getLgc_fil_nm());
+				// 논리파일명
+				param.put("filepath", fileUtilModel.getPsc_fil_nm());
+				// 물리파일명
+				param.put("filesize", fileUtilModel.getFil_siz());
+				// 사이즈
+				
+				hlteacherLmmDao.insertLmm(param);
+				
+				System.out.println(param);
+				
+			}
 		}catch(Exception e) {
 			// 파일 삭제
 			fileUtil.deleteFiles(fileInfo);

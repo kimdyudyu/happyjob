@@ -42,6 +42,6 @@
 	<select id="selectTmFile" resultType="Map">
 		SELECT no, nt_title, nt_note, filename, filepath, filesize, reg_date, loginID
 		FROM tb_task 
-		where no=#{no}
+		where no=#{no} and loginID=#{loginId}
 	</select>
 </mapper>

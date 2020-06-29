@@ -69,7 +69,7 @@ public class hlTeacherLmmController {
 	public Map<String,Object> IUDLmm(HttpServletRequest request, @RequestParam Map<String,Object> paramMap){
 		
 		logger.info("+ Start updateNotice");
-		logger.info("-- paramMap : "+paramMap);
+		logger.info("-- paramMap : "+ paramMap);
 		logger.info("-- request : " + request);
 		
 		

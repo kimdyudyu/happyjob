@@ -22,7 +22,13 @@
 	<!-- vue 적용.  -->
 
 	<tbody>
-		<template v-for="item in items">
+		<template v-if="items[0] == null">
+			<tr>
+				<td colspan="4"><strong>조회된 목록이 없습니다.</strong></td>
+			</tr>
+		</template>
+		
+		<template v-else v-for="item in items">
 			<tr @click="showDetail(item)">
 				<td class="hidden">{{ item.no }}</td>
 				<td>{{ item.nt_title }} 
