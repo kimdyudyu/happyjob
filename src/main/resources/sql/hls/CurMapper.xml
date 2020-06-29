@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hls.dao.CurDao">
+
+	<!-- 그룹코드 목록 조회 -->
+	<select id="curList" resultType="kr.happy.jobkorea.hls.model.CurriculumModel">
+		/*kr.happy.jobkorea.system.dao.ComnCodDao.listComnGrpCod*/
+		SELECT	@rownum:=@rownum+1 as row_num	
+			,	le.title
+			,	date_format(le.startdate, '%y-%m-%d') as startdate
+			,	le.enddate as enddate
+			,	le.loginID as loginID
+			,   le.no as no
+		FROM	tb_lecture le, tb_userinfo ui
+		WHERE (@rownum:=0)=0
+		  AND le.loginID = ui.loginID
+    		<if test="searchword != null and searchword !='' ">
+    		    <if test="searchkey == 'title' ">
+    		        AND le.title like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'wr' ">
+    		        AND ui.name like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'ct' ">
+    		        AND le.note like concat('%',#{searchword},'%')
+    		    </if>    		        		    
+   			</if>  	
+		ORDER BY no desc 
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="curTotalCnt" resultType="int">
+		select count(le.no) 
+		  from tb_lecture le, tb_userinfo ui
+		 WHERE le.loginID = ui.loginID
+   			<if test="startdate != null and startdate !='' ">
+   				AND le.reg_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
+   			</if>
+   			<if test="enddate != null and enddate !='' ">
+   				AND le.reg_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   			</if>
+    		<if test="searchword != null and searchword !='' ">
+    		    <if test="searchkey == 'title' ">
+    		        AND le.title like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'wr' ">
+    		        AND ui.name like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'ct' ">
+    		        AND le.note like concat('%',#{searchword},'%')
+    		    </if>    		        		    
+   			</if>  	 
+	</select>
+	
+	
+	<select id="detailCur" resultType="kr.happy.jobkorea.hls.model.CurriculumModel">
+		select le.title
+				, le.plan
+				, le.no
+				, le.loginID
+				, date_format(le.startdate, '%y-%m-%d') as startdate
+				, date_format(le.enddate, '%y-%m-%d') as enddate
+				, le.filename
+		from tb_lecture as le  
+		where le.no = #{no}
+	</select>
+	
+<!-- 	<insert id="insertcur" > -->
+<!-- 		<selectKey resultType="string" keyProperty="wno" order="BEFORE"> -->
+<!--             SELECT IFNULL(MAX(CAST(wno AS UNSIGNED)),0) + 1  FROM tb_cur  -->
+<!--         </selectKey>  -->
+        
+<!-- 		insert into tb_cur(wno, reg_date, loginID, title, note, upper_wno, cmnt_level) -->
+<!-- 		values( -->
+<!-- 			#{wno}, -->
+<!-- 			now(), -->
+<!-- 			#{answer_id}, -->
+<!-- 			#{answer_title}, -->
+<!-- 			#{answer_note}, -->
+<!-- 			#{select_upper_wno}, -->
+<!-- 			concat(CAST(#{select_cmnt_level} AS UNSIGNED) + 1) -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	<select id="selectNoticeOne" resultType="Map">
+		SELECT	
+			no  ,title
+  				,filename ,filepath ,filesize 
+  				,loginID
+		FROM	tb_lecture 
+		where no=#{no}
+	</select>
+</mapper>

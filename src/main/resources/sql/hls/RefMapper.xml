@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hls.dao.RefDao">
+
+	<!-- 그룹코드 목록 조회 -->
+	<select id="refList" resultType="kr.happy.jobkorea.hls.model.ReferenceModel">
+		
+		SELECT	@rownum:=@rownum+1 as row_num	
+			,	nt.nt_title as nt_title
+			,	date_format(nt.write_date, '%y-%m-%d') as write_date
+			,	nt.loginID as loginID
+			,	nt.nt_note as nt_note
+			,   nt.filename as filename
+			,	nt.filepath as filepath
+			,	nt.filesize as filesize 
+			,	nt.nt_no as nt_no
+		FROM	tb_notice nt , tb_userinfo ui
+		WHERE (@rownum:=0)=0
+		  AND nt.loginID = ui.loginID
+    		<if test="searchword != null and searchword !='' ">
+    		    <if test="searchkey == 'title' ">
+    		        AND nt.nt_title like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'wr' ">
+    		        AND ui.name like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'ct' ">
+    		        AND nt.nt_note like concat('%',#{searchword},'%')
+    		    </if>    		        		    
+   			</if>  	
+		ORDER BY nt_no desc 
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="refTotalCnt" resultType="int">
+		select count(nt.nt_no) 
+		  from tb_notice nt, tb_userinfo ui
+		 WHERE nt.loginID = ui.loginID
+    		<if test="searchword != null and searchword !='' ">
+    		    <if test="searchkey == 'title' ">
+    		        AND nt.nt_title like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'wr' ">
+    		        AND ui.name like concat('%',#{searchword},'%')
+    		    </if>
+    		    <if test="searchkey == 'ct' ">
+    		        AND nt.nt_note like concat('%',#{searchword},'%')
+    		    </if>    		        		    
+   			</if>  	 
+	</select>
+	
+	
+	<select id="detailRef" resultType="kr.happy.jobkorea.hls.model.ReferenceModel">
+		select le.title
+				, le.plan
+				, le.no
+				, le.loginID
+				, date_format(le.startdate, '%y-%m-%d') as startdate
+				, date_format(le.enddate, '%y-%m-%d') as enddate
+				, le.filename
+		from tb_lecture as le  
+		where le.no = #{no}
+	</select>
+	
+<!-- 	<insert id="insertcur" > -->
+<!-- 		<selectKey resultType="string" keyProperty="wno" order="BEFORE"> -->
+<!--             SELECT IFNULL(MAX(CAST(wno AS UNSIGNED)),0) + 1  FROM tb_cur  -->
+<!--         </selectKey>  -->
+        
+<!-- 		insert into tb_cur(wno, reg_date, loginID, title, note, upper_wno, cmnt_level) -->
+<!-- 		values( -->
+<!-- 			#{wno}, -->
+<!-- 			now(), -->
+<!-- 			#{answer_id}, -->
+<!-- 			#{answer_title}, -->
+<!-- 			#{answer_note}, -->
+<!-- 			#{select_upper_wno}, -->
+<!-- 			concat(CAST(#{select_cmnt_level} AS UNSIGNED) + 1) -->
+<!-- 		) -->
+<!-- 	</insert> -->
+	
+</mapper>
