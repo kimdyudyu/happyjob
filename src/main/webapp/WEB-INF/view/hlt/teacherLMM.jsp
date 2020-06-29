@@ -343,7 +343,7 @@
 				wrtLmmVue.loginId="${sessionScope.loginId}";
 				/* $(".ql-editor").css("height","300px"); */
 				$("#wnt_title").focus();
-				
+				$("#wfilename").val('');
 				gfModalPop("#writeLmm");
 			}
 			
