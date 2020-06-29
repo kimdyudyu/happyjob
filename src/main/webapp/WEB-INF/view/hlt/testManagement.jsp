@@ -121,14 +121,14 @@ function init() {
 				var listV;
 				if(item.status == "본시험"){ //본시험 click
 					
-					alert("mainClick");
+					//alert("mainClick");
 					
 					if(!isEmpty(testMain)){	
 						listV= testMain;
 					} 
 				}else{ //재시험 click
 					
-					alert("reClick");
+					//alert("reClick");
 					
 					if(!isEmpty(testRe)){
 						listV =	testRe;
@@ -270,12 +270,11 @@ function init() {
 			alert("문제가 등록되지 않았습니다");
 			return false;
 		}
-		/*else if(status=="수정" && (startCompare.getTime()>endCompare.getTime())){
+		else if(status=="수정" && (startCompare.getTime()>endCompare.getTime())){
 			alert("종료된 강의 입니다 ");
 			gfCloseModal();
 			return false;
-		}*/
-		
+		}		
 	
 		else if((status=="수정" && infoVue.re=="main" && !isEmpty(existStatus.main))){
 			alert("본시험 응시인원이 있습니다 ");

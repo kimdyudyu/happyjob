@@ -57,7 +57,7 @@ public class TestManagementController {
 		int pageIndex = (currentPage-1) * pageSize;
 		
 		String loginID = (String)session.getAttribute("loginId");
-		loginID = (loginID == null) ?  "1234" : loginID;
+		//loginID = (loginID == null) ?  "1234" : loginID;
 		
 		paramMap.put("loginID", loginID);
 		paramMap.put("pageIndex", pageIndex);
