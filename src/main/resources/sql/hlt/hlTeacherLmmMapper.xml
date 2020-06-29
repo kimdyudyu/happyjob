@@ -70,10 +70,10 @@
 		  nt_title = #{nt_title}
 		  ,nt_note = #{nt_note}
 		  ,write_date = DATE_FORMAT(NOW(),'%Y-%c-%d')   
-		  <if test="fileInfo.filename != null and fileInfo.filename != ''">
-			  ,filename = #{fileInfo.filename}
-			  ,filepath = #{fileInfo.filepath}
-			  ,filesize = #{fileInfo.filesize}		  
+		  <if test="filename != null and filename != ''">
+			  ,filename = #{filename}
+			  ,filepath = #{filepath}
+			  ,filesize = #{filesize}		  
 		  </if>
 		WHERE nt_no = #{nt_no}
 	</update>
