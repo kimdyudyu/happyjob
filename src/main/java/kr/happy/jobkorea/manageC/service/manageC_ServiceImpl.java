@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import kr.happy.jobkorea.common.comnUtils.FileUtil;
 import kr.happy.jobkorea.common.comnUtils.FileUtilCho;
+import kr.happy.jobkorea.common.comnUtils.FileUtilModel;
 import kr.happy.jobkorea.manageC.dao.manageC_Dao;
 
 @Service
@@ -69,13 +71,21 @@ public class manageC_ServiceImpl implements manageC_service {
 
 		// 파일 저장
 		String itemFilePath = dirPath + File.separator;
-		FileUtilCho fileUtil = new FileUtilCho(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
-		Map<String, Object> fileInfo = fileUtil.uploadFiles();
+		FileUtil fileUtil = new FileUtil(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
+		List<FileUtilModel> fileInfo = fileUtil.uploadFiles();
+		
 
 		// 데이터 저장
 		try {
-			param.put("fileInfo", fileInfo);
-			dao.insertLmm(param);
+			for (FileUtilModel fileUtilModel : fileInfo) {
+
+				param.put("filename", fileUtilModel.getLgc_fil_nm());
+				// 논리파일명
+				param.put("filepath", fileUtilModel.getPsc_fil_nm());
+				// 물리파일명
+				param.put("filesize", fileUtilModel.getFil_siz());
+				dao.insertLmm(param);
+			}
 		} catch (Exception e) {
 			fileUtil.deleteFiles(fileInfo);
 			throw e;
@@ -91,12 +101,19 @@ public class manageC_ServiceImpl implements manageC_service {
 		param.put("dirPath", dirPath);
 
 		String itemFilePath = dirPath + File.separator;
-		FileUtilCho fileUtil = new FileUtilCho(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
-		Map<String, Object> fileInfo = fileUtil.uploadFiles();
+		FileUtil fileUtil = new FileUtil(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
+		List<FileUtilModel> fileInfo = fileUtil.uploadFiles();
 
 		try {
-			param.put("fileInfo", fileInfo);
-			dao.updateLmm(param);
+			for (FileUtilModel fileUtilModel : fileInfo) {
+
+				param.put("filename", fileUtilModel.getLgc_fil_nm());
+				// 논리파일명
+				param.put("filepath", fileUtilModel.getPsc_fil_nm());
+				// 물리파일명
+				param.put("filesize", fileUtilModel.getFil_siz());
+				dao.updateLmm(param);
+			}
 		} catch (Exception e) {
 			fileUtil.deleteFiles(fileInfo);
 			throw e;

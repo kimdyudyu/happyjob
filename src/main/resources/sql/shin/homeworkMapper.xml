@@ -58,9 +58,9 @@
 		,#{loginId}
 		,#{nt_title}
 		,#{nt_note}
-		,#{fileInfo.filename}
-		,#{fileInfo.filepath}
-		,#{fileInfo.filesize}
+		,#{filename}
+		,#{filepath}
+		,#{filesize}
 		,DATE_FORMAT(NOW(),'%Y-%c-%d %T')
 		FROM tb_task
 		
@@ -73,9 +73,9 @@
 		   ,reg_date = DATE_FORMAT(NOW(),'%Y-%c-%d')
 		   
 		<if test="fileInfo.filename != null and fileInfo.filename != ''">
-			,filename = #{fileInfo.filename}
-			,filepath = #{fileInfo.filepath}
-			,filesize = #{fileInfo.filesize}
+			,filename = #{filename}
+			,filepath = #{filepath}
+			,filesize = #{filesize}
 		</if>
 		WHERE no = #{nt_no}
 	</update>
