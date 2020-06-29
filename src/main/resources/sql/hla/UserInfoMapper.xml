@@ -17,7 +17,10 @@
 		area,
 		birthday,
 		user_type,
-		sex
+		sex,
+		imgname,
+		imgpath,
+		imgsize
 	FROM tb_userinfo
 		<where>
 			<if test="(UserName != null) and (!UserName.equals(''))">			
@@ -37,6 +40,11 @@
 	      	LIMIT #{pageIndex}, #{pageSize}
 	</select>
 	
+	<select id="getDirectory" resultType="String">
+		select concat('F', date_format(now(),'%y%m%d')) AS dirPath
+	</select>
+	
+	
 	<select id="SelectAUserInfo" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
 	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectAnUserInfo*/
 	SELECT
@@ -51,7 +59,10 @@
 		area,
 		birthday,
 		user_type,
-		sex
+		sex,
+		imgname,
+		imgpath,
+		imgsize
 	FROM tb_userinfo
 		<where>
 			loginID = #{loginID}
@@ -122,7 +133,10 @@
 		tel2 = #{tel2},
 		tel3 = #{tel3},
 		area = #{area},
-		birthday = REPLACE( #{birthday} , '-', '')
+		birthday = REPLACE( #{birthday} , '-', ''),
+	  	imgname = #{fileName},
+  		imgpath = #{filePath},
+	  	imgsize = #{fileSize}
 	WHERE
 		loginID = #{loginID}
 	</update>

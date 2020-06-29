@@ -2,7 +2,16 @@
     pageEncoding="UTF-8"%>
 <link rel="stylesheet" type="text/css" href="${CTX_PATH}/css/khcss/gridsetting.css" />
 		<div id="divUserInfoVue" class="regcontainer">
-		   <div class="divpicture">{{ vformUseType }}</div>
+		   <div id="divpicture" class="divpicture">
+		   		<!-- <img  src="/images/mpm/사쿠라.jpg"> -->
+		   	<template v-if="vUploadImageData != null ">
+		   		{{ vUploadImageData }}
+		   		<img width="200" :src="vCurrentImage"><!--  :src="'/images/userImage/'+vUploadImageData" > -->
+	   		</template>
+	   		<template v-if="vformUseType != 'R'">
+		   		<input type="file" @change="ImageChange" ref="vUploadImageData">
+		   	</template>		   		
+		   </div>
 		   <div class="box2">아이디<br>
 		   		<template v-if="vformUseType === 'I'">
 			   		<input id="iuserId" style="height: 30px; width: 150px; font-size: 20px;" type="text" name="userId" v-model="vUserId">

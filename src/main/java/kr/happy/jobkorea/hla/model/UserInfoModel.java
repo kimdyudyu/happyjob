@@ -16,6 +16,10 @@ public class UserInfoModel {
 	private String 	area;
 	private String 	birthday;
 	
+	private	String	imgpath;
+	private	String	imgname;
+	private	String	imgsize;
+	
 	//////////// 이력서 관련  //////////////////
 	
 	private String	no;
@@ -156,6 +160,24 @@ public class UserInfoModel {
 	}
 	public void setTotalScore(int totalscore) {
 		this.totalscore = totalscore;
+	}
+	public String getImgname() {
+		return imgname;
+	}
+	public void setImgname(String imgname) {
+		this.imgname = imgname;
+	}
+	public String getImgpath() {
+		return imgpath;
+	}
+	public void setImgpath(String imgpath) {
+		this.imgpath = imgpath;
+	}
+	public String getImgsize() {
+		return imgsize;
+	}
+	public void setImgsize(String imgsize) {
+		this.imgsize = imgsize;
 	}
 
 

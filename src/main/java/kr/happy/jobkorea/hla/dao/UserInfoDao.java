@@ -13,6 +13,8 @@ public interface UserInfoDao {
 	
 	UserInfoModel 		SelectAUserInfo(Map<String, Object> paramMap);
 	
+	String 				getDirectory();
+	
 	List<UserInfoModel> SelectLectureList(Map<String, Object> paramMap);
 	int 				getSelectedCnt(Map<String, Object> paramMap);
 	int 				getLectureCnt(Map<String, Object> paramMap);

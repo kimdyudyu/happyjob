@@ -29,7 +29,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import kr.happy.jobkorea.common.comnUtils.FileUtilCho;
 import kr.happy.jobkorea.hla.model.UserInfoModel;
 import kr.happy.jobkorea.hla.service.UserInfoService;
 
@@ -125,12 +127,13 @@ public class UserInfoController {
 		String resultMsg = "가입되었습니다.";
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		logger.info(" registUser - paramMap : " + paramMap);
+		logger.info("registUser- request : " + request);
 		
 		String action = paramMap.get("action").toString();
 		
 		if(action.equals("U"))
-		{
-			userInfoService.UpdateUser(paramMap);
+		{			
+			userInfoService.UpdateUser(paramMap, request);
 			result = "SUCCESS";
 			resultMsg = "수정 되었습니다.";
 		}
@@ -279,9 +282,7 @@ public class UserInfoController {
 		{
 			result = false;
 			resultMsg = "중복되었습니다.";			
-		}
-		
-		
+		}		
 		resultMap.put("result", result);
 		resultMap.put("resultMsg", resultMsg);
 		
@@ -291,6 +292,42 @@ public class UserInfoController {
 		
 		return resultMap;
 	}
+	
+	/*@RequestMapping("/hSetUserImage.do")
+	@ResponseBody
+	public String SetUserImage(Model model, @RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception
+	{		
+		logger.info("+ Start " + className + ".SetUserImage");
+		
+		logger.info("SetUserImage - paramMap1 : " + paramMap);
+		
+		
+		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
+		
+		logger.info("SetUserImage - request : " + multipartHttpServletRequest);
+		
+		//String dirPath = UserInfoDao.getDirectory();
+		//param.put("dirPath", dirPath);
+		
+		// 파일 저장
+		//String itemFilePath = dirPath+ File.separator;
+		
+		// 파일 저장
+		//String itemFilePath = File.separator;
+		//FileUtilCho fileUtil = new FileUtilCho(multipartHttpServletRequest, "D:\\FileRepository", itemFilePath);
+		//Map<String, Object> fileInfo = fileUtil.uploadFiles();
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		
+
+		
+		//logger.info("SetUserImage - resultMap : " + resultMap);
+		//logger.info("+ End " + className + ".SetUserImage");
+		
+		//return resultMap;
+		return "hi";
+	}*/
 	
 	
 }

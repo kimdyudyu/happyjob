@@ -53,6 +53,9 @@ function hUserInfoVueInit() {
 	//alert("uinit");
 	hUserInfoVue = new Vue({
 		el: '#divUserInfoVue'
+		/*,component : {
+			'divpicture' : divpicture
+		}*/
 		,data: {
 				vformUseType		: 	'' //ì´ë ¥ì ìì X, ê·¸ë¥ ìì  ì¬ì©, íìê°ì íìì 3ê°ì§? Update, Read ,Create
 			,	vUserType			: 	'' // Cíì, D êµì¬, A ê´ë¦¬ì
@@ -71,8 +74,35 @@ function hUserInfoVueInit() {
 			,	vAddressCombo		:	[]
 			,	vDomainCombo		:	[]
 			,	vIdCheck			:   false
+			,	vUserInputImage		: 	''
+			,	vUserImageNm		: 	''
+			,	vCurrentImage		:	''
+			,	vUploadImageData	: 	null
 		}
 		,methods: {
+			ImageChange : function ( event )
+			{
+				this.vUploadImageData = event.target.files[0];
+				
+				this.vUserImageNm = this.vUploadImageData.name;
+				console.log("ImageChange : " + this.vUploadImageData.name);
+
+		        if(!this.vUploadImageData.type.match("image.*")) 
+		        {
+		            alert("확장자는 이미지 확장자만 가능합니다.");
+
+		            return;
+		        }
+		        else
+	        	{
+				    if (this.vUploadImageData && this.vUploadImageData.type.match(/^image\/(png|jpeg)$/)) 
+				    {
+				    	this.vCurrentImage = window.URL.createObjectURL(this.vUploadImageData);
+				    }
+	        	} 
+
+					    	
+			},
 			Init : function()
 			{				
 				this.vformUseType = '';
@@ -90,10 +120,12 @@ function hUserInfoVueInit() {
 				this.vUserEmail1 = '';
 				this.vUserEmail2 = '';
 				this.vIdCheck = false;
+				this.vUploadImageData = null;
+				this.vCurrentImage = null;
 				//this.vAddressCombo = [];
 				//this.vDomainCombo = [];
 				this.vformUseType = hUserInfoHeaderVue.vformUseType;
-			},
+			},		
 			registUser : function()
 			{				
 				var param = {
@@ -136,7 +168,16 @@ function hUserInfoVueInit() {
 				this.vUserType = usertype;
 			},
 			UpdateUser : function(){
-				var param = {
+				const formData = new FormData();
+				//if(this.vUploadImageData){
+				if(this.vUploadImageData)
+				{
+					formData.append('UserImage' , this.vUploadImageData);
+				}
+				//}
+				
+				alert(this.vUploadImageData);
+				/*var param = {
 					 	loginID 	: 	this.vUserId,
 					 	user_type 	: 	this.vUserType,
 					 	name 		: 	this.vUserName,
@@ -149,13 +190,29 @@ function hUserInfoVueInit() {
 					 	area 		: 	this.vUserAddress,
 					 	birthday 	: 	this.vUserBirthDate,
 					 	action		:	"U"
-					};
+				};*/
+				
+				formData.append('loginID', this.vUserId);
+				formData.append('user_type', this.vUserType);
+				formData.append('name', this.vUserName);
+				formData.append('password', this.vUserPw);
+				formData.append('email', this.vUserEmail1 + '@' + this.vUserEmail2);
+				formData.append('sex', this.vUserGender);
+				formData.append('tel1', this.vUserPhone1);
+				formData.append('tel2', this.vUserPhone2);
+				formData.append('tel3', this.vUserPhone3);
+				formData.append('area', this.vUserAddress);
+				formData.append('birthday', this.vUserBirthDate);
+				formData.append('action', "U");
+				
+				
 					var resultCallback = function(data) {
 						console.log("updateCallback");
 						alert(data.resultMsg);
 					};
 					console.log("UpdateUser");
-					callAjax("/hla/hCRUDUser.do", "post", "json", false, param, resultCallback);
+					callAjaxFileUploadSetFormData("/hla/hCRUDUser.do", "post", "json", true, formData, resultCallback);
+					//callAjax("/hla/hCRUDUser.do", "post", "json", false, param, resultCallback);
 			},
 			setComboBox : function(){
 				
@@ -210,6 +267,7 @@ function hUserInfoVueInit() {
 			},
 			setUserData : function(Data)
 			{
+				console.log("SetUserData");
 				console.log(Data);
 				if(Data.email)
 				{
@@ -228,6 +286,9 @@ function hUserInfoVueInit() {
 				this.vUserAddress = Data.area;
 				this.vUserJoinDate = Data.joinDate;
 				this.vUserBirthDate = Data.birthday;
+				this.vUploadImageData = String(Data.imgpath + Data.imgname);
+				this.vCurrentImage = String(Data.imgpath + Data.imgname);
+				alert(this.vUploadImageData);
 
 			},
 			hidCheck : function()
@@ -317,6 +378,7 @@ function hUserInfoVueInit() {
 				return true;
 			}			
 		}
+
 	
 	});
 
@@ -363,6 +425,8 @@ function CheckIdCallback(data)
 	}
 }
 
+
+
 function UserInfoFormInit()
 {
 	hUserInfoHeader();
@@ -372,6 +436,15 @@ function UserInfoFormInit()
 	hUserInfoVue.Init();
 	hUserInfoFooterVue.Init();
 	hUserInfoVue.setComboBox();
+
+}
+
+
+
+
+function checkImageType(fileName){
+		var pattern = /jpg$|gif$|png$|jpeg$/i;
+		return fileName.match(pattern);
 }
 
 function InitComboCallBack(data)
@@ -407,6 +480,7 @@ function RegistUser()
 function UpdateUser()
 {
 	console.log("Is Update?");
+	
 	hUserInfoVue.UpdateUser();
 	hUserInfoVue.Init();
 	$("#userInfoPopup").hide();
