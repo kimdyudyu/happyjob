@@ -18,7 +18,6 @@ public interface RegisterDao {
 	public RegisterModel selectFindIdRegister(String user_email);
 	
 	// 비밀번호 찾기
-
 	public RegisterModel selectFindPwdRegister(RegisterModel rgmParam);
 
 	// 아이디 체크

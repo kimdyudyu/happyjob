@@ -414,7 +414,7 @@
 		                            <colgroup>
 						                   <col width="50px">
 						                   <col width="200px">
-						                    <col width="60px">
+						                   <col width="60px">
 						                   <col width="50px">
 					                 </colgroup>
 								<thead>

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hla.dao.UserInfoDao">
+
+	<select id="SelectUserInfo" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectUserInfo*/
+	SELECT
+		name,
+		loginID,
+		password,
+		email,
+		tel1,
+		tel2,
+		tel3,
+		joinDate,
+		area,
+		birthday,
+		user_type,
+		sex
+	FROM tb_userinfo
+		<where>
+			<if test="(UserName != null) and (!UserName.equals(''))">			
+				AND name like concat('%',#{UserName},'%')
+			</if>
+			<if test="(user_type != null) and (!user_type.equals(''))">			
+				AND user_type = #{user_type}
+			</if>
+			<if test="(fromDt != null) and (!fromDt.equals(''))">
+				AND DATE_FORMAT(joinDate,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+			</if>    
+			<if test="(toDt != null) and (!toDt.equals(''))">
+				AND DATE_FORMAT(joinDate,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+			</if>
+		</where>
+			ORDER BY joinDate DESC
+	      	LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="SelectAUserInfo" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectAnUserInfo*/
+	SELECT
+		name,
+		loginID,
+		password,
+		email,
+		tel1,
+		tel2,
+		tel3,
+		joinDate,
+		area,
+		birthday,
+		user_type,
+		sex
+	FROM tb_userinfo
+		<where>
+			loginID = #{loginID}
+		</where>
+	</select>
+	
+	<select id="getSelectedCnt" resultType="int">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.getSelectedCnt*/
+	SELECT
+		COUNT(*) AS SelectedCnt
+	FROM tb_userinfo
+		<where>
+			<if test="(UserName != null) and (!UserName.equals(''))">			
+				AND name like concat('%',#{UserName},'%')
+			</if>
+			<if test="(fromDt != null) and (!fromDt.equals(''))">
+				AND DATE_FORMAT(joinDate,'%Y%m%d')  <![CDATA[ >= ]]>  REPLACE( #{fromDt} , '-', '')
+			</if>    
+			<if test="(toDt != null) and (!toDt.equals(''))">
+				AND DATE_FORMAT(joinDate,'%Y%m%d') <![CDATA[ <= ]]>  REPLACE( #{toDt}, '-', '')
+			</if>
+		</where>
+	</select>
+	
+	<insert id="RegistUser">
+		/*kr.happy.jobkorea.hla.dao.UserInfoDao.RegistUser*/		 
+		INSERT INTO tb_userinfo
+		(
+			loginID,
+			user_type,
+			name,
+			password,
+			email,
+			sex,
+			tel1,
+			tel2,
+			tel3,
+			joinDate,
+			area,
+			birthday
+		)
+		VALUES
+		(
+				#{loginID}
+			,	#{user_type}			
+			,	#{name}
+			,	#{password}
+			,	#{email}
+			,	#{sex}
+			,	#{tel1}
+			,	#{tel2}
+			,	#{tel3}
+			,	NOW()
+			,	#{area}
+			,	REPLACE( #{birthday} , '-', '')	
+		)		
+	</insert>
+	
+	<update id="UpdateUser">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.UpdateUser*/
+	UPDATE tb_userinfo
+	SET
+		name = #{name},
+		password = #{password},
+		email = #{email},
+		sex = #{sex},
+		tel1 = #{tel1},
+		tel2 = #{tel2},
+		tel3 = #{tel3},
+		area = #{area},
+		birthday = #{birthday}	
+	WHERE
+		loginID = #{loginID}
+	</update>
+	
+	<select id="SelectLectureList" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectLectureList*/
+	SELECT
+		tl.no,
+		tl.title,
+		tl.startdate,
+		tl.enddate,
+		(SELECT
+			COUNT(*)
+		 FROM tb_tcourse tc
+		 WHERE
+		 	tl.no = tc.no
+		) AS students
+		
+	FROM tb_lecture tl
+		<where>
+			<if test="(LectureName != null) and (!LectureName.equals(''))">			
+				AND tl.title like concat('%',#{LectureName},'%')
+			</if>
+		</where>
+			<!--ORDER BY joinDate DESC-->
+	      	LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="getLectureCnt" resultType="int">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.getLectureCnt*/
+	SELECT
+		COUNT(*) AS SelectedCnt		
+	FROM tb_lecture tl
+		<where>
+			<if test="(LectureName != null) and (!LectureName.equals(''))">			
+				AND tl.title like concat('%',#{LectureName},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="SelectStudentList" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.SelectStudentList*/
+	SELECT
+		ui.loginID,
+		ui.name,
+		ui.birthday
+	FROM tb_userinfo ui , tb_tcourse tc
+		<where>
+			ui.loginID = tc.loginID
+			AND tc.no = #{LectureNo}
+		</where>
+			ORDER BY joinDate DESC
+	      	LIMIT #{pageIndex}, #{pageSize}
+	</select>
+	
+	<select id="getStudentCnt" resultType="int">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.getStudentCnt*/
+	SELECT
+		COUNT(*) AS SelectedCnt
+	FROM tb_userinfo ui , tb_tcourse tc
+		<where>
+			ui.loginID = tc.loginID
+			AND tc.no = #{LectureNo}
+		</where>
+	</select>
+	
+	<select id="ResumeLectureList" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.ResumeLectureList*/
+	SELECT
+		tl.title,
+		ui.name AS teachername,
+		tl.startdate,
+		tl.enddate
+	FROM tb_lecture tl , tb_tcourse tc, tb_userinfo ui
+		<where>
+			tc.loginID = #{loginID}
+			AND
+			tc.no = tl.no
+     		AND
+       		ui.loginID = tl.loginID
+		</where>
+	</select>
+	
+	<select id="ResumeTestList" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.ResumeTestList*/
+	SELECT
+		lecture.title,
+		testinfo.testname,
+		SUM(testanswer.score) AS totalscore
+	FROM tb_testanswer testanswer, tb_test testinfo, tb_lecture lecture
+	WHERE
+		testanswer.loginID = #{loginID}
+		AND	
+		testinfo.no = lecture.no
+		AND
+		testinfo.no = testanswer.no
+		AND
+		testinfo.re = testanswer.re  
+		GROUP BY testinfo.testname;
+	</select>
+	
+	<select id="IDValidation" resultType="kr.happy.jobkorea.hla.model.UserInfoModel">
+	/*kr.happy.jobkorea.hla.dao.UserInfoDao.ResumeTestList*/
+	SELECT
+		loginID
+	FROM tb_userinfo
+	WHERE
+		loginID = #{loginID}
+	</select>
+
+
+</mapper>

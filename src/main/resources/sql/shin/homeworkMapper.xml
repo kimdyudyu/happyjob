@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.manageC.dao.manageC_Dao">
+
+	<select id="shList" resultType="Map">
+		SELECT ts.no as nt_no,
+			   ts.nt_title, 
+			   ts.loginID,
+			   ts.nt_note,
+			   DATE_FORMAT(ts.reg_date, '%Y-%m-%d') as reg_date,
+			   ts.filename,
+			   ts.filesize,
+			   ts.filepath,
+			   le.loginID AS teacherID
+		FROM tb_task ts
+		LEFT OUTER JOIN
+		tb_lecture le
+		ON
+		ts.no = le.no
+		WHERE ts.loginID = #{loginId}
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+
+	
+	<select id="totalCountRoom" resultType="int">
+		SELECT COUNT(ts.no)
+		FROM tb_task ts
+		LEFT OUTER JOIN
+		tb_lecture le
+		ON 
+		ts.no = le.no
+		WHERE ts.loginID = #{loginId}
+	</select>
+
+	<select id="getDirectory" resultType="String">
+		select concat('F',
+		date_format(now(),'%y%m%d')) AS dirPath
+	</select>
+
+	<insert id="insertLmm">
+		INSERT INTO tb_task
+		(
+		 no, 
+		 seq,
+		 loginID, 
+		 nt_title, 
+		 nt_note,
+		 filename, 
+		 filepath, 
+		 filesize,
+		 reg_date
+		 )
+		 
+		SELECT 
+		#{nt_no}
+		,ifnull(MAX(seq)+1,1)
+		,#{loginId}
+		,#{nt_title}
+		,#{nt_note}
+		,#{fileInfo.filename}
+		,#{fileInfo.filepath}
+		,#{fileInfo.filesize}
+		,DATE_FORMAT(NOW(),'%Y-%c-%d %T')
+		FROM tb_task
+		
+	</insert>
+
+	<update id="updateLmm">
+		UPDATE tb_task 
+		SET nt_title = #{nt_title}
+		   ,nt_note = #{nt_note}
+		   ,reg_date = DATE_FORMAT(NOW(),'%Y-%c-%d')
+		   
+		<if test="fileInfo.filename != null and fileInfo.filename != ''">
+			,filename = #{fileInfo.filename}
+			,filepath = #{fileInfo.filepath}
+			,filesize = #{fileInfo.filesize}
+		</if>
+		WHERE no = #{nt_no}
+	</update>
+
+	<select id="optionList" resultType="Map">
+		select no
+		from tb_tcourse
+		where loginID = #{loginId}
+	</select>
+</mapper>

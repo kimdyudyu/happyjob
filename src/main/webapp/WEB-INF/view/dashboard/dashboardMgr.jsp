@@ -76,71 +76,71 @@ function init() {
 	      date: String
 	     },
 	     mounted: function() {
-										      	var that = this;
-										      $(this.$el).datepicker({
-										          'autoclose':true,
-										          'minViewMode':0, //day까지 선택할수 있게 선언
-										          'maxViewMode':2,
-										          'format':'yyyy.mm.dd' //날짜 포맷
-										      }).on('changeDate', function(e){
-														       var year = e.date.getFullYear();
-														       var month = e.date.getMonth() + 1;
-														       if(month < 10) month = '0' + month;
-														       var day = e.date.getDate();
-														       that.$emit('change',String(year)+'.'+String(month)+'.'+day);
+					var that = this;
+				    $(this.$el).datepicker({
+									'autoclose':true,
+									'minViewMode':0, //day까지 선택할수 있게 선언
+									'maxViewMode':2,
+									'format':'yyyy.mm.dd' //날짜 포맷
+								     }).on('changeDate', function(e){
+											var year = e.date.getFullYear();
+											var month = e.date.getMonth() + 1;
+											if(month < 10) month = '0' + month;
+											var day = e.date.getDate();
+											that.$emit('change',String(year)+'.'+String(month)+'.'+day);
 										      });
-	     },
-	     updated: function(){
-	            $(this.$el).datepicker('update', this.date);
-	     }   
-	});		
-	//변수에 넣어서 가져다 쓰기 위해서 변수를 사용한거다.
-	svm = new Vue({
-	                           el: '#searcharea',  
-	                         data: {
-	                        	    stitle: ''
-	                               }
-	            });
-    
-	ved = new Vue({
-                                el: '#editvue',  
-                              data: {
-                            	      loginID_vue: ''
-                            	     ,write_date_vue: ''
-                            	     ,nt_title_vue: ''
-                            	     ,nt_note_vue: ''
-                                   }
-                 });
-	 
-	 //items = 넥사크로 dataSet과 같다.
-    vm = new Vue({
-		  el: '#vuetable',
-		  components: {
-		    'bootstrap-table': BootstrapTable
-		  },
-		  data: {
-		    items: [],
-		    options: {
-		    	//  paginated:"paginated"
-		    }			    
-		  },
-		  methods: {
-		      rowClicked(row) {
-		    	 //alert("1111111111111111");
-		        //this.$refs.tableData.toggleRowExpansion(row);
-		       // console.log("row : " + row);
-		        
-		        var str = "";
-                var tdArr = new Array();    // 배열 선언
-                    
-                // 현재 클릭된 Row(<tr>)
-                var tr = $(row);
-                var td = tr.children();
-                
-                td.each(function(i){
-                    tdArr.push(td.eq(i).text());
-                });
-                        
+								     },
+								     updated: function(){
+								            $(this.$el).datepicker('update', this.date);
+								     }   
+								});		
+								//변수에 넣어서 가져다 쓰기 위해서 변수를 사용한거다.
+								svm = new Vue({
+								                 el: '#searcharea',  
+								                 data: {
+								                 stitle: ''
+								              }
+								            });
+							    
+								ved = new Vue({
+							                   el: '#editvue',  
+							                   data: {
+							                   loginID_vue: ''
+							                   ,write_date_vue: ''
+							                   ,nt_title_vue: ''
+							                   ,nt_note_vue: ''
+							                   }
+							                 });
+								 
+			 //items = 넥사크로 dataSet과 같다.
+		    vm = new Vue({
+				  el: '#vuetable',
+				  components: {
+				    'bootstrap-table': BootstrapTable
+				  },
+				  data: {
+				    items: [],
+				    options: {
+				    	//  paginated:"paginated"
+				    }			    
+				  },
+				  methods: {
+				      rowClicked(row) {
+				    	 //alert("1111111111111111");
+				        //this.$refs.tableData.toggleRowExpansion(row);
+				       // console.log("row : " + row);
+				        
+				        var str = "";
+		                var tdArr = new Array();    // 배열 선언
+		                    
+		                // 현재 클릭된 Row(<tr>)
+		                var tr = $(row);
+		                var td = tr.children();
+		                
+		                td.each(function(i){
+		                    tdArr.push(td.eq(i).text());
+		                });
+		                        
                 fNoticeModal2(tdArr[1]);
                 //console.log("배열에 담긴 값 : "+tdArr[1]);
 		        
@@ -162,318 +162,318 @@ function init() {
     
 };
 
-/* 공지사항 리스트 불러오기  */
-function selectNoticeList(currentPage){
-	
-	currentPage = currentPage || 1;   // or		
-	
-    //alert("지금 현재 페이지를 찍어봅시다. " + currentPage);
-	
-	var param = {
-			currentPage : currentPage ,
-			pageSize : noticePageSize 
-	}
-	
-	var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
-		noticeListResult(data, currentPage); 
-	}
-	
-	callAjax("/supportD/noticeList.do","post","text", true, param, resultCallback);
-	
-}
-
-/* callAjax 공통 common.js 에서 퍼옴  -> 이렇게 생긴 함수입니다.  
-
-function fOnloadImg(param){
-	var resultCallback = function(data) {
-		fOnloadImgResult(data);
-	};
-	callAjax("/image/selectImgSize.do", "post", "json", false, param, resultCallback);
- } */
-
-
- /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
- function noticeListResult(data, currentPage){
-	 
-	 // 일단 기존 목록을 삭제합니다. (변경시 재부팅 용)
-	 $("#noticeList").empty();
-	 //alert("데이터!!! " + data);
-	 //console.log("data !!!! " +  data);
-	 
-	 //var $data = $( $(data).html() ); // data의 .html()통해서 html구문을 끌어온다.
-	 //alert("데이터 찍어보자!!!! " +  $data); // object
-	 
-	 $("#noticeList").append(data);
-
-	 
-	 // 리스트의 총 개수를 추출합니다. 
-	 //var totalCnt = $data.find("#totalCnt").text();
-	 var totalCnt = $("#totalCnt").val();  // qnaRealList() 에서보낸값 
-     //alert("totalCnt 찍어봄!! " + totalCnt);
-	 
-	 // * 페이지 네비게이션 생성 (만들어져있는 함수를 사용한다 -common.js)
-	 // function getPaginationHtml(currentPage, totalCount, pageRow, blockPage, pageFunc, exParams)
-	 // 파라미터를 참조합시다. 
-     var list = $("#tmpList").val();
-	 //var listnum = $("#tmpListNum").val();
-     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSize,noticePageBlock, 'selectNoticeList',[list]);
-	 
-     //console.log("pagingnavi : " + pagingnavi);
-	 // 비운다음에 다시 append 
-     $("#pagingnavi").empty().append(pagingnavi); // 위에꺼를 첨부합니다. 
-	 
-	 // 현재 페이지 설정 
-    $("#currentPage").val(currentPage);
- }
- 
- 
- /* 공지사항 모달창(팝업) 실행  */
- function fNoticeModal(nt_no) {
-	 
-	 // 신규저장 하기 버튼 클릭시 (값이 null)
-	 if(nt_no == null || nt_no==""){
-		// Tranjection type 설정
-		//alert("넘을 찍어보자!!!!!!" + nt_no);
+		/* 공지사항 리스트 불러오기  */
+		function selectNoticeList(currentPage){
+			
+			currentPage = currentPage || 1;   // or		
+			
+		    //alert("지금 현재 페이지를 찍어봅시다. " + currentPage);
+			
+			var param = {
+					currentPage : currentPage ,
+					pageSize : noticePageSize 
+			}
+			
+			var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
+				noticeListResult(data, currentPage); 
+			}
+			
+			callAjax("/supportD/noticeList.do","post","text", true, param, resultCallback);
+			
+		}
 		
-		$("#action").val("I"); // insert 
-		frealPopModal(nt_no); // 공지사항 초기화 
+		/* callAjax 공통 common.js 에서 퍼옴  -> 이렇게 생긴 함수입니다.  
 		
-		//모달 팝업 모양 오픈! (빈거) _ 있는 함수 쓰는거임. 
-		gfModalPop("#notice");
+		function fOnloadImg(param){
+			var resultCallback = function(data) {
+				fOnloadImgResult(data);
+			};
+			callAjax("/image/selectImgSize.do", "post", "json", false, param, resultCallback);
+		 } */
 		
-	 }else{
-		// Tranjection type 설정
-		$("#action").val("U");  // update
-		fdetailModal(nt_no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
-	 }
-
- }
- 
- 
- /*공지사항 상세 조회*/
- function fdetailModal(nt_no){
-	 //alert("공지사항 상세 조회  ");
-	 
-	 var param = {nt_no : nt_no};
-	 var resultCallback2 = function(data){
-		 fdetailResult(data);
-	 };
-	 
-	 callAjax("/supportD/detailNoticeList.do", "post", "json", true, param, resultCallback2);
-	 //alert("공지사항 상세 조회  22");
- }
- 
- /*  공지사항 상세 조회 -> 콜백함수   */
- function fdetailResult(data){
-
-	 //alert("공지사항 상세 조회  33");
-	 if(data.resultMsg == "SUCCESS"){
-		 //모달 띄우기 
-		 gfModalPop("#notice");
-		 
-		// 모달에 정보 넣기 
-		frealPopModal(data.result);
-	 
-	 }else{
-		 alert(data.resultMsg);
-	 }
- }
- 
- /* 팝업 _ 초기화 페이지(신규) 혹은 내용뿌리기  */
- function frealPopModal(object){
-	 
-	 if(object == "" || object == null || object == undefined){
-		 var writer = $("#swriter").val();
-		 //var Now = new Date();
-		 
-		 $("#loginID").val(writer);
-		 $("#loginID").attr("readonly", true);
-		 
-		 $("#write_date").val();
-		 
-		 $("#nt_title").val("");
-		 $("#nt_note").val("");
-		 
-		 $("#btnDeleteNotice").hide(); // 삭제버튼 숨기기
-		 $("#btnUpdateNotice").hide();
-		 $("#btnSaveNotice").show();
 		
-		 
-	 }else{
-		 
-		 //alert("숫자찍어보세 : " + object.wno);// 페이징 처리가 제대로 안되서 
-		 $("#loginID").val(object.loginID);
-		 $("#loginID").attr("readonly", true); // 작성자 수정불가 
-		 
-		 $("#write_date").val(object.write_date);
-		 $("#write_date").attr("readonly", true); // 처음 작성된 날짜 수정불가 
-		 
-		 $("#nt_title").val(object.nt_title);
-		 $("#nt_title").attr("readonly", true);
-		 
-		 $("#nt_note").val(object.nt_note);
-		 $("#nt_note").attr("readonly", true);
-
-		 
-		 $("#nt_no").val(object.nt_no); // 중요한 num 값도 숨겨서 받아온다. 
-		 
-		 $("#btnDeleteNotice").show(); // 삭제버튼 보이기 
-		 $("#btnSaveNotice").hide();
-		 $("#btnUpdateNotice").css("display","");
-		 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
-		 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
+		 /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
+		 function noticeListResult(data, currentPage){
+			 
+			 // 일단 기존 목록을 삭제합니다. (변경시 재부팅 용)
+			 $("#noticeList").empty();
+			 //alert("데이터!!! " + data);
+			 //console.log("data !!!! " +  data);
+			 
+			 //var $data = $( $(data).html() ); // data의 .html()통해서 html구문을 끌어온다.
+			 //alert("데이터 찍어보자!!!! " +  $data); // object
+			 
+			 $("#noticeList").append(data);
 		
+			 
+			 // 리스트의 총 개수를 추출합니다. 
+			 //var totalCnt = $data.find("#totalCnt").text();
+			 var totalCnt = $("#totalCnt").val();  // qnaRealList() 에서보낸값 
+		     //alert("totalCnt 찍어봄!! " + totalCnt);
+			 
+			 // * 페이지 네비게이션 생성 (만들어져있는 함수를 사용한다 -common.js)
+			 // function getPaginationHtml(currentPage, totalCount, pageRow, blockPage, pageFunc, exParams)
+			 // 파라미터를 참조합시다. 
+		     var list = $("#tmpList").val();
+			 //var listnum = $("#tmpListNum").val();
+		     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSize,noticePageBlock, 'selectNoticeList',[list]);
+			 
+		     //console.log("pagingnavi : " + pagingnavi);
+			 // 비운다음에 다시 append 
+		     $("#pagingnavi").empty().append(pagingnavi); // 위에꺼를 첨부합니다. 
+			 
+			 // 현재 페이지 설정 
+		    $("#currentPage").val(currentPage);
+		 }
 		 
-	 }
- }
- 
- /* 공지사항 리스트 불러오기  */
- function selectNoticeListvue(currentPage){
- 	
-	currentPage = currentPage || 1;   // or		
-	//svm.stitle = "55555555555";
-	//console.log("selectNoticeListvue currentPage : " + currentPage);
- 	var stitle = $("#stitle").val();
- 	
- 	var param = {
- 			currentPage : currentPage ,
- 			pageSize : noticePageSizevue,
- 			title : svm.stitle
- 	}
- 	
- 	var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
- 		gridinit(data,currentPage); 
- 	}
- 	
- 	callAjax("/supportD/noticeListvue.do","post","json", true, param, resultCallback);
- 	
- }
- 
-
- /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
- function gridinit(data,currentPage){
-	 //console.log("noticeListResult2 data : " + JSON.stringify(noticeList));
-	 //console.log("noticeListResult2 noticeList : " + JSON.stringify(data.noticeList));
-	 
-	 vm.items=[];
-	 vm.items=data.noticeList;
-	 
-	 console.log(data.totalCnt + " : " + currentPage);
-	 
-	// 리스트의 총 개수를 추출합니다. 
-	 //var totalCnt = $data.find("#totalCnt").text();
-	 var totalCnt = data.totalCnt;  // qnaRealList() 에서보낸값 
-     //alert("totalCnt 찍어봄!! " + totalCnt);
-	 
-	 // * 페이지 네비게이션 생성 (만들어져있는 함수를 사용한다 -common.js)
-	 // function getPaginationHtml(currentPage, totalCount, pageRow, blockPage, pageFunc, exParams)
-	 // 파라미터를 참조합시다. 
-     //var list = $("#tmpList").val();
-	 var listnum = $("#tmpListNum").val();
-     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSizevue,noticePageBlock, 'selectNoticeListvue');
-	 
-     //console.log("pagingnavi : " + pagingnavi);
-	 // 비운다음에 다시 append 
-     $("#pagingnavi2").empty().append(pagingnavi); // 위에꺼를 첨부합니다. 
-	 
-	 // 현재 페이지 설정 
-    $("#currentPagevue").val(currentPage);
- }
- 
- 
- /* 공지사항 모달창(팝업) 실행  */
- function fNoticeModal2(nt_no) {
-	 
-	 console.log("fNoticeModal2 nt_no : " + nt_no);
-	 
-	 // 신규저장 하기 버튼 클릭시 (값이 null)
-	 if(nt_no == null || nt_no==""){
-		// Tranjection type 설정
-		//alert("넘을 찍어보자!!!!!!" + nt_no);
+		 
+		 /* 공지사항 모달창(팝업) 실행  */
+		 function fNoticeModal(nt_no) {
+			 
+			 // 신규저장 하기 버튼 클릭시 (값이 null)
+			 if(nt_no == null || nt_no==""){
+				// Tranjection type 설정
+				//alert("넘을 찍어보자!!!!!!" + nt_no);
+				
+				$("#action").val("I"); // insert 
+				frealPopModal(nt_no); // 공지사항 초기화 
+				
+				//모달 팝업 모양 오픈! (빈거) _ 있는 함수 쓰는거임. 
+				gfModalPop("#notice");
+				
+			 }else{
+				// Tranjection type 설정
+				$("#action").val("U");  // update
+				fdetailModal(nt_no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
+			 }
 		
-		$("#action").val("I"); // insert 
-		frealPopModal2(); // 공지사항 초기화 
+		 }
+		 
+		 
+		 /*공지사항 상세 조회*/
+		 function fdetailModal(nt_no){
+			 //alert("공지사항 상세 조회  ");
+			 
+			 var param = {nt_no : nt_no};
+			 var resultCallback2 = function(data){
+				 fdetailResult(data);
+			 };
+			 
+			 callAjax("/supportD/detailNoticeList.do", "post", "json", true, param, resultCallback2);
+			 //alert("공지사항 상세 조회  22");
+		 }
+		 
+		 /*  공지사항 상세 조회 -> 콜백함수   */
+		 function fdetailResult(data){
 		
-		//모달 팝업 모양 오픈! (빈거) _ 있는 함수 쓰는거임. 
-		gfModalPop("#noticevue");
+			 //alert("공지사항 상세 조회  33");
+			 if(data.resultMsg == "SUCCESS"){
+				 //모달 띄우기 
+				 gfModalPop("#notice");
+				 
+				// 모달에 정보 넣기 
+				frealPopModal(data.result);
+			 
+			 }else{
+				 alert(data.resultMsg);
+			 }
+		 }
+		 
+		 /* 팝업 _ 초기화 페이지(신규) 혹은 내용뿌리기  */
+		 function frealPopModal(object){
+			 
+			 if(object == "" || object == null || object == undefined){
+				 var writer = $("#swriter").val();
+				 //var Now = new Date();
+				 
+				 $("#loginID").val(writer);
+				 $("#loginID").attr("readonly", true);
+				 
+				 $("#write_date").val();
+				 
+				 $("#nt_title").val("");
+				 $("#nt_note").val("");
+				 
+				 $("#btnDeleteNotice").hide(); // 삭제버튼 숨기기
+				 $("#btnUpdateNotice").hide();
+				 $("#btnSaveNotice").show();
+				
+				 
+			 }else{
+				 
+				 //alert("숫자찍어보세 : " + object.wno);// 페이징 처리가 제대로 안되서 
+				 $("#loginID").val(object.loginID);
+				 $("#loginID").attr("readonly", true); // 작성자 수정불가 
+				 
+				 $("#write_date").val(object.write_date);
+				 $("#write_date").attr("readonly", true); // 처음 작성된 날짜 수정불가 
+				 
+				 $("#nt_title").val(object.nt_title);
+				 $("#nt_title").attr("readonly", true);
+				 
+				 $("#nt_note").val(object.nt_note);
+				 $("#nt_note").attr("readonly", true);
 		
-	 }else{
-		// Tranjection type 설정
-		$("#action").val("U");  // update
-		fdetailModal2(nt_no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
-	 }
-
- }
- 
- 
- /*공지사항 상세 조회*/
- function fdetailModal2(nt_no){
-	 //alert("공지사항 상세 조회  ");
-	 
-	 var param = {nt_no : nt_no};
-	 var resultCallback2 = function(data){
-		 fdetailResult2(data);
-	 };
-	 
-	 callAjax("/supportD/detailNoticeList.do", "post", "json", true, param, resultCallback2);
-	 //alert("공지사항 상세 조회  22");
- }
- 
- /*  공지사항 상세 조회 -> 콜백함수   */
- function fdetailResult2(data){
-
-	 //alert("공지사항 상세 조회  33");
-	 if(data.resultMsg == "SUCCESS"){
-		 //모달 띄우기 
-		 gfModalPop("#noticevue");
+				 
+				 $("#nt_no").val(object.nt_no); // 중요한 num 값도 숨겨서 받아온다. 
+				 
+				 $("#btnDeleteNotice").show(); // 삭제버튼 보이기 
+				 $("#btnSaveNotice").hide();
+				 $("#btnUpdateNotice").css("display","");
+				 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
+				 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
+				
+				 
+			 }
+		 }
 		 
-		// 모달에 정보 넣기 
-		frealPopModal2(data.result);
-	 
-	 }else{
-		 alert(data.resultMsg);
-	 }
- }
-	 
-
- /* 팝업 _ 초기화 페이지(신규) 혹은 내용뿌리기  */
- function frealPopModal2(object){
-	 
-	 if(object == "" || object == null || object == undefined){
-		 var writer = $("#swriter_vue").val();
-		 //var Now = new Date();
-		 // ****************************
+		 /* 공지사항 리스트 불러오기  */
+		 function selectNoticeListvue(currentPage){
+		 	
+			currentPage = currentPage || 1;   // or		
+			svm.stitle = "55555555555";
+			//console.log("selectNoticeListvue currentPage : " + currentPage);
+		 	var stitle = $("#stitle").val();
+		 	
+		 	var param = {
+		 			currentPage : currentPage ,
+		 			pageSize : noticePageSizevue,
+		 			title : svm.stitle
+		 	}
+		 	
+		 	var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
+		 		gridinit(data,currentPage); 
+		 	}
+		 	
+		 	callAjax("/supportD/noticeListvue.do","post","json", true, param, resultCallback);
+		 	
+		 }
 		 
-		 ved.loginID_vue = writer;
-		 ved.write_date_vue = writer;
-		 ved.nt_title_vue = "";
-		 ved.nt_note_vue = "";
-		 
-	 }else{
-		 console.log("frealPopModal2 object.loginID : " + object.loginID);
-		 
-		 ved.loginID_vue = object.loginID;
-		 
-		 console.log("frealPopModal2 ved.loginID_vue : " + ved.loginID_vue);
-		 $("#loginID_vue").attr("readonly", true); // 작성자 수정불가 
-		 ved.write_date_vue = object.write_date;
-		 $("#write_date").attr("readonly", true); // 처음 작성된 날짜 수정불가 
-		 ved.nt_title_vue = object.nt_title;
-		 $("#nt_title_vue").attr("readonly", true);
-		 ved.nt_note_vue = object.nt_note;
-		 $("#nt_note_vue").attr("readonly", true);
-		 
-		 $("#nt_no_vue").val(object.nt_no); // 중요한 num 값도 숨겨서 받아온다. 
-		 
-		 //$("#btnDeleteNotice").show(); // 삭제버튼 보이기 
-		 //$("#btnSaveNotice").hide();
-		 //$("#btnUpdateNotice").css("display","");
-		 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
-		 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
 		
+		 /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
+		 function gridinit(data,currentPage){
+			 //console.log("noticeListResult2 data : " + JSON.stringify(noticeList));
+			 //console.log("noticeListResult2 noticeList : " + JSON.stringify(data.noticeList));
+			 
+			 vm.items=[];
+			 vm.items=data.noticeList;
 		 
-	 }
- }
+			 console.log(data.totalCnt + " : " + currentPage);
+			 
+			// 리스트의 총 개수를 추출합니다. 
+			 //var totalCnt = $data.find("#totalCnt").text();
+			 var totalCnt = data.totalCnt;  // qnaRealList() 에서보낸값 
+		     //alert("totalCnt 찍어봄!! " + totalCnt);
+			 
+			 // * 페이지 네비게이션 생성 (만들어져있는 함수를 사용한다 -common.js)
+			 // function getPaginationHtml(currentPage, totalCount, pageRow, blockPage, pageFunc, exParams)
+			 // 파라미터를 참조합시다. 
+		     //var list = $("#tmpList").val();
+			 var listnum = $("#tmpListNum").val();
+		     var pagingnavi = getPaginationHtml(currentPage, totalCnt, noticePageSizevue,noticePageBlock, 'selectNoticeListvue');
+			 
+		     //console.log("pagingnavi : " + pagingnavi);
+			 // 비운다음에 다시 append 
+		     $("#pagingnavi2").empty().append(pagingnavi); // 위에꺼를 첨부합니다. 
+			 
+			 // 현재 페이지 설정 
+		    $("#currentPagevue").val(currentPage);
+		 }
+		 
+		 
+		 /* 공지사항 모달창(팝업) 실행  */
+		 function fNoticeModal2(nt_no) {
+			 
+			 console.log("fNoticeModal2 nt_no : " + nt_no);
+			 
+			 // 신규저장 하기 버튼 클릭시 (값이 null)
+			 if(nt_no == null || nt_no==""){
+				// Tranjection type 설정
+				//alert("넘을 찍어보자!!!!!!" + nt_no);
+				
+				$("#action").val("I"); // insert 
+				frealPopModal2(); // 공지사항 초기화 
+				
+				//모달 팝업 모양 오픈! (빈거) _ 있는 함수 쓰는거임. 
+				gfModalPop("#noticevue");
+				
+			 }else{
+				// Tranjection type 설정
+				$("#action").val("U");  // update
+				fdetailModal2(nt_no); //번호로 -> 공지사항 상세 조회 팝업 띄우기
+			 }
+		
+		 }
+		 
+		 
+		 /*공지사항 상세 조회*/
+		 function fdetailModal2(nt_no){
+			 //alert("공지사항 상세 조회  ");
+			 
+			 var param = {nt_no : nt_no};
+			 var resultCallback2 = function(data){
+				 fdetailResult2(data);
+			 };
+			 
+			 callAjax("/supportD/detailNoticeList.do", "post", "json", true, param, resultCallback2);
+			 //alert("공지사항 상세 조회  22");
+		 }
+		 
+		 /*  공지사항 상세 조회 -> 콜백함수   */
+		 function fdetailResult2(data){
+		
+			 //alert("공지사항 상세 조회  33");
+			 if(data.resultMsg == "SUCCESS"){
+				 //모달 띄우기 
+				 gfModalPop("#noticevue");
+				 
+				// 모달에 정보 넣기 
+				frealPopModal2(data.result);
+			 
+			 }else{
+				 alert(data.resultMsg);
+			 }
+		 }
+			 
+		
+		 /* 팝업 _ 초기화 페이지(신규) 혹은 내용뿌리기  */
+		 function frealPopModal2(object){
+			 
+			 if(object == "" || object == null || object == undefined){
+				 var writer = $("#swriter_vue").val();
+				 //var Now = new Date();
+				 // ****************************
+				 
+				 ved.loginID_vue = writer;
+				 ved.write_date_vue = writer;
+				 ved.nt_title_vue = "";
+				 ved.nt_note_vue = "";
+				 
+			 }else{
+				 console.log("frealPopModal2 object.loginID : " + object.loginID);
+				 
+				 ved.loginID_vue = object.loginID;
+				 
+				 console.log("frealPopModal2 ved.loginID_vue : " + ved.loginID_vue);
+				 $("#loginID_vue").attr("readonly", true); // 작성자 수정불가 
+				 ved.write_date_vue = object.write_date;
+				 $("#write_date").attr("readonly", true); // 처음 작성된 날짜 수정불가 
+				 ved.nt_title_vue = object.nt_title;
+				 $("#nt_title_vue").attr("readonly", true);
+				 ved.nt_note_vue = object.nt_note;
+				 $("#nt_note_vue").attr("readonly", true);
+				 
+				 $("#nt_no_vue").val(object.nt_no); // 중요한 num 값도 숨겨서 받아온다. 
+				 
+				 //$("#btnDeleteNotice").show(); // 삭제버튼 보이기 
+				 //$("#btnSaveNotice").hide();
+				 //$("#btnUpdateNotice").css("display","");
+				 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
+				 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
+				
+				 
+			 }
+		 }
  
 </script>
 

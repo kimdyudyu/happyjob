@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.hlteacher.dao.hlTeacherDao">
+
+	<select id="getClassList" parameterType="Map" resultType="kr.happy.jobkorea.hlteacher.model.lectureModel">
+			SELECT	
+					no , title , loginID ,
+					startDate , endDate ,
+					filename , pcnt , 
+					goal , plan
+			FROM	tb_lecture
+			WHERE loginID = #{loginId}
+			    <if test="searchkey =='content' ">
+			        and title like '%${content}%'
+			    </if>
+	   		ORDER BY no
+	</select>
+
+</mapper>
