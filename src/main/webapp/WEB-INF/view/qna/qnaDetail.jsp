@@ -10,8 +10,8 @@
 		<input type="hidden" name="comment_wno"
 								id="comment_wno" v-model="wno" />
 		<dl>
-			<dt>
-				<strong> 상세보기 </strong>
+			<dt style="padding:10px;">
+				<strong style="padding:10px;"> 상세보기 </strong>
 			</dt>
 			<dd class="content">
 				<div>
@@ -47,25 +47,26 @@
 							</td>
 						</tr>
 					</table>
-					<div id="qna_comments">
+					<div id="qna_comments" style="margin-top:15px;">
 							<dl>
 								<dt>
-									<strong>강의 후기</strong>
+									<strong style="padding:10px;">강의 후기</strong>
 								</dt>
 								<dd class="content">
-									<div id="comment_write">
+									<div id="comment_write" style="padding:10px;">
 										<form id="comment_frm">
-											<span>제목</span>
+											<span>제목 : </span>
 											<input type="text" id="comment_title" name="comment_title" />
-											<span>내용</span>
+											<span style="margin-left:15px;">내용 : </span>
 											<input type="textarea" id="comment_note" name="comment_note" />
-											<a href="javascript:write_comment()">글 작 성</a>
+											<a href="javascript:write_comment()" style="margin-left: 15px;">
+												<strong>글 작 성</strong></a>
 										</form>	
 									</div>
 								
-									<div id="survey" style=" overflow:auto; height:200px;">
+									<div id="survey" style=" overflow:auto; height:155px;">
 										<div style="padding:10px;" v-for="(row, index) in clist">
-											<span style="margin-left:25px; margin-right:5px;">작성자 : </span>
+											<span style="margin-left:25px; margin-right:5px;"> 작성자 : </span>
 											<input type="text" style="width:70px;" v-model="row.qcregId" readonly />
 											<span style="margin-left:20px; margin-right:5px;">내용 : </span> 
 											<input type="text" style="width:250px;" v-model="row.qcnote" readonly />
@@ -79,7 +80,7 @@
 						</div>
 				</div>
 
-				<div class="btn_areaC mt30" id="updateoption">
+				<div class="btn_areaC mt30" id="updateoption" style="padding:10px;">
 					<a href="javascript:cancel()" class="btnType gray"><span>취소</span></a>
 				</div>
 			</dd>

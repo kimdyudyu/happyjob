@@ -12,7 +12,7 @@
 
 		<dl>
 			<dt>
-				<h3 style="margin-left: 30px; margin-top: 5px; padding: 5px">
+				<h3 style="margin-left: 10px; margin-top: 5px; padding: 5px">
 					상세보기</h3>
 			</dt>
 			<dd class="content">
