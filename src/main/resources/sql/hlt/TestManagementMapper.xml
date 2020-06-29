@@ -33,21 +33,21 @@
 	</select>
 	
 	<select id="getTestResult" resultType="Map" >
-		select no , title , testname , status , targetCount from
+		select no , title , testname , status , ifnull(targetCount,0) as targetCount from
 			(select lec.no
 				,lec.title
 				, test.testname 
 				, case 
 				  when test.re ='main' then '본시험'
-				  else '재시험'
+				  when test.re ='re' then '재시험'
 				  end as 'status'
 				 ,case
-				 when test.re = 'main' then targetCount
-				 else reCount
+				 when test.re = 'main' then ifnull(targetCount,0)
+				 else ifnull(reCount,0)
 				 end as 'targetCount'
 				from tb_lecture lec 
-				inner join tb_tcourse tcour on lec.no = tcour.no
-				inner join tb_test test on lec.no = test.no
+				left outer join tb_tcourse tcour on lec.no = tcour.no
+				left outer join tb_test test on lec.no = test.no
 				left outer join (select no 
 				                       ,count(loginID) as targetCount
 				                      from tb_tcourse
