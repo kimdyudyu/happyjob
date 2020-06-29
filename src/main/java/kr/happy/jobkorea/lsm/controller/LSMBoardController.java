@@ -90,7 +90,8 @@ public class LSMBoardController {
 		   
 		   return resultMap;
 	   }
-//	   설문조사 가능목록 도출
+	   
+//	설문조사 가능목록 도출(진도 100이상인 수강목록)
 	   @RequestMapping("LecList.do")
 	   @ResponseBody
 	   public Map<String,Object> LecList(Model model, @RequestParam HashMap<String, Object> paramMap, HttpServletRequest request,
@@ -103,21 +104,38 @@ public class LSMBoardController {
 			String loginID = (String)session.getAttribute("loginId"); 
 			paramMap.put("loginID", loginID);
 			System.out.println(loginID);
-			
 			// 목록 조회
-			List<Map<String,Object>> LecListModel = lsmBoardService.selectLsmBoardList(paramMap);
+			List<Map<String,Object>> LecListModel = StuSurveyService.getLecList(paramMap);
 			//List<Map<String,Object>> LecListModel =  StuSurveyService.getLecList(paramMap);
-			
 			Map<String,Object> resultMap = new HashMap<>();
 			resultMap.put("LecListModel",LecListModel);
 			   System.out.println(resultMap);
-
-			
 			logger.info("++paramMap : "+resultMap);
-			logger.info("++End lectureList.do ");
+			logger.info("++End LecList.do ");
 			
 			return resultMap;
 		}
+	   
+	   //설문조사 모달 띄우기
+	   @RequestMapping("surveyModal.do")
+	   @ResponseBody
+	   public Map<String, Object> getSurveyList(Model model, @RequestParam HashMap<String, Object> paramMap, HttpServletRequest request,
+			HttpServletResponse response, HttpSession session) throws Exception{
+			
+		    logger.info("+ Start " + className + "getSurveyList");
+			logger.info("   - paramMap : " + paramMap);
+			
+		   // 목록 조회
+		   Map<String, Object> result = StuSurveyService.getSurveyList(paramMap);
+		   
+		   Map<String, Object> resultMap = new HashMap<>();
+		   resultMap.put("result", result);
+
+		   logger.info("+ End " + className + "getSurveyList");
+		   
+		   return resultMap;
+	   }	   
+	   
 	   @RequestMapping("lsmModal.do")
 	   @ResponseBody
 	   public Map<String, Object> lsmModal(Model model, @RequestParam HashMap<String, Object> paramMap, HttpServletRequest request,
@@ -132,7 +150,7 @@ public class LSMBoardController {
 		   Map<String, Object> resultMap = new HashMap<>();
 		   resultMap.put("result", result);
 
-		   logger.info("+ End " + className + "lsmCodList");
+		   logger.info("+ End " + className + "lsmModal");
 		   
 		   return resultMap;
 	   }
@@ -155,45 +173,28 @@ public class LSMBoardController {
 			
 			return "lsm/lec/surveyhome";
 		}
-		
+		//설문조사 결과 저장해서 보내주기
 		@RequestMapping("savesurvey.do")
 		@ResponseBody
 		public Map<String,Object> savesurvey(Model model, 
-											@RequestParam Map<String, Object> paramMap, 
+			  @RequestParam Map<String, Object> paramMap, 
 											HttpServletRequest request,
 											HttpServletResponse response, 
 											HttpSession session) throws Exception {
 
 			logger.info("++Start savesurvey.do ");
 			logger.info("++paramMap : "+paramMap);
-			
-			int lec_seq = Integer.parseInt((String)paramMap.get("lec_seq"));
-			
-			paramMap.put("lec_seq",lec_seq);
-			
+			String loginID = (String)session.getAttribute("loginId"); 
+			paramMap.put("loginID", loginID);
+//			int lec_seq = Integer.parseInt((String)paramMap.get("lec_seq"));	
+//			paramMap.put("lec_seq",lec_seq);
 			Map<String,Object> resultMap = new HashMap<>();
-			
 			StuSurveyService.savesurvey(paramMap);
-			
-			
-			
-			
-			
-			
-			resultMap.put("msg"," 성공");
-			
-			
-			
-			
+			resultMap.put("msg","SUCCESS");
 			/*List<Map<String,Object>> list= stuSurvey.getSurveyList(paramMap);
-			
-			
-			
 			resultMap.put("list",list);*/
-			
 			logger.info("++paramMap : "+resultMap);
 			logger.info("++End savesurvey.do ");
 			return resultMap;
 		}
-
 }

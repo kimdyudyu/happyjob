@@ -10,7 +10,7 @@
       FROM tb_lecture as l
           left outer join tb_process as p
        on l.no = p.no
-       where l.loginID = #{loginID}
+       where l.loginID = #{loginID} 
        and l.title = #{title}
        order by no desc
        limit 1
@@ -33,14 +33,14 @@
 			LIMIT #{pageIndex},#{pageSize}
 			-->
 					SELECT
-								
+								tb_lecture.no,
 								tb_lecture.title,
 								tb_lecture.loginID,
 								Date_Format(tb_lecture.enddate,'%Y.%m.%d') AS end_date,
 								Date_Format(tb_lecture.startdate,'%Y.%m.%d') AS start_date,
 								tb_lecture.room,
 								tb_process.processrate
-						 FROM tb_lecture, tb_tcourse, tb_userinfo, tb_process
+						FROM tb_lecture, tb_tcourse, tb_userinfo, tb_process
 						WHERE (@rownum:=0)=0
 							   and tb_lecture.no = tb_tcourse.no
      					       and tb_userinfo.loginID = tb_tcourse.loginID
@@ -52,6 +52,4 @@
                                    )           
 				      and tb_tcourse.loginID = #{loginID}
 	</select>
-
-
 </mapper>

@@ -65,15 +65,7 @@ function init(){
 					eventBus.$emit('sendeventscore',id,score);
 				}
 			}
-			
 		}); 
-
-	
-
-
-
-	
-	
 	LecListVue = new Vue({
 		el:'#vuedatatable',
 		data:{
@@ -164,16 +156,8 @@ function fsaveSurvey(){
 		fgetLecList();
 		
 	};
-	
-	
-	
+
 	callAjax("/survey/savesurvey.do", "post", "json",true, param ,resultCallback);
-	
-	
-	
-	
-	
-	
 }
 
 

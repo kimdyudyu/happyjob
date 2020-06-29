@@ -30,7 +30,7 @@ var popperProps = {
 
 /* onload 이벤트  */
 $(function(){
-   
+
    // 강의 리스트
    init();
    lectList();
@@ -84,12 +84,10 @@ function init() {
                   console.log("여기왔나요? -2 ");
                   frealPopModal(data.result); 
                   gfModalPop("#classvue");
-                }
-              
+                }             
               callAjax("/manageC/lsmModal.do","post","json", true, param, resultCallback);
     	   }
          }
-      
    });
 };
 
@@ -112,94 +110,31 @@ function lectListCallback(data){
    console.log(lect.lsmCodListModel);
 }
 
-function fSearchLec(){
-   console.log("여기왔나요? -3");
-   param={
-      selected:lect.selected,
-      keyword:lect.search_name,
-      startdate:$("#date1").val(),
-      enddate:$("#date2").val()
-      
-   };
-   
-   function resultCallback(data){
-      $("#classList").empty();
-      
-      $("#classList").append(data);
-   }
-   
-   callAjax("/hlt/hltClassList.do","post","text", true, param, resultCallback);
-   console.log("여기왔나요? -4");
-}
-
-
-
 
 </script>
 <body>
    <!-- 모달 배경 -->
    <div id="mask"></div>
-
    <div id="wrap_area">
-
-
-      <h2 class="hidden">컨텐츠 영역</h2>
       <div id="container">
          <ul>
             <li class="lnb">
                <!-- lnb 영역 --> <jsp:include
                   page="/WEB-INF/view/common/lnbMenu.jsp"></jsp:include> <!--// lnb 영역 -->
             </li>
-            <li class="contents">
-               <!-- contents -->
-               <h3 class="hidden">contents 영역</h3> <!-- content -->
-               <div class="home_area">
-                  <p class="Location">
-                     <a href="#" class="btn_set home">메인으로</a> 
-                     <span class="btn_nav bold">수강 인원 / 강의 목록</span> 
-                     <a href="#"class="btn_set refresh">새로고침</a>
-                  </p>
+					<li class="contents">
+          		     <!-- contents -->
+					<div class="home_area">
                </div>
-               <h3 class="hidden">강의실 검색 영역</h3>
             <div id="lecture_box" >
-               <div class="lecture_searchbox">
-                  <div class="lecture_selectbox">
-                     <select v-model="selected" >
-                        <option v-for = "option in options" v-bind:value="option.value">
-                           {{ option.text }}
-                        </option>
-                     </select>
-                  </div>
-                  <div class="lecture_serch_input" style="width:250px; margin-right:50px;">
-                     <input type="text" name="room_search" v-model="search_name" placeholder="검색">
-                  </div>
-                  <!-- <div id="app1" style="display:inline-block;">
-                    <datepicker @change="updateDate" v-once></datepicker>
-                    <p>{{ date }}</p>
-                  </div>
-                  <div id="app2" style="display:inline-block;">
-                    <datepicker @change="updateDate" v-once></datepicker>
-                    <p>{{ date }}</p>
-                  </div> -->
-                  <div class="lecture_serch_input" style="width: 150px; margin-right:20px;">
-                     <input type="text" id="date1">
-                  </div>
-                  <div class="lecture_serch_input" style="width: 150px; margin-right:10px;">
-                     <input type="text" id="date2">
-                  </div>
-                  
-                    
-                  <div style="display: inline-block; margin-left:20px;">
-                     <a class="btnType blue" href="javascript:fSearchLec();" name="search" id="searchBtn" style="width: 70px;"><span>검색</span></a>
-                  </div>
-                       
-               </div>
-               <!-- /.lecture_searchbox -->
-               
+	               <div class="lecture_searchbox">
+	                  	<div class="lecture_selectbox">
+	                  	</div>
+	               </div>
                <div class="lecture_box" style="width:90%;">
-                  <div class="lecture_tit_box">
-                     수강목록/진도
-                  </div>
+		                  <div class="lecture_tit_box">
+		                     수강목록/진도
+		                  </div>
                   <div class="lecture_listbox">
                      <table id="lectInfo">
                         <thead>

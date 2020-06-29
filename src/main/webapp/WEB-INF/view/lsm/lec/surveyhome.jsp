@@ -8,28 +8,51 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <title>잡코리아 dashboard</title>
-
-
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-
-
-
 <jsp:include page="/WEB-INF/view/common/common_include.jsp"></jsp:include>
-
-
 <script>
 var lect;
 var loginID="${sessionScope.loginID}";
 
 var LecListVue;
 var picks ='';
+var totalScore=0;
+var tdArr= [];
+/*onload 이벤트*/
 $(function(){
-	
 	console.log(" ++ 설문조사 홈");
 	init();
 	fgetLecList();
+	
+	$("#fsavesurvey").click(function (){
+		 var one =Number($("input:radio[name='one']:checked").val());
+			var two = Number($("input:radio[name='two']:checked").val());
+			var three = Number($("input:radio[name='three']:checked").val());
+			var four = Number($("input:radio[name='four']:checked").val());
+			
+			totalScore = (one + two + three + four)/4 ;
+			totalScore.toFixed(2);
+			console.log(tdArr[0]);
+			console.log(totalScore);
+			var param={
+					totalScore : totalScore,
+					no:tdArr[0]
+			}
+
+			
+			var resultCallback = function(data) {
+				
+			
+					alert("저장 성공했습니다.");
+					location.reload();
+				
+			};
+			callAjax("/manageC/savesurvey.do", "post", "json",true, param ,resultCallback);	
+	
+	 });
 });
 
+// 
 function init(){
 	   lect = new Vue({
 		      el : '#lecture_box',
@@ -45,139 +68,47 @@ function init(){
 		          options : [
 		             {text : '전체', value : 'ALL'},
 		             {text : '내용', value : 'content'}
-		                     ]
+		           ]
+	      },
+	   
+	      methods : {
+				rowClicked(row){
+	    		  console.log(row);
+	    		  var str = "";
+	              tdArr = new Array();    // 배열 선언
+	                  
+	              // 현재 클릭된 Row(<tr>)
+	              var tr = $(row);
+	              var td = tr.children();
+	              
+	              td.each(function(i){
+	                  tdArr.push(td.eq(i).text());
+	              });
+	              console.log(tdArr);
+	              var param = {
+	            		  title : tdArr[0],
+	            		  loginID : tdArr[1]
+	              }
+	              gfModalPop("#surveyvue");
+	              var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
+	                  console.log("여기왔나요? -2 ");
+	                  frealPopModal(data.result); 
+	                  gfModalPop("#surveyvue");
+	                }             
+	             //callAjax("/manageC/surveyModal.do","post","json", true, param, resultCallback);
+	    	   },
+				savesurvey:function(){
+					//alert("저장!");
+					fsaveSurvey();
+				}
 	      }
-	   })
-}
-	var eventBus = new Vue();		
-	 Vue.component('radioboxC', { 
-			template:
-				'<tr style="text-align: -webkit-center;"  >'+
-				'	<td colspan="3">{{rdata}} : {{pick}}</td>'+
-				'	<td><input type="radio" v-model="pick" :id="pickid" value="1"  checked="checked" @change="sendscore"></td>'+
-				'	<td><input type="radio" v-model="pick" :id="pickid" value="2" @change="sendscore"></td>'+
-				'	<td><input type="radio" v-model="pick" :id="pickid" value="3" @change="sendscore"></td>'+
-				'	<td><input type="radio" v-model="pick" :id="pickid" value="4" @change="sendscore"></td>'+
-				'	<td><input type="radio" v-model="pick" :id="pickid" value="5" @change="sendscore"></td>'+
-				'</tr>'
-			,
-			data:function(){
-				return {
-						pick:''
-				}
-			},
-			props:['rdata','pickid'],
-			methods:{
-				sendscore:function(){
-					
-					console.log("target.id : "+event.target.id);
-					var id= event.target.id;
-					var score =this.pick;
-					
-					eventBus.$emit('sendeventscore',id,score);
-				}
-			}
-			
-		}); 
+      });
+};
 
 	
-
-
-
-	
-	
-/*	LecListVue = new Vue({
-		el:'#vuedatatable',
-		data:{
-			items:[],
-			row:[]
-		},
-		methods:{
-			dosurvey:function(row){
-				this.row = row;
-				qnaWritePopup("#layer1");
-			}
-		}
-	});
-*/	
-/*
-	doSurveyVue = new Vue({
-		el:'#surveyModal',
-		created :function(){
-			eventBus.$on('sendeventscore',function(id,score){
-				
-				console.log("id : " +id);
-				console.log("score : " +score);
-				
-				if(picks != ''){
-					picks=picks.substring(0,picks.lastIndexOf('}'));
-					picks +=',"'+id+'":'+score+'}';
-				}else{
-					picks +='{"'+id+'":'+score+'}';
-				}
-				
-		
-		
-			});
-		},
-		data:{
-			items:[
-			       {"qst":"시간이 잘 지켜졌습니까?","id":"pick1"},
-			       {"qst":"학생들과의 소통을 잘하였습니까?","id":"pick2"},
-			       {"qst":"시험의 난이도는 어땠습니까?","id":"pick3"},
-			       {"qst":"내용 전달이  잘되었습니까? ","id":"pick4"}
-			       ],
-			picks:'',
-			comment:''
-		},
-		methods:{
-			cancel:function(){
-				gfCloseModal();
-			},
-			savesurvey:function(){
-				//alert("저장!");
-				fsaveSurvey();
-			}
-		}
-	});
-*/	
-
-
-function fsaveSurvey(){
-	var totalScore=0;
-	console.log(picks);
-	var obj = JSON.parse(picks);
-	for(var k in obj){
-		console.log("k :"+k+" value : " + obj[k]);
-		totalScore+=obj[k];
-	}
-	//alert(totalScore);
-	
-	var param={
-		lec_seq:LecListVue.row.lec_seq,
-		comment:doSurveyVue.comment,
-		totalScore:totalScore,
-		enr_user:userid
-	};
-
-	
-	var resultCallback = function(data) {
-		alert("저장 "+data.msg);
-		doSurveyVue.comment='';
-		$("input[type=radio]").prop("checked",false);
-		
-		gfCloseModal();
-		fgetLecList();
-		
-	};
-	
-	
-	
-	callAjax("/survey/savesurvey.do", "post", "json",true, param ,resultCallback);	
-}
 //강의 전체 목록 조회 콜백
 function fgetLecListCallback(data){
-	lect.LecListModel = [];
+	lect.LecListModel = []; 
 	console.log(data);
 	console.log(data.LecListModel);
 	lect.LecListModel = data.LecListModel;
@@ -195,41 +126,11 @@ function fgetLecList(){
 	callAjax("/manageC/LecList.do", "post", "json",true, param ,resultCallback);
 }
 
-function qnaWritePopup(id) {
-
-	//var id = $(this).attr('href');
-	//alert("asdf");  
-	var maskHeight = $(document).height();
-	var maskWidth = $(document).width();
-
-	$('#mask').css({'width':maskWidth,'height':maskHeight});
-
-	$('#mask').fadeIn(200);
-	$('#mask').fadeTo("fast", 0.5);
-	$('#wqna_title').focus();
-	var winH = $(window).height();
-	var winW = $(window).width();
-	var scrollTop = $(window).scrollTop();
-
-	$(id).css('top', "5px");
-	$(id).css('left', winW/2-$(id).width()/2);
-
-	$(".layerPop").hide();
-	$(id).fadeIn(100); //페이드인 속도..숫자가 작으면 작을수록 빨라집니다.
-}
-
-
 </script>
-
-Z`	`	
 </head>
 <body>
 <div id="mask"></div>
-
    <div id="wrap_area">
-
-
-      <h2 class="hidden">컨텐츠 영역</h2>
       <div id="container">
          <ul>
             <li class="lnb">
@@ -238,50 +139,10 @@ Z`	`
             </li>
             <li class="contents">
                <!-- contents -->
-               <h3 class="hidden">contents 영역</h3> <!-- content -->
-               <div class="home_area">
-                  <p class="Location">
-                     <a href="#" class="btn_set home">메인으로</a> 
-                     <span class="btn_nav bold">수강 인원 / 강의 목록</span> 
-                     <a href="#"class="btn_set refresh">새로고침</a>
-                  </p>
-               </div>
-               <h3 class="hidden">강의실 검색 영역</h3>
+
             <div id="lecture_box" >
-               <div class="lecture_searchbox">
-                  <div class="lecture_selectbox">
-                     <select v-model="selected" >
-                        <option v-for = "option in options" v-bind:value="option.value">
-                           {{ option.text }}
-                        </option>
-                     </select>
-                  </div>
-                  <div class="lecture_serch_input" style="width:250px; margin-right:50px;">
-                     <input type="text" name="room_search" v-model="search_name" placeholder="검색">
-                  </div>
-                  <!-- <div id="app1" style="display:inline-block;">
-                    <datepicker @change="updateDate" v-once></datepicker>
-                    <p>{{ date }}</p>
-                  </div>
-                  <div id="app2" style="display:inline-block;">
-                    <datepicker @change="updateDate" v-once></datepicker>
-                    <p>{{ date }}</p>
-                  </div> -->
-                  <div class="lecture_serch_input" style="width: 150px; margin-right:20px;">
-                     <input type="text" id="date1">
-                  </div>
-                  <div class="lecture_serch_input" style="width: 150px; margin-right:10px;">
-                     <input type="text" id="date2">
-                  </div>
-                  
-                    
-                  <div style="display: inline-block; margin-left:20px;">
-                     <a class="btnType blue" href="javascript:fSearchLec();" name="search" id="searchBtn" style="width: 70px;"><span>검색</span></a>
-                  </div>
-                       
+               <div class="lecture_searchbox">         
                </div>
-               <!-- /.lecture_searchbox -->
-               
                <div class="lecture_box" style="width:90%;">
                   <div class="lecture_tit_box">
                      					설문조사 목록
@@ -290,6 +151,7 @@ Z`	`
                      <table id="lectInfo">
                         <thead>
                            <tr>
+                          	<th>강의번호</th>
                               <th>과목명</th>
                               <th>강사</th>
                               <th>강의시작일</th>
@@ -301,6 +163,7 @@ Z`	`
                         <tbody id="classList">
                         	<template v-for="(row, index) in LecListModel" >
                               <tr onclick="lect.rowClicked(this)">
+                            	 <td>{{ row.no }}</td>
                                  <td>{{ row.title }}</td>
                                  <td>{{ row.loginID }}</td>
                                  <td>{{ row.start_date }}</td>
@@ -318,73 +181,155 @@ Z`	`
          </ul>
       </div>
    </div>
-   <div id="classvue" class="layerPop layerType2" style="width: 600px;">
-      <input type="hidden" id="nt_novue" name="nt_novue">
-      <!-- 수정시 필요한 num 값을 넘김  -->
-
+   <div id="surveyvue" class="layerPop layerType2" style="width: 700px; hight: 1000px,">
       <dl>
          <dt>
-            <strong>수업내용 살펴보기</strong>
+            <strong>설문조사</strong>
          </dt>
          <dd class="content">
             <!-- s : 여기에 내용입력 -->
-            <div id="classvue">
-               <div class="row" id="lec_info" style="margin-bottom:30px; height: 50px;">
-                  <div class="col-md-4" style="width:25%; padding-left:0px;">
-                     <h3>과목명</h3>
-                     <input type="text" id="lec_title" style="height: 25px;" v-model="lec_title" readonly>
-                  </div>
-                  <div class="col-md-4" style="width:25%;">
-                     <h3>강사</h3>
-                     <input type="text" id="lec_teacher" style="height: 25px;" v-model="lec_teacher" readonly>
-                  </div>
-                  <div class="col-md-4" style="width:25%;">
-                     <h3>강의시간</h3>
-                     <input type="text" id="lec_startdate" style="height: 25px;" v-model="lec_date" readonly>
-                  </div>
-               </div>
-               </div>
-               <div id="lec_Room">
-                <h3>강의내용</h3>
-                  <textarea style="resize: none; width: 88%;" id="lec_room" v-model="lec_room" readonly></textarea>
-               </div>
-               <div id="lec_process">
-                  <h3>진도</h3>
-                  <input type="text" id="lec_process" style="height: 25px;" v-model="lec_process" readonly>
-               </div>
-                <div class="btn_areaC mt30">
-
-               <a href="" class="btnType gray" id="btnClose_vue" name="btn"><span>취소</span></a>
-            </div>
-            </div>
-           
-         </dd>
-
-      </dl>
-      <a href=""  class="closePop"><span class="hidden">닫기</span></a>
-   </div>
-   <script>
-   ved = new Vue({
-       el: '#classvue',  
-     data: {
-        lec_title: '',
-        lec_teacher: '',
-        lec_date: '',
-        lec_room: '',
-        lec_process: ''
-          }
-   });
+            <div id="surveyvue">
+   					<table class="row" >
+						<caption>caption</caption>
+						<colgroup>
+							<col width="200px">
+							<col width="*">
+							<col width="200px">
+							<col width="80px">
+							<col width="80px">
+							<col width="80px">
+							<col width="80px">
+							<col width="80px">
+						</colgroup>
+						<thead>
+							<tr>
+								<th rowspan="2" colspan="3">내용</th>
+								<th colspan="5">선택</th>
+							</tr>
+							<tr>
+								<th>1</th>
+								<th>2</th>
+								<th>3</th>
+								<th>4</th>
+								<th>5</th>
+							</tr>
+						</thead>
+						 <tbody>
+							<tr>
+								<td colspan="3">
+										<label for="one">시간이 잘 지켜졌습니까?</label>
+								</td>
+								<td>
+									<input type="radio"  name="one"  value="1" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="one"   value="2" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="one"  value="3" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="one"  value="4" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="one"   value="5" v-model="picked">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+										<label for="two">학생들과의 소통을 잘하였습니까?</label>
+								</td>
+								<td>
+									<input type="radio"  name="two"  value="1" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="two"  value="2" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="two"  value="3" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="two"   value="4" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="two"  value="5" v-model="picked">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+										<label for="three">시험의 난이도는 어땠습니까?</label>
+								</td>
+								<td>
+									<input type="radio"   name="three"  value="1" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="three"  value="2" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"    name="three"  value="3" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"    name="three"   value="4" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="three"  value="5" v-model="picked">
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3">
+										<label for="four">내용 전달이  잘되었습니까?</label>
+								</td>
+								<td>
+									<input type="radio"   name="four"   value="1" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"  name="four"   value="2" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="four"   value="3" v-model="picked">
+								</td>
+								<td>
+									<input type="radio"   name="four"   value="4" v-model="picked">
+								</td>
+								<td>
+									<input type="radio" id="one" value="5" v-model="picked">
+								</td>
+							</tr>			
+						
+							<tr style="border-top: solid;">
+								<td colspan="8"><span>불평 불만 LEGO</span></td>
+							</tr>
+							<tr>
+								<td colspan="8">
+									<input type="text" style="width:100%; height:100%;" v-model="comment">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					
+						<div class="btn_areaC mt30">
+					
+					<!-- 	<a class="btnType blue"  id="fsavesurvey"><span>저장</span></a> -->
+						<button class="btnType blue"  id="fsavesurvey">저장</button>
+						<a href="" class="btnType gray" @click="cancel"><span>취소</span></a>
+					</div>
+					</div>
+				</dd>
+			</dl>
+			<a href="" class="closePop"><span class="hidden">닫기</span></a>
+		</div>
+	<script>
+  
    /* 팝업 _ 초기화 페이지(신규) 혹은 내용뿌리기  */
-   function frealPopModal(object){
+ function frealPopModal(object){
        var ratetotal = "/100";
         ved.lec_title = object.title;
-       ved.lec_teacher = object.loginID;
+     /*  ved.lec_teacher = object.loginID;
        ved.lec_date = object.lectdate;
        ved.lec_note = object.note;
-       ved.lec_process = object.processrate + ratetotal;
+       ved.lec_process = object.processrate + ratetotal;*/
    }
-   
-   
+  
    </script>
 </body>
 </html>

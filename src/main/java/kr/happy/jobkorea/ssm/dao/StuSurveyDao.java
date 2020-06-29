@@ -7,8 +7,8 @@ public interface StuSurveyDao {
 
 	List<Map<String, Object>> getLecList(Map<String, Object> paramMap);
 
-	List<Map<String, Object>> getSurveyList(Map<String, Object> paramMap);
+	Map<String, Object> getSurveyList(Map<String, Object> paramMap);
 
-	void saveSurvey(Map<String, Object> paramMap);
+	void savesurvey(Map<String, Object> paramMap);
 
 }
