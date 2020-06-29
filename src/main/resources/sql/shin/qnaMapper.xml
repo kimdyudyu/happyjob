@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.happy.jobkorea.manageC.dao.manageC_Dao">
+
+	<select id="QList" resultType="Map">
+		SELECT
+		wno,
+		title,
+		note,
+		regId,
+		DATE_FORMAT(reg_date, '%Y-%m-%d') as reg_date,
+		update_date
+
+		FROM tb_qna
+		<if test="searchkey == 'loginId' ">
+			WHERE regId like '%${searchword}%'
+		</if>
+		<if test="searchkey == 'nt_title' ">
+			WHERE title like '%${searchword}%'
+		</if>
+		LIMIT #{pageIndex}, #{pageSize}
+	</select>
+
+	<select id="totalQcnt" resultType="int">
+		SELECT COUNT(*) AS tot_cnt
+		FROM tb_qna
+		<if test="searchkey == 'loginId' ">
+			WHERE regId like '%${searchword}%'
+		</if>
+		<if test="searchkey == 'nt_title' ">
+			WHERE title like '%${searchword}%'
+		</if>
+	</select>
+
+	<select id="CList" resultType="Map">
+		SELECT
+		wno as qwno,
+		ctitle as qctitle,
+		cnote as qcnote,
+		regId as qcregId,
+		DATE_FORMAT(reg_date, '%Y-%m-%d') as qcreg_date
+		FROM tb_qna_comment
+		WHERE wno = #{wno}
+	</select>
+	
+	<insert id="comment_write">
+		<selectKey resultType="String" keyProperty="kimkey" order="BEFORE">
+			SELECT IFNULL(Max(cno)+1, '1') 
+			FROM tb_qna_comment
+			WHERE wno = #{wno}
+		</selectKey>
+		INSERT INTO tb_qna_comment
+		(cno,
+		 wno, 
+		 ctitle, 
+		 cnote, 
+		 regId, 
+		 reg_date, 
+		 update_date)
+		 
+		 VALUES 
+		 (
+		 #{kimkey},
+		 #{wno},
+		 #{ctitle},
+		 #{cnote}, 
+		 #{regId}, 
+		 now(), 
+		 now())
+	</insert>
+</mapper>
