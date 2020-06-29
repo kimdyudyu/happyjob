@@ -399,16 +399,17 @@
 			    showDetailVue.filepath=item.filepath;
 			    showDetailVue.filesize=item.filesize;
 				
+			    $("#wfilename").val('');
+			    
 			    gfModalPop("#LmmDetailvue");
 			    /* 	
 				for( var key in dNoticeVue.$data){
 					   console.log("2key : "+ key+" ,  value : "+row[key]);
 				}
 				 */
-				 
-			 	var param = {
+				var param = {
 						 nt_no:item.nt_no
-				 }
+				}
 			}
 			
 			function UpdateLmm(){
