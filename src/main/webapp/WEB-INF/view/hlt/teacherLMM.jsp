@@ -363,6 +363,12 @@
 				
 				var resultCallback = function(data) {
 					alert(data.msg);
+					wrtLmmVue.nt_no = '';
+					wrtLmmVue.nt_title = '';
+					wrtLmmVue.nt_note = '';
+					wrtLmmVue.filename = '';
+					wrtLmmVue.filepath = '';
+					wrtLmmVue.filesize = '';
 					lmmList();
 				};
 				

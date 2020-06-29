@@ -55,9 +55,9 @@
 		  ,#{nt_note}
 		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )                                       
 		  ,#{loginId}                        
-		  ,#{fileInfo.filename}                
-		  ,#{fileInfo.filepath}                
-		  ,#{fileInfo.filesize}              
+		  ,#{filename}                
+		  ,#{filepath}                
+		  ,#{filesize}              
 		FROM tb_notice
 	</insert>
 	

@@ -239,6 +239,7 @@
 				
 				var params = "";
 				params += "<input type='hidden' name='no' value='"+ showDetailVue.no +"' />";
+				params += "<input type='hidden' name='loginId' value='"+showDetailVue.loginId +"' />";
 				
 				
 				jQuery("<form action='/manageD/downloadTmFile.do' method='post'>"+params+"</form>").appendTo('body').submit().remove();
