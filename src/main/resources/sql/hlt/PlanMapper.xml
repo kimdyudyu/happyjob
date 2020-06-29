@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="kr.happy.jobkorea.hlt.dao.PlanDao">
+	
+	<select id="selectPlanList" resultType="kr.happy.jobkorea.hlt.model.Plan">   
+		  SELECT *
+	      FROM tb_lecture A
+	      JOIN tb_userinfo B
+	      ON A.LOGINID = B.LOGINID
+	      <where>
+	      	<if test="searchkey != null and searchkey !='' and searchkey eq 'title'">
+   				title like concat('%',#{searchword},'%')
+   			</if>
+   				<if test="searchkey != null and searchkey !='' and searchkey eq 'name'">
+   				name like concat('%',#{searchword},'%')
+   			</if>
+   				<if test="searchkey != null and searchkey !='' and searchkey eq 'subject'">
+   				subject like concat('%',#{searchword},'%')
+   			</if>
+   			<if test="Sstartdate !=null and Sstartdate !=''">
+   				and startdate between #{Sstartdate} and #{Senddate} 
+   			</if>
+   		</where>
+	    
+			LIMIT #{pageIndex},#{pageSize} 
+	</select>
+	
+	<select id="planTotalCnt" resultType="int">   
+		  SELECT COUNT(A.title) AS CNT
+	      FROM tb_lecture A
+	      JOIN tb_userinfo B
+	      ON A.LOGINID = B.LOGINID
+	   	<where>
+	      	<if test="searchkey != null and searchkey !='' and searchkey eq 'title'">
+   				title like concat('%',#{searchword},'%')
+   			</if>
+   				<if test="searchkey != null and searchkey !='' and searchkey eq 'name'">
+   				name like concat('%',#{searchword},'%')
+   			</if>
+   				<if test="searchkey != null and searchkey !='' and searchkey eq 'subject'">
+   				subject like concat('%',#{searchword},'%')
+   			</if>
+   			<if test="Sstartdate !=null and Sstartdate !=''">
+   				and startdate between #{Sstartdate} and #{Senddate} 
+   			</if>
+   		</where>
+	    
+			LIMIT #{pageIndex},#{pageSize} 
+	</select>
+	
+	<select id="detailPlan" resultType="kr.happy.jobkorea.hlt.model.Plan">
+		SELECT A.title, A.no, A.subject, B.name, B.hp, A.email, A.room, A.startdate, A.enddate, A.goal, A.attendanceinfo, A.plan
+		FROM tb_lecture A
+	    JOIN tb_userinfo B
+	    ON A.LOGINID = B.LOGINID
+		WHERE A.no= #{no}
+	</select>
+	
+	<update id="updateplan">
+		UPDATE tb_lecture  SET
+				title = #{title}
+			,	subject = #{subject}
+			,	room = #{room}
+			,	goal = #{goal}
+			,	plan = #{plan}
+		WHERE  no= #{no}
+	
+	</update>
+	
+	
+	<insert id="insertplan" >
+	    <selectKey resultType="string" keyProperty="no" order="BEFORE">
+            SELECT IFNULL(MAX(CAST(no AS UNSIGNED)),0) + 1  FROM tb_lecture
+        </selectKey> 
+	
+		INSERT INTO tb_lecture
+		( no, title, subject, room, startdate, enddate, goal, attendanceinfo, plan)
+		VALUES
+		(
+				#{no}
+			,   #{title}	
+			,	#{subject}
+			,	#{room}
+			,	#{startdate}
+			,	#{enddate}
+			,	#{goal}
+			,	#{attendanceinfo}
+			,	#{plan}
+		)		
+	</insert>
+	
+	
+	
+</mapper>	    
+	    

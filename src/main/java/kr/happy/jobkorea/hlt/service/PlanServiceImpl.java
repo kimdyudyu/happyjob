@@ -21,10 +21,10 @@ public class PlanServiceImpl implements PlanService{
 	@Override
 	public List<Plan> selectPlanList(Map<String, Object> paramMap){
 		
-		 List<Plan> noticeList = planDao.selectPlanList(paramMap);
+		 List<Plan> planList = planDao.selectPlanList(paramMap);
 			
 			
-	   return noticeList;
+	   return planList;
 	}
 
 	@Override
@@ -45,9 +45,7 @@ public class PlanServiceImpl implements PlanService{
 
 	@Override
 	public int insertplan(Map<String, Object> paramMap) {
-		
-		int numResult = planDao.numPlus();
-		paramMap.put("no", numResult); // 번호 여기에 추가 
+	
 		int resultCnt = planDao.insertplan(paramMap);
 		
 		return resultCnt;
@@ -56,21 +54,14 @@ public class PlanServiceImpl implements PlanService{
 
 	@Override
 	public int updateplan(Map<String, Object> paramMap) {
-		
+		System.out.println(paramMap.get("no"));
 		int resultCnt = planDao.updateplan(paramMap);
 		
 		return resultCnt;
 		
 	}
 
-	@Override
-	public int deleteplan(Map<String, Object> paramMap) {
-        
-		int resultCnt = planDao.deleteplan(paramMap);
-		
-		return resultCnt;
-		
-	}
+
 
 	
 

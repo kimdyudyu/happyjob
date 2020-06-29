@@ -14,13 +14,11 @@ public interface PlanDao {
 
 	public Plan detailPlan(Map<String, Object> paramMap);
 
-	public int numPlus();
+	//public int numPlus();
 
 	public int insertplan(Map<String, Object> paramMap);
 
 	public int updateplan(Map<String, Object> paramMap);
-
-	public int deleteplan(Map<String, Object> paramMap);
 	
 	
 }

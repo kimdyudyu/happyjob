@@ -22,7 +22,7 @@
 		selectplanList();
 		
 		// 버튼 이벤트 등록 (저장, 수정, 삭제, 모달창 닫기)
-		//fButtonClickEvent();
+		fButtonClickEvent();
 	});
 	
 	/* 버튼 이벤트 등록 - 저장, 수정, 삭제  */
@@ -44,7 +44,7 @@
 			case 'btnClose' : gfCloseModal();  // 모달닫기 
 			selectplanList(); // 첫페이지 다시 로딩 
 				break;
-			case 'btnUpdateNotice' : fUpdateNotice();  // 수정하기
+			case 'btnUpdateNotice' : fUpdateNotice(no);  // 수정하기
 				break;
 			case 'searchBtn' : board_search();  // 검색하기
 			break;
@@ -56,12 +56,61 @@
 		});
 	}
 	
+	function fValidateCheck(){
+	      
+	      var chk = checkNotEmpty(
+	                 [
+	                    ["title","제목을 입력해주세요."]
+	                   ,["startdate","조회기간을 설정해주세요."]
+	                   ,["enddate","조회기간을 설정해주세요."]
+	                 ]         
+	      );
+	      
+	      if(!chk){
+	         return;
+	      }
+	      
+	      return true;
+	      
+	   }//fValidateCheck
+	
 	/* 공지사항 리스트 불러오기  */
 	function selectplanList(currentPage){
-		
+	
+		   currentPage = currentPage || 1;
+	         
+	         var Sstartdate = $('#Sstartdate').val();
+	         var Senddate = $('#Senddate').val();
+	         var searchkey = $('#searchkey').val();
+	         var searchword = $('#searchword').val();
+	         
+	         var param = {
+	        		   searchkey : searchkey
+	        	   ,   searchword : searchword
+	               ,   Sstartdate : Sstartdate
+	               ,   Senddate : Senddate
+	               ,   currentPage : currentPage
+	               ,   pageSize : noticePageSize
+	         }
+	         
+	         var resultCallback = function(data) {
+	        	 planListResult(data, currentPage); 
+	         };
+		   
+		   
+		   
+		  /* 
+		   
+		   
+		alert("currentPage"+currentPage);
 		currentPage = currentPage || 1;   // or		
 		
 //alert("지금 현재 페이지를 찍어봅시다. " + currentPage);
+		 var title = $('#title');
+		 var name = $('#name');
+		 var subject = $('#subject');
+         var from_date = $('#startdate');
+         var to_date = $('#enddate');
 		
 		var param = {
 				currentPage : currentPage ,
@@ -71,7 +120,7 @@
 		var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
 			planListResult(data, currentPage); 
 		}
-		
+		*/
 		callAjax("/supportD/planList.do","post","text", true, param, resultCallback);
 		
 	}
@@ -84,11 +133,14 @@
 		};
 		callAjax("/image/selectImgSize.do", "post", "json", false, param, resultCallback);
 	 } */
-	
+	 
 
 	 /* 공지사항 리스트 data를 콜백함수를 통해 뿌려봅시당   */
 	 function planListResult(data, currentPage){
 		 
+		 //var currentPage = $("#currentPage").val() || 1;
+		// var totalCnt = $('#totalCnt').val();
+		// var pageSize = $("#pageSize").val();
 		 // 일단 기존 목록을 삭제합니다. (변경시 재부팅 용)
 		 $("#planList").empty();
 		 //alert("데이터!!! " + data);
@@ -96,10 +148,14 @@
 		 
 		 //var $data = $( $(data).html() ); // data의 .html()통해서 html구문을 끌어온다.
 		 //alert("데이터 찍어보자!!!! " +  $data); // object
-		 
+		 console.log(data);
 		 $("#planList").append(data);
-	
-		 
+		console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~!!~@!@00");
+		console.log("currentPage ",currentPage);
+		console.log("totalCnt" , totalCnt);
+		console.log("pageSize" , pageSize);
+		console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~!!~@!@00");
+		
 		 // 리스트의 총 개수를 추출합니다. 
 		 //var totalCnt = $data.find("#totalCnt").text();
 		 var totalCnt = $("#totalCnt").val();  // qnaRealList() 에서보낸값 
@@ -126,18 +182,19 @@
 	      
 	      currentPage = currentPage || 1;
 	         
-	         var title = $('#title');
-	         var name = $('#name');
-	         var subject = $('#subject');
-	         var startdate = $('#startdate');
-	         var enddate = $('#enddate');
+	         var Sstartdate = $('#Sstartdate').val();
+	         var Senddate = $('#Senddate').val();
+	         var searchkey = $('#searchkey').val();
+	         var searchword = $('#searchword').val();
+	         
+	         
+	        
 	         
 	         var param = {
-	                   title : title.val()
-	               ,   name : name.val()
-	               ,   subject : subject.val()
-	               ,   startdate : startdate.val()
-	               ,   enddate : enddate.val()
+	        		   searchkey : searchkey
+	        	   ,   searchword : searchword
+	               ,   Sstartdate : Sstartdate
+	               ,   Senddate : Senddate
 	               ,   currentPage : currentPage
 	               ,   pageSize : noticePageSize
 	         }
@@ -154,10 +211,10 @@
 	 /* 공지사항 모달창(팝업) 실행  */
 	 function fNoticeModal(no) {
 		 // 신규저장 하기 버튼 클릭시 (값이 null)
-		 if(title == null || title==""){
+		 if(no == null || no==""){
 			// Tranjection type 설정
 			//alert("넘을 찍어보자!!!!!!" + nt_no);
-			
+			console.log("여기로 옴?")
 			$("#action").val("I"); // insert 
 			frealPopModal(no); // 공지사항 초기화 
 
@@ -177,6 +234,8 @@
 	 /*공지사항 상세 조회*/
 	 function fdetailModal(no){
 		 //alert("공지사항 상세 조회  ");
+		 
+
 		 gfModalPop("#notice");
 		 var param = {no : no};
 		 var resultCallback2 = function(data){
@@ -214,10 +273,10 @@
 		 if(object == "" || object == null || object == undefined){
 			 var writer = $("#swriter").val();
 			 //var Now = new Date();
-			 console.log("gggg"+object);
-			 console.log(object.title);
-			 //$("#loginID").val(writer);
-			 //$("#loginID").attr("readonly", true);
+			 console.log("gggg"+object);	
+			 
+			 $("#loginID").val(writer);
+			 $("#loginID").attr("readonly", true);
 			 
 			 $("#title").val();
 			 $("#subject").val();
@@ -225,6 +284,8 @@
 			 $("#hp").val();
 			 $("#email").val();
 			 $("#room").val();
+			 $("#startdate").val();
+			 $("#enddate").val();
 			 $("#goal").val();
 			 $("#attendanceinfo").val();
 			 $("#plan").val();
@@ -254,6 +315,8 @@
 			 $("#hp").val(object.hp);
 			 $("#email").val(object.email);
 			 $("#room").val(object.room);
+			 $("#startdate").val();
+			 $("#enddate").val();
 			 $("#goal").val(object.goal);
 			 $("#attendanceinfo").val(object.attendanceinfo);
 			 $("#plan").val(object.plan);
@@ -261,9 +324,9 @@
 			 
 			 $("#no").val(object.no); // 중요한 num 값도 숨겨서 받아온다. 
 			 
-			 $("#btnDeleteplan").show(); // 삭제버튼 보이기 
-			 $("#btnSaveplan").hide();
-			 $("#btnUpdateplan").css("display","");
+			 $("#btnDeleteNotice").show(); // 삭제버튼 보이기 
+			 $("#btnSaveNotice").hide();
+			 $("#btnUpdateNotice").css("display","");
 			 //if문써서 로그인 아이디 == 작성자 아이디 일치시  --- 추가하기 
 			 //$("#grp_cod").attr("readonly", false);  // false, true(읽기만)로 수정
 			
@@ -281,7 +344,9 @@
 				 ]
 		 );
 	 
-	 	if(!chk){return;}
+	 	if(!chk){
+	 		return;
+	 	}
 	 	return true;
 	 }
 	 
@@ -298,7 +363,22 @@
 		 
 		 $("#action").val("I");  // insert
 		 
-		 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+		console.log("-------------------------------");
+	 	 var param = { 
+				    title : $("#title").val(),
+					subject : $("#subject").val(),
+					room :  $("#room").val(),
+					startdate : $("#startdate").val(),
+					enddate : $("#enddate").val(),
+					goal : $("#goal").val(),
+			 		attendanceinfo : $("#attendanceinfo").val(),
+			 		plan : $("#plan").val(),
+					action :  "I"
+				 
+		 } 
+
+	 	console.log("this");
+		 callAjax("/supportD/planSave.do", "post", "json", true, param, resultCallback3);
 	 	// $("#myNotice").serialize() => 직렬화해서 name 값들을 그냥 넘김.
 	 }
 	 
@@ -329,9 +409,12 @@
 	 }
 	 
 	 /* 공지사항 등록(수정) */
-	 function fUpdateNotice(){
+	 function fUpdateNotice(no){
 		 //alert("수정  함수 타는지!!!!!?? ");
 		 // validation 체크 
+		
+		 alert(no);
+		 var param = {no : no};
 		 if(!(fValidatePopup())){ return; }
 		 
 		 var resultCallback3 = function(data){
@@ -339,8 +422,20 @@
 		 };
 		 
 		 $("#action").val("U");  // update
-		 
-		 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+		 console.log("-------------------------------");
+		 var param = { 
+				title : $("#title").val(),
+				subject : $("#subject").val(),
+				room :  $("#room").val(),
+				goal : $("#goal").val(),
+		 		attendanceinfo : $("#attendanceinfo").val(),
+		 		plan : $("#plan").val(),
+		        no : $('#no').val(),
+		        action : "U"
+				 
+		 }
+	
+		 callAjax("/supportD/planSave.do", "post", "json", true, param , resultCallback3);
 	 	// $("#myQna").serialize() => 직렬화해서 name 값들을 그냥 넘김.
 	 }
 	 
@@ -352,7 +447,7 @@
 				 fSaveNoticeResult(data);
 			 }
 			 $("#action").val("D");  // delete
-			 callAjax("/supportD/planSave.do", "post", "json", true, $("#myNotice").serialize(), resultCallback3);
+			 callAjax("/supportD/planSave.do", "post", "json", true, $("#plist").serialize(), resultCallback3);
 			 // num만 넘겨도되지만 그냥 귀찮으니깐...^^... 
 		 }else{
 			 gfCloseModal();	// 모달 닫기
@@ -372,9 +467,9 @@
 
 <form id="plist" action="" method="">
 	
-	<input type="hidden" id="currentPage" value="1">  <!-- 현재페이지는 처음에 항상 1로 설정하여 넘김  -->
-	<input type="hidden" id="tmpList" value=""> <!-- ★ 이거뭐임??? -->
-	<input type="hidden" id="tmpListNum" value=""> <!-- 스크립트에서 값을 설정해서 넘길거임 / 임시 리스트 넘버 -->
+	<input type="hidden" id="currentPage" value="${currentPage}">  <!-- 현재페이지는 처음에 항상 1로 설정하여 넘김  -->
+	<input type="hidden" id="totalCnt" value="${totalCnt }"> <!-- ★ 이거뭐임??? -->
+	<input type="hidden" id="pageSize" value="${pageSize }"> <!-- 스크립트에서 값을 설정해서 넘길거임 / 임시 리스트 넘버 -->
 	<input type="hidden" name="action" id="action" value=""> 
 	<input type="hidden" id="swriter" value="${writer}"> <!-- 작성자 session에서 java에서 넘어온값 -->
 
@@ -404,16 +499,16 @@
 
 					   <p class="conTitle">
 							<span class="fr" style="margin-right: 264px;"> 
-							<select>
-							   <option>제목</option>
-							   <option>강사명</option>
-							   <option>과목</option>
+							<select id="searchkey" name="searchkey">
+							   <option value="title">강의명</option>
+							   <option value="name">강사명</option>
+							   <option value="subject">과목</option>
 							</select>
-                            <input type="text" name="searchName" style="height: 23.5px;">
+                            <input type="text" name="searchword" id="searchword" style="height: 23.5px;">
                             <a>작성일</a>                  
-                            <input type="date" style="width: 120px" id="startdate" name="startdate">
+                            <input type="date" style="width: 120px" id="Sstartdate" name="Sstartdate">
                             <a>~</a>
-                            <input type="date" style="width: 120px" id="enddate" name="enddate">
+                            <input type="date" style="width: 120px" id="Senddate" name="Senddate">
                             <a href="" class="btnType blue" id="searchBtn" name="btn"><span>검  색</span></a>
                             <!-- <input type="button" value="검  색  " id="searchBtn" name="btn" class="test_btn1" 
                               style="border-collapse: collapse; border: 0px gray solid; background-color: #50bcdf; width: 70px; color: white"/> -->
@@ -422,29 +517,32 @@
 						</p> 
 						
 					<!--검색창  --> 
+					<div style="margin-bottom:10px; margin-left: 920px;">
+					 <c:set var="nullNum" value=""></c:set>
+                     <a class="btnType blue" href="javascript:fNoticeModal(${nullNum});" name="modal">
+                     <span>신규등록</span></a>
+					</div>
 					
-					<button></button>
-					 	
 						
+                    
+
 						<div class="divComGrpCodList">
 							<table class="col">
 								<caption>caption</caption>
 	
 		                            <caption>caption</caption>
 										            <colgroup>
-										                <col width="6%">
 										                <col width="15%">
 										                <col width="14%">
 										                <col width="10%">
-										                <col width="17.5%">
-										                <col width="17.5%">
+										                <col width="20.5%">
+										                <col width="20.5%">
 										                <col width="10%">
 										                <col width="10%">
 										            </colgroup>
 										
 										            <thead>
 										                <tr>
-										                    <th scope="col"></th>
 										                    <th scope="col">강의명</th>
 										                    <th scope="col">과목</th>
 										                    <th scope="col">강사명</th>
@@ -460,9 +558,10 @@
 									<jsp:include page="/WEB-INF/view/hlt/planlist.jsp"></jsp:include>
 								</tbody>
 							</table>
+						<!-- 페이징 처리  -->
 							
-							<!-- 페이징 처리  -->
-							<div class="paging_area" id="pagingnavi">
+							
+						<!-- 	<div class="paging_area" id="pagingnavi">
 								<div class="paging">
 									<a class="first" href="javascript:selectplanList(1)">
 									<span class="hidden">맨앞</span></a>
@@ -478,8 +577,8 @@
 									<a class="last" href="javascript:selectplanList(5)">
 									<span class="hidden">맨뒤</span></a>
 								</div>
-							</div>
-											
+							</div> -->
+										
 						</div>
 
 		
@@ -495,7 +594,7 @@
 
 	<!-- 모달팝업 -->
 	<div id="notice" class="layerPop layerType2" style="width: 600px;">
-		<input type="hidden" id="no" name="no"> <!-- 수정시 필요한 num 값을 넘김  -->
+		 <input type="hidden" id="no" name="no" value="${resultMap.no}"> <!-- 수정시 필요한 num 값을 넘김  -->
 		
 		<dl>
 			<dt>
@@ -507,9 +606,11 @@
 					<caption>caption</caption>
 
 					<tbody>
+					    
 						<tr>
-							<th scope="row">강의명</th>
-							<td><input type="text" class="inputTxt p100"name="title" id="title" /></td>
+						    <th scope="row">강의명</th>
+							<td><input type="text" class="inputTxt p100" name="title" id="title" />
+							</td>
 							<th scope="row">과목</th>
 							<td>
 							<input type="text" class="inputTxt p100"name="subject" id="subject" />
@@ -526,6 +627,12 @@
 							<td><input type="text" class="inputTxt p100"name="email" id="email" readonly="readonly" /></td>
 							<th scope="row">강의실</th>
 							<td><input type="text" class="inputTxt p100"name="room" id="room" /></td>
+						</tr>
+						<tr>
+							<th scope="row">강의시작일</th>
+							<td><input type="date" class="inputTxt p100"name="startdate" id="startdate"/></td>
+							<th scope="row">강의종료일</th>
+							<td><input type="date" class="inputTxt p100"name="enddate" id="enddate" /></td>
 						</tr>
 						<tr>
 							<th scope="row">수업목표</th>
@@ -555,9 +662,8 @@
 				<!-- e : 여기에 내용입력 -->
 
 				<div class="btn_areaC mt30">
-					<a href="" class="btnType blue" id="btnSaveNotice" name="btn"><span>저장</span></a> 
-					<a href="" class="btnType blue" id="btnUpdateNotice" name="btn"><span>수정</span></a> 
-					<a href="" class="btnType blue" id="btnDeleteNotice" name="btn"><span>삭제</span></a> 
+				    <a href="" class="btnType blue" id="btnSaveNotice" name="btn"><span>등록</span></a>
+					<a href="" class="btnType blue" id="btnUpdateNotice" name="btn"><span>수정</span></a>
 					<a href=""	class="btnType gray"  id="btnClose" name="btn"><span>취소</span></a>
 				</div>
 			</dd>

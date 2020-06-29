@@ -18,8 +18,6 @@ public interface PlanService {
 
 	public int updateplan(Map<String, Object> paramMap);
 
-	public int deleteplan(Map<String, Object> paramMap);
-
 
 
 }
