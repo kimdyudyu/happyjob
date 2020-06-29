@@ -7,14 +7,15 @@
 			,l.title title
 			,u.name name
 			,u.loginID loginID
-			,l.room room
+			,r.name rname
 			,l.pcnt pcnt
-			<!-- ,l.etc -->
 		from
 			tb_lecture l
 			,tb_userinfo u
+			,tb_roominfo r
 		where
 			l.loginID=u.loginID
+			and l.room =r.room
 			and u.user_type='D'
 			<if test="searchKey == 'lecture_no' and searchWord != '' ">
 			AND l.no like concat('%',#{searchWord},'%')
@@ -31,6 +32,8 @@
 			<if test="searchKey == 'lecture_room' and searchWord != '' ">
 			AND l.room like concat('%',#{searchWord},'%')
 			</if>
+		LIMIT
+			#{pageIndex}, #{pageSize}
 	</select>
 	<select id="lectureListAdminCount" resultType="int">
 		select
@@ -69,6 +72,7 @@
 			,l.startdate 
 			,l.enddate 
 			,l.attend
+			,count(t.seq) cnt
 		FROM 
 			tb_userinfo u
 			,tb_tcourse t
@@ -92,7 +96,7 @@
 			and l.no=#{no}
 	</select>
 	
-	<update id="restyn">
+	<update id="resty">
 		update
 			tb_tcourse
 		set
@@ -100,4 +104,35 @@
 		where
 			seq=#{seq}
 	</update>
+	
+	<update id="restn">
+		update
+			tb_tcourse
+		set
+			restyn='n'
+		where
+			seq=#{seq}
+	</update>
+	
+	<select id="studentInfo" resultType="kr.happy.jobkorea.hla.model.LectureListAdminModel">
+		select
+			u.loginID loginID 
+			,u.name name 
+			,u.email email 
+			,u.hp hp 
+			,u.sex sex 
+			,u.tel1 tel1 
+			,u.tel2 tel2 
+			,u.tel3 tel3 
+			,u.joinDate joinDate 
+			,u.area area 
+			,u.birthday birthday 
+		FROM 
+			tb_userinfo u
+			,tb_tcourse t 
+		WHERE
+			u.loginID =t.loginID 
+			and t.no = #{no}
+			and t.loginID = #{loginID}
+	</select>
 </mapper>

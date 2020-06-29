@@ -26,17 +26,19 @@
 				<tr>
 					<td>${list.no}</td>
 					<td>${list.title}</td>
-					<td>${list.loginID}</td>
+					<td><a href="javascript:studentInfo('${list.no}','${list.loginID}');"
+						id="compBtn" name="modal"><strong>${list.loginID}</strong></a></td>
 					<td>${list.name}</td>
 					<td>${list.attend}</td>
 					<td>${list.startdate}</td>
 					<td>${list.enddate}</td>
 					<c:if test="${list.restyn eq 'y'}">
-						<td>휴학중</td>
+						<td><a class="btnType blue"
+							href="javascript:restyn('${list.seq }','${list.restyn}');"><span>휴학취소</span></a></td>
 					</c:if>
 					<c:if test="${list.restyn ne 'y'}">
-						<td class="restyn"><a class="btnType blue"
-							href="javascript:restyn('${list.seq }','${list.restyn}');"><span>휴학</span></a></td>
+						<td><a class="btnType blue"
+							href="javascript:restyn('${list.seq }','${list.restyn}');"><span>휴학신청</span></a></td>
 					</c:if>
 				</tr>
 				<c:set var="nRow" value="${nRow + 1}" />

@@ -50,4 +50,10 @@ public class CareerInfoServiceImpl implements CareerInfoService {
 		int careerInfoUpdate = careerInfoDao.careerInfoUpdate(paramMap);
 		return careerInfoUpdate;
 	}
+
+	@Override
+	public List<CareerInfoModel> studentList() {
+		List<CareerInfoModel> studentList = careerInfoDao.studentList();
+		return studentList;
+	}
 }

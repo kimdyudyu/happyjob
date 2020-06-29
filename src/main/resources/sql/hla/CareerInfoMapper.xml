@@ -18,7 +18,7 @@
    				AND qa.hire_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
    			</if>
    			<if test="enddate != null and enddate !='' ">
-   				AND qa.resign_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   				AND qa.hire_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
    			</if>
     		<if test="searchword != null and searchword !='' ">
     			AND qa.cop_name like concat('%',#{searchword},'%')	        		    
@@ -41,7 +41,7 @@
    				AND qa.hire_date <![CDATA[>=]]> STR_TO_DATE(#{startdate}, '%Y-%m-%d')   
    			</if>
    			<if test="enddate != null and enddate !='' ">
-   				AND qa.resign_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
+   				AND qa.hire_date <![CDATA[<=]]> STR_TO_DATE(#{enddate}, '%Y-%m-%d')   
    			</if>
     		<if test="searchword != null and searchword !='' ">
     			AND qa.cop_name like concat('%',#{searchword},'%')	        		    
@@ -113,4 +113,14 @@
 		where
 			seq=#{seq}
 	</update>
+	
+	<select id="studentList" resultType="kr.happy.jobkorea.hla.model.CareerInfoModel">
+		select
+			loginID
+			,name
+		from
+			tb_userinfo
+		where
+			user_type='C'
+	</select>
 </mapper>

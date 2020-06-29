@@ -9,33 +9,89 @@
 <jsp:include page="/WEB-INF/view/common/common_include.jsp"></jsp:include>
 <script type="text/javascript">
 	//페이징입니다.
-	var pageSizelist = 5;
-	var pageBlockSizelist = 5;
+	var pageSizelist = 10;
+	var pageBlockSizelist = 10;
 
 	//유저페이징입니다.
 	var pageSizeDtlList = 5;
 	var pageBlockSizeDtlList = 5;
 	//ON LOAD EVENT****
 	$(function() {
-		fcnsList();
+		lectureListAdminList();
 
 		fRegisterButtonClickEvent();
 	});
+	
+	function studentInfo(no,loginID){
+		console.log("studentInfo~"+no+" "+loginID);
+		var param = {
+				no : no,
+				loginID : loginID
+			};
+
+			var resultCallback = function(data) {
+				studentInfoResult(data);
+			};
+
+			callAjax("/hla/studentInfo.do", "post", "json", true, param,
+					resultCallback);
+	}
+	
+	function studentInfoResult(data){
+		
+		if (data.result == "SUCCESS") {
+
+			gfModalPop("#studentInfo");
+			
+			studentInfoForm(data.studentInfo);
+
+		} else {
+			alert(data.resultMsg);
+		}
+	}
+	function studentInfoForm(object){
+		console.log(object.loginID);
+		var phone=object.tel1+" - "+object.tel2+" - "+object.tel3;
+		document.getElementById("loginID").innerHTML=object.loginID;
+		document.getElementById("name").innerHTML=object.name;
+		document.getElementById("birthday").innerHTML=object.birthday;
+		document.getElementById("sex").innerHTML=object.sex;
+		document.getElementById("hp").innerHTML=object.hp;
+		document.getElementById("phone").innerHTML=phone;
+		document.getElementById("area").innerHTML=object.area;
+		document.getElementById("email").innerHTML=object.email;
+		document.getElementById("joinDate").innerHTML=object.joinDate;
+	}
+	
 	function restyn(seq, restyn) {
-		console.log("restyn~");
+		console.log("restyn~" + seq + " " + restyn);
+		var action = $("#restyn").val("y");
+		var action_param=action.val();
 		var resultCallback = function(data) {
 			restynResult(data);
 		}
 		var param = {
 			seq : seq,
-			restyn : restyn
+			restyn : restyn,
+			action_param : action_param
 		}
-		if (confirm("휴강신청?")) {
-			callAjax("/hla/restyn.do", "post", "json", true, param,
-					resultCallback);
+		if (restyn == "y") {
+			if (confirm("휴학취소?")) {
+				console.log("휴학취소~");
+				callAjax("/hla/restyn.do", "post", "json", true, param,
+						resultCallback);
+			} else {
+				return false;
+			}
 		} else {
-			return false;
+			if (confirm("휴학신청?")) {
+				callAjax("/hla/restyn.do", "post", "json", true, param,
+						resultCallback);
+			} else {
+				return false;
+			}
 		}
+
 	}
 
 	function restynResult(data) {
@@ -58,6 +114,10 @@
 		}
 	}
 
+	function restynCancleResult() {
+
+	}
+
 	function fRegisterButtonClickEvent() {
 		$('a[name=btn]').click(function(e) {
 			e.preventDefault();
@@ -74,6 +134,9 @@
 			case 'btnDeleteClist':
 				fDeleteClist();
 				break;
+			case 'btnCloseDtlCod':
+				gfCloseModal();
+				break;
 			}
 		});
 	}
@@ -81,12 +144,12 @@
 	function enterKey() {
 
 		if (event.keyCode == '13') {
-			fcnsList();
+			lectureListAdminList();
 		}
 	}
 
 	//과정 리스트
-	function fcnsList(currentPage) {
+	function lectureListAdminList(currentPage) {
 
 		var searchKey = $("#searchKey").val();
 		var searchWord = $("#searchWord").val();
@@ -110,18 +173,20 @@
 	}
 	//과정콜백
 	function fcnsListResult(data, currentPage) {
-
 		$('#list').empty();
 		var $data = $($(data).html());
-		var $list = $data.find('#list');
 
+		var $list = $data.find('#list');
 		$('#list').append($list.children());
-		var $lectureListAdminCount = $data.find('#lectureListAdminCount');
+
+		var $lectureListAdminCount = $data.find('#list');
 		var lectureListAdminCount = $lectureListAdminCount.text();
 		console.log(lectureListAdminCount);
-		var paginationHtml = getPaginationHtml(currentPage,
-				lectureListAdminCount, pageSizelist, pageBlockSizelist,
-				'fcnsList');
+		console.log(currentPage + " " + /* lectureListAdminCount */+" "
+				+ pageSizelist + " " + pageBlockSizelist);
+		var paginationHtml = getPaginationHtml(currentPage, 12, 10,
+				pageBlockSizelist, 'lectureListAdminList');
+		console.log(paginationHtml);
 		$("#listPagiNation").empty().append(paginationHtml);
 		$("#currentPagelist").val(currentPage);
 
@@ -152,6 +217,7 @@
 	function fcnsUserListResult(data, currentPage) {
 		$('#cnsUserDtlList').empty();
 		var $data = $($(data).html());
+
 		var $cnsUserDtlList = $data.find("#cnsUserDtlList");
 		$("#cnsUserDtlList").append($cnsUserDtlList.children());
 
@@ -160,8 +226,10 @@
 
 		var lec_seq = $("#tmpLecSeq").val();
 		var lec_nm = $("#tmpLecNm").val();
+		console.log(currentPage + " " + totalCntDtlList + " " + pageSizeDtlList
+				+ " " + pageBlockSizelist);
 		var paginationHtml = getPaginationHtml(currentPage, totalCntDtlList,
-				pageSizeDtlList, pageBlockSizelist, 'fcnsUserList', [ lec_seq ]);
+				pageSizeDtlList, pageBlockSizelist, 'fcnsUserList');
 		$("#listDtlPagiNation").empty().append(paginationHtml);
 
 		$("#currentPageDtlList").val(currentPage);
@@ -283,7 +351,7 @@
 
 			gfCloseModal();
 
-			fcnsList(currentPage, searchWord);
+			lectureListAdminList(currentPage, searchWord);
 		}
 	}
 </script>
@@ -294,7 +362,8 @@
 			type="hidden" id="currentPageDtlList" value="1"> <input
 			type="hidden" id="tmpLecSeq" value=""> <input type="hidden"
 			id="tmpLecNm" value=""> <input type="hidden" id="action"
-			name="action" value="">
+			name="action" value=""> <input type="hidden" id="restyn"
+			name="restyn" value="">
 
 		<div id="mask"></div>
 		<div id="wrap_area">
@@ -327,10 +396,10 @@
 									<option value="lecture_name">강사명</option>
 									<option value="lecture_room">강의실</option>
 								</select> <input
-									onkeypress="if(event.keyCode==13) {fcnsList(); return false;}"
+									onkeypress="if(event.keyCode==13) {lectureListAdminList(); return false;}"
 									type="text" id="searchWord" name="searchWord" placeholder=""
 									style="height: 28px;"> <a class="btnType blue"
-									href="javascript:fcnsList()" onkeydown="enterKey()"
+									href="javascript:lectureListAdminList()" onkeydown="enterKey()"
 									name="search"><span id="searchEnter">검색</span></a>
 							</p>
 							<p class="conTitle">
@@ -477,6 +546,66 @@
 						<a href="" class="btnType blue" id="btnSave" name="btn"><span>저장</span></a>
 						<a href="" class="btnType blue" id="btnDeleteClist" name="btn"><span>삭제</span></a>
 						<a href="" class="btnType gray" id="btnCloseGrpCod" name="btn"><span>취소</span></a>
+					</div>
+				</dd>
+			</dl>
+			<a href="" class="closePop"><span class="hidden">닫기</span></a>
+		</div>
+		<div id="studentInfo" class="layerPop layerType2"
+			style="width: 600px;">
+			<dl>
+				<dt>
+					<strong>학생 정보</strong>
+				</dt>
+				<dd class="content">
+
+					<!-- s : 여기에 내용입력 -->
+
+					<table class="row">
+						<caption>caption</caption>
+						<colgroup>
+							<col width="120px">
+							<col width="*">
+							<col width="120px">
+							<col width="*">
+						</colgroup>
+
+						<tbody>
+							<tr>
+								<th>아이디</th>
+								<td id="loginID"></td>
+								<th>이름</th>
+								<td id="name"></td>
+							</tr>
+							<tr>
+								<th>생년월일</th>
+								<td id="birthday"></td>
+								<th>성별</th>
+								<td id="sex"></td>
+							</tr>
+							<tr>
+								<th>전화번호</th>
+								<td id="hp"></td>
+								<th>폰번호</th>
+								<td id="phone"></td>
+							</tr>
+							<tr>
+								<th>사는곳</th>
+								<td id="area"></td>
+								<th>이메일</th>
+								<td id="email"></td>
+							</tr>
+							<tr>
+								<th colspan="2">가입일자</th>
+								<td id="joinDate"></td>
+							</tr>
+						</tbody>
+					</table>
+
+					<!-- e : 여기에 내용입력 -->
+
+					<div class="btn_areaC mt30">
+						<a href="" class="btnType gray" id="btnCloseDtlCod" name="btn"><span>취소</span></a>
 					</div>
 				</dd>
 			</dl>

@@ -17,4 +17,6 @@ public interface CareerInfoDao {
 	int careerInfoDelete(Map<String, Object> paramMap);
 
 	int careerInfoUpdate(Map<String, Object> paramMap);
+
+	List<CareerInfoModel> studentList();
 }

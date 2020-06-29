@@ -1,6 +1,7 @@
 package kr.happy.jobkorea.hla.model;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 public class LectureListAdminModel {
 	// 강의번호
@@ -12,7 +13,7 @@ public class LectureListAdminModel {
 	// 아이디
 	private String loginID;
 	// 강의실
-	private String room;
+	private String rname;
 	// 수강인원
 	private int pcnt;
 	// 강의목록 비고
@@ -27,6 +28,106 @@ public class LectureListAdminModel {
 	private int attend;
 	// 수강정보 일련번호
 	private int seq;
+
+	private String email;
+	private String hp;
+	private String sex;
+	private String tel1;
+	private String tel2;
+	private String tel3;
+	private String area;
+	private String birthday;
+	private Date joinDate;
+
+	private int cnt;
+
+	public int getCnt() {
+		return cnt;
+	}
+
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+
+	public String getRname() {
+		return rname;
+	}
+
+	public void setRname(String rname) {
+		this.rname = rname;
+	}
+
+	public Date getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Date joinDate) {
+		this.joinDate = joinDate;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public String getHp() {
+		return hp;
+	}
+
+	public void setHp(String hp) {
+		this.hp = hp;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	public String getTel1() {
+		return tel1;
+	}
+
+	public void setTel1(String tel1) {
+		this.tel1 = tel1;
+	}
+
+	public String getTel2() {
+		return tel2;
+	}
+
+	public void setTel2(String tel2) {
+		this.tel2 = tel2;
+	}
+
+	public String getTel3() {
+		return tel3;
+	}
+
+	public void setTel3(String tel3) {
+		this.tel3 = tel3;
+	}
+
+	public String getArea() {
+		return area;
+	}
+
+	public void setArea(String area) {
+		this.area = area;
+	}
+
+	public String getBirthday() {
+		return birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		this.birthday = birthday;
+	}
 
 	public int getSeq() {
 		return seq;
@@ -74,14 +175,6 @@ public class LectureListAdminModel {
 
 	public void setLoginID(String loginID) {
 		this.loginID = loginID;
-	}
-
-	public String getRoom() {
-		return room;
-	}
-
-	public void setRoom(String room) {
-		this.room = room;
 	}
 
 	public int getPcnt() {

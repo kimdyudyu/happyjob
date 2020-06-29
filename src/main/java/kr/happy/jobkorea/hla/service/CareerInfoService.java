@@ -13,8 +13,10 @@ public interface CareerInfoService {
 	CareerInfoModel careerInfoListDetail(Map<String, Object> paramMap);
 
 	int careerInfoInsert(Map<String, Object> paramMap);
-	
+
 	int careerInfoDelete(Map<String, Object> paramMap);
-	
+
 	int careerInfoUpdate(Map<String, Object> paramMap);
+
+	List<CareerInfoModel> studentList();
 }

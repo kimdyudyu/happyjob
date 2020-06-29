@@ -346,7 +346,7 @@ click-able rows
 				}
 			}
 		});
-	
+
 		var dateFormat = "yy-mm-dd";
 		//시작일
 		$("#startdate").datepicker({
@@ -440,7 +440,7 @@ click-able rows
 		//var list = $("#tmpList").val();
 		//var listnum = $("#tmpListNum").val();
 		var pagingnavi = getPaginationHtml(currentPage, totalCnt,
-				qnaPageSizevue, qnaPageBlock, 'selectqnaListvue');
+				qnaPageSizevue, qnaPageBlock, 'noticeList');
 
 		//console.log("pagingnavi : " + pagingnavi);
 		// 비운다음에 다시 append 
@@ -489,7 +489,7 @@ click-able rows
 	function frealPopModal(object) {
 
 		if (object == "" || object == null || object == undefined) {
-			
+
 		} else {
 			//alert("숫자찍어보세 : " + object.seq);// 페이징 처리가 제대로 안되서
 			dqnaVue.nt_no = object.nt_no;

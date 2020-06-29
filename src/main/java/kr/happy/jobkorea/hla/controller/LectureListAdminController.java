@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.happy.jobkorea.hla.dao.LectureListAdminDao;
 import kr.happy.jobkorea.hla.model.LectureListAdminModel;
+import kr.happy.jobkorea.hla.model.ToolModel;
 import kr.happy.jobkorea.hla.service.LectureListAdminService;
 import kr.happy.jobkorea.mss.model.AdminLecModel;
 
@@ -35,7 +37,8 @@ public class LectureListAdminController {
 	}
 
 	@RequestMapping("lectureListAdminList.do")
-	public String lectureListAdminList(Model model, @RequestParam Map<String, Object> paramMap,
+	@ResponseBody
+	public  Map<String, Object> lectureListAdminList(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 
 		logger.info("lectureListAdminList~" + paramMap);
@@ -43,41 +46,38 @@ public class LectureListAdminController {
 		int currentPage = Integer.parseInt((String) paramMap.get("currentPage")); // 현재
 		int pageSize = Integer.parseInt((String) paramMap.get("pageSize")); // 페이지
 		int pageIndex = (currentPage - 1) * pageSize; // 페이지 시작 row 번호
-
+		logger.info("pageIndex~"+pageIndex);
 		paramMap.put("pageIndex", pageIndex);
 		paramMap.put("pageSize", pageSize);
 
 		// 강의실 목록
 		List<LectureListAdminModel> lectureListAdminList = lectureListAdminService.lectureListAdminList(paramMap);
 		logger.info("lectureListAdminList~" + lectureListAdminList);
-		model.addAttribute("lectureListAdminList", lectureListAdminList);
+		//model.addAttribute("lectureListAdminList", lectureListAdminList);
 
 		// 강의실 목록 카운트 조회
 		int lectureListAdminCount = lectureListAdminService.lectureListAdminCount(paramMap);
-
+		logger.info(lectureListAdminCount);
+/*
 		model.addAttribute("lectureListAdminCount", lectureListAdminCount);
 		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("currentPageComnGrpCod", currentPage);
-
+*/
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("lectureListAdminList", lectureListAdminList); // 리턴 값 해쉬에
 																		// 담기
 		resultMap.put("lectureListAdminCount", lectureListAdminCount); // success
 																		// 용어 담기
-
-		/*
-		 * List<LectureListAdminModel> lectureStudentList =
-		 * lectureListAdminService.lectureStudentList(paramMap);
-		 * model.addAttribute("userList", lectureStudentList);
-		 */
-
-		return "/hla/lectureListAdminList";
+		//return "/hla/lectureListAdminList";
+		return resultMap;
 	}
 
 	@RequestMapping("/lectureStudentList.do")
-	public String lectureStudentList(Model model, @RequestParam Map<String, Object> paramMap,
+	@ResponseBody
+	public Map<String, Object> lectureStudentList(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 		logger.info("lectureStudentList~" + paramMap);
+		
 		int currentPage = Integer.parseInt((String) paramMap.get("currentPage"));
 		int pageSize = Integer.parseInt((String) paramMap.get("pageSize"));
 		int pageIndex = (currentPage - 1) * pageSize;
@@ -88,14 +88,19 @@ public class LectureListAdminController {
 		List<LectureListAdminModel> lectureStudentList = lectureListAdminService.lectureStudentList(paramMap);
 		model.addAttribute("userList", lectureStudentList);
 
-		int totalCount = lectureListAdminService.lectureStudentListCount(paramMap);
-
+		int lectureStudentListCount = lectureListAdminService.lectureStudentListCount(paramMap);
+/*
 		model.addAttribute("totalCntlist", totalCount);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("pagesize", pageSize);
 		model.addAttribute("lecSeq", paramMap.get("lecSeq"));
-		logger.info("@@@@@@@@@@@@@@@@lectureStudentList.do END@@@@@@@@@@@@@@@@");
-		return "/hla/lectureStudentList";
+		*/
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();		
+		resultMap.put("lectureStudentList", lectureStudentList);
+		resultMap.put("lectureStudentListCount", lectureStudentListCount);
+		//return "/hla/lectureStudentList";
+		return resultMap;
 	}
 
 	@RequestMapping("/restyn.do")
@@ -103,23 +108,50 @@ public class LectureListAdminController {
 	public Map<String, Object> restyn(Model model, @RequestParam Map<String, Object> paramMap,
 			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
 		logger.info("restyn~" + paramMap);
+		String action = (String) paramMap.get("action_param");
 		String restyn = (String) paramMap.get("restyn");
-		String y = "y";
 
-		String result = null;
+		String result = "SUCCESS";
 		String resultMsg = null;
 
-		/*
-		 * if (restyn.equals(y)) { resultMsg = "이 학생은 휴학 중입니다."; } else {
-		 */
-		lectureListAdminService.restyn(paramMap);
-		result = "SUCCESS";
-		resultMsg = "휴학신청 됐습니다.";
-		// }
+		if (restyn.equals("y")) {
+			resultMsg = "휴학취소 됐습니다.";
+			lectureListAdminService.restn(paramMap);
+		} else {
+			resultMsg = "휴학신청 됐습니다.";
+			lectureListAdminService.resty(paramMap);
+		}
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		String no=(String) paramMap.get("no");
+		resultMap.put("no", no);
+		resultMap.put("result", result);
+		resultMap.put("resultMsg", resultMsg);
+		return resultMap;
+	}
+
+	@RequestMapping("studentInfo.do")
+	@ResponseBody
+	public Map<String, Object> studentInfo(Model model, @RequestParam Map<String, Object> paramMap,
+			HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
+
+		logger.info("studentInfo~" + paramMap);
+
+		LectureListAdminModel studentInfo = lectureListAdminService.studentInfo(paramMap);
+
+		String result = "SUCCESS";
+		String resultMsg = "조회 되었습니다.";
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("result", result);
 		resultMap.put("resultMsg", resultMsg);
+		resultMap.put("studentInfo", studentInfo);
+
 		return resultMap;
+	}
+
+	@RequestMapping("/lectureListVuejs.do")
+	public void lectureList() throws Exception {
+
 	}
 }

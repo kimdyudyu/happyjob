@@ -58,7 +58,7 @@ public class CareerInfoController {
 		int currentPage = Integer.parseInt((String) paramMap.get("currentPage")); // 현재페이지
 		int pageSize = Integer.parseInt((String) paramMap.get("pageSize"));
 		int pageIndex = (currentPage - 1) * pageSize;
-
+		logger.info("pageIndex~"+pageIndex);
 		paramMap.put("pageIndex", pageIndex);
 		paramMap.put("pageSize", pageSize);
 
@@ -72,7 +72,10 @@ public class CareerInfoController {
 		resultMap.put("careerInfoList", careerInfoList); // 리턴 값 해쉬에 담기
 		// resultMap.put("resultComments", comments);
 		resultMap.put("totalCnt", totalCnt); // success 용어 담기
-
+		
+		List<CareerInfoModel> studentList = careerInfoService.studentList();
+		resultMap.put("studentList", studentList);
+		logger.info(studentList);
 		return resultMap;
 	}
 

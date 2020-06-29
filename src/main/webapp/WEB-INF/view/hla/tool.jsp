@@ -130,8 +130,8 @@
 	function roomResult(data, currentPage) {
 
 		//alert(data);
-		console.log("강의실 목록 콜백 함수~" + data);
-
+		//console.log("강의실 목록 콜백 함수~" + data);
+		//console.log(data.totalCntComnGrpCod);
 		// 기존 목록 삭제
 		$('#listComnGrpCod').empty();
 		//$('#listComnGrpCod').find("tr").remove() 
@@ -149,7 +149,7 @@
 		// 페이지 네비게이션 생성
 		var paginationHtml = getPaginationHtml(currentPage, totalCntComnGrpCod,
 				pageSize, pageBlockSize, 'roomList');
-		console.log("paginationHtml : " + paginationHtml);
+		//console.log("paginationHtml : " + paginationHtml);
 		//alert(paginationHtml);
 		$("#comnGrpCodPagination").empty().append(paginationHtml);
 
@@ -226,7 +226,7 @@
 		// 총 개수 추출
 		var $totalCntComnDtlCod = $data.find("#totalCntComnDtlCod");
 		var totalCntComnDtlCod = $totalCntComnDtlCod.text();
-
+		//alert(totalCntComnDtlCod);
 		// 페이지 네비게이션 생성
 		var grp_cod = $("#tmpGrpCod").val();
 		var grp_cod_nm = $("#tmpGrpCodNm").val();
@@ -438,7 +438,7 @@
 											<td><input name="searchword" id="searchword"
 												style="width: 500px;" searchword" placeholder="강의실명"
 												autocomplete="off"
-												onkeypress="if(event.keyCode==13) {selectqnaListvue(); return false;}"></td>
+												onkeypress="if(event.keyCode==13) {roomList(); return false;}"></td>
 											<td><a class="btnType blue" href="javascript:reset();"
 												name="modal"><span>초기화</span></a></td>
 											<td><a class="btnType blue" id="SEARCH_KEYWORD"

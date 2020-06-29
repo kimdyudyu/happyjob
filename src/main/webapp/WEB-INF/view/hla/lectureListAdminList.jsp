@@ -15,7 +15,8 @@
 			<c:set var="nRow" value="${pageSize*(currentPagelist-1) }" />
 			<c:forEach items="${lectureListAdminList }" var="list">
 				<tr>
-					<td><a href="javascript:fcnsUserList('1','${list.no }')">${list.no}</a></td>
+					<td><strong><a
+							href="javascript:fcnsUserList('1','${list.no }')">${list.no}</a></strong></td>
 					<td>${list.title }</td>
 					<td>${list.name }</td>
 					<td>${list.loginID }</td>

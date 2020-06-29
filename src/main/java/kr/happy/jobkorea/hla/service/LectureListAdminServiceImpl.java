@@ -39,9 +39,20 @@ public class LectureListAdminServiceImpl implements LectureListAdminService {
 	}
 
 	@Override
-	public int restyn(Map<String, Object> paramMap) {
-		int restyn = lectureListAdminDao.restyn(paramMap);
-		return restyn;
+	public int resty(Map<String, Object> paramMap) {
+		int resty = lectureListAdminDao.resty(paramMap);
+		return resty;
 	}
 
+	@Override
+	public int restn(Map<String, Object> paramMap) {
+		int restn = lectureListAdminDao.restn(paramMap);
+		return restn;
+	}
+
+	@Override
+	public LectureListAdminModel studentInfo(Map<String, Object> paramMap) {
+		LectureListAdminModel studentInfo = lectureListAdminDao.studentInfo(paramMap);
+		return studentInfo;
+	}
 }

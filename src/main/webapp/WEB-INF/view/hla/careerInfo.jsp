@@ -26,7 +26,6 @@ click-able rows
 }
 </style>
 <script type="text/javascript">
-	var testvm;
 	// 페이징 설정 
 	var qnaPageSize = 10; // 화면에 뿌릴 데이터 수 
 	var qnaPageSizevue = 10;
@@ -34,6 +33,7 @@ click-able rows
 
 	var vm;
 	var dqnaVue;
+	var studentList;
 
 	//var isM = isMobile();
 	var isM = false;
@@ -58,8 +58,18 @@ click-able rows
 		//btnEvent();
 		// 버튼 이벤트 등록
 		fRegisterButtonClickEvent();
+		admin();
 	});
 
+	function admin() {
+		var userType = "${sessionScope.userType}";
+		console.log("userType~" + userType);
+		if (userType != "A") {
+			//$("#insertBtn").hide();
+			$('#insertBtn').attr('style', "display:none;"); //숨기기
+			$('#adminUpdate').attr('style', "display:none;"); //숨기기
+		}
+	}
 	function reset() {
 		$("#searchword").val("");
 		$("#startdate").val("");
@@ -106,10 +116,6 @@ click-able rows
 			$("input:radio[name=work_yn]:input[value='Y']").attr("checked",
 					true);
 			$("#loginID").focus();
-
-			$("#deleteBtn").hide();
-			console.log($("#btnDeleteGrpCod").hide());
-
 		}
 	}
 
@@ -259,10 +265,9 @@ click-able rows
 	// 취업정보 저장 Validation
 	function careerInfoValidation() {
 
-		var chk = checkNotEmpty([ [ "loginID_save", "아이디를 입력해 주세요." ],
-				[ "name_save", "학생명을 입력해 주세요" ],
-				[ "hire_date_save", "입사일을 입력해 주세요." ],
-				[ "cop_name_save", "업체명을 입력해 주세요." ] ]);
+		var chk = checkNotEmpty([ /* [ "loginID_save", "아이디를 입력해 주세요." ], */
+				/* [ "name_save", "학생명을 입력해 주세요" ], */[ "hire_date_save",
+						"입사일을 입력해 주세요." ], [ "cop_name_save", "업체명을 입력해 주세요." ] ]);
 
 		if (!chk) {
 			return;
@@ -362,6 +367,22 @@ click-able rows
 			}
 		});
 
+		studentList = new Vue({
+			el : '#layer1',
+			data : {
+				items : [],
+				options : {
+				//  paginated:"paginated"
+				}
+			},
+			methods : {
+				studentName : function(loginID) {
+					alert(loginID);
+					//careerInfoDetail(seq);
+				}
+			}
+		});
+
 		var dateFormat = "yy-mm-dd";
 		//시작일
 		$("#startdate").datepicker({
@@ -445,6 +466,9 @@ click-able rows
 		//console.log("vm.items~"+vm.items);
 		console.log(data.totalCnt + " : " + currentPage);
 
+		studentList.items = [];
+		studentList.items = data.studentList;
+		console.log(data.studentList);
 		// 리스트의 총 개수를 추출합니다. 
 		//var totalCnt = $data.find("#totalCnt").text();
 		var totalCnt = data.totalCnt; // qnaRealList() 에서보낸값 
@@ -455,6 +479,8 @@ click-able rows
 		// 파라미터를 참조합시다. 
 		//var list = $("#tmpList").val();
 		//var listnum = $("#tmpListNum").val();
+		console.log(currentPage + " " + totalCnt + " " + qnaPageSizevue + " "
+				+ qnaPageBlock);
 		var pagingnavi = getPaginationHtml(currentPage, totalCnt,
 				qnaPageSizevue, qnaPageBlock, 'careerList');
 
@@ -524,6 +550,11 @@ click-able rows
 
 		} else {
 			//alert("숫자찍어보세 : " + object.seq);// 페이징 처리가 제대로 안되서
+			var test123;
+			for ( var test in object) {
+				test123 = object[test]
+			}
+			console.log(test123);
 			dqnaVue.seq = object.seq;
 			dqnaVue.loginID = object.loginID;
 			console.log("dqnaVue.loginID~" + dqnaVue.loginID);
@@ -625,7 +656,7 @@ click-able rows
 											<td><a class="btnType blue" id="SEARCH_KEYWORD"
 												href="javascript:careerList();" name="modal"><span>검색</span></a>
 											</td>
-											<td><a class="btnType blue"
+											<td id="insertBtn"><a class="btnType blue"
 												href="javascript:careerInsertModal();" name="modal"><span>신규등록</span></a></td>
 										</tr>
 									</tbody>
@@ -673,7 +704,12 @@ click-able rows
 														<td>{{ row.hire_date }}</td>
 														<td>{{ row.resign_date }}</td>
 														<td>{{ row.cop_name }}</td>
-														<td>{{ row.work_yn }}</td>
+														<template v-if="row.work_yn === 'Y'">
+														<td>재직</td>
+														</template>
+														<template v-if="row.work_yn === 'N'">
+														<td>퇴사</td>
+														</template>
 													</tr>
 													</template>
 
@@ -760,8 +796,10 @@ click-able rows
 						</table>
 					</div>
 					<div class="btn_areaC mt30">
-						<a href="" class="btnType blue" id="btnSaveDtlCod" name="btn"><span>수정</span></a>
-						<a href="" class="btnType gray" id="btnDeleteGrpCod" name="btn"><span>삭제</span></a>
+						<div id="adminUpdate">
+							<a href="" class="btnType blue" id="btnSaveDtlCod" name="btn"><span>수정</span></a>
+							<a href="" class="btnType gray" id="btnDeleteGrpCod" name="btn"><span>삭제</span></a>
+						</div>
 						<a href="" class="btnType blue" id="btnClose_vue" name="btn"><span>취소</span></a>
 					</div>
 				</dd>
@@ -790,11 +828,17 @@ click-able rows
 						<tbody>
 							<tr>
 								<th scope="row">아이디</th>
-								<td><input type="text" class="inputTxt p100"
-									name="loginID_save" id="loginID" /></td>
+								<td style="text-align: center;"><select name="loginID_save">
+										<option v-for="(row, index) in items" v-if="items.length">
+											{{ row.loginID}}</option>
+								</select></td>
+								<!-- <td> <input type="text" class="inputTxt p100"
+									name="loginID_save" id="loginID" /></td> -->
 								<th scope="row">학생명</th>
-								<td><input type="text" class="inputTxt p100"
-									name="name_save" id="name_save" /></td>
+								<td><select name="name_save">
+										<option v-for="(row, index) in items" v-if="items.length">
+											{{ row.name}}</option>
+								</select></td>
 							</tr>
 							<tr>
 								<th scope="row">입사일</th>
@@ -811,10 +855,11 @@ click-able rows
 								<td><input type="text" class="inputTxt p100"
 									name="cop_name_save" id="cop_name" v-model="cop_name" /></td>
 
-								<th scope="row">재직여부</th>
-								<td colspan="3"><input type="radio" id="radio1-1"
-									name="work_yn_save" id="work_yn" value='Y' v-model="work_yn" />
-									<label for="radio1-1">입사</label> &nbsp;&nbsp;&nbsp;&nbsp; <input
+								<th scope="row">재직<br>여부
+								</th>
+								<td><input type="radio" id="radio1-1" name="work_yn_save"
+									id="work_yn" value='Y' v-model="work_yn" /> <label
+									for="radio1-1">입사</label>&nbsp;&nbsp;&nbsp;&nbsp;<input
 									v-model="work_yn" type="radio" id="radio1-2"
 									name="work_yn_save" id="work_yn2" value="N" /> <label
 									for="radio1-2">퇴직</label></td>
@@ -826,9 +871,6 @@ click-able rows
 
 					<div class="btn_areaC mt30">
 						<a href="" class="btnType blue" id="btnSaveGrpCod" name="btn"><span>저장</span></a>
-						<div id="deleteBtn">
-							<!-- <a href="" class="btnType blue" id="btnDeleteGrpCod" name="btn"><span>삭제</span></a> -->
-						</div>
 						<a href="" class="btnType gray" id="btnCloseGrpCod" name="btn"><span>취소</span></a>
 					</div>
 				</dd>
