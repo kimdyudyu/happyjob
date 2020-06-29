@@ -88,16 +88,19 @@ public class FileUtilCho {
             if (!multipartFile.isEmpty()) {
             	
             
+
             	String filename = multipartFile.getOriginalFilename();
                 String fileExtension = filename.substring(filename.lastIndexOf(".")+1);
+
                 String filepath = rootFilePath+itemFilePath.substring(0, itemFilePath.length()-1);
                
                /* String thumbnailFileName = tmpFileName +"_thumbnail."+fileExtension;*/
                 String fileSize = Long.toString(multipartFile.getSize());
                 
-                
+
                 map.put("filename", filename);
                 map.put("filesize", fileSize);
+
                 map.put("filepath", filepath);
                 map.put("fileExtension", fileExtension);
                

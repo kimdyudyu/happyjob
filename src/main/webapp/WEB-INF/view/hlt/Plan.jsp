@@ -497,13 +497,13 @@
 								<a href="#" class="btn_set refresh">새로고침</a>
 						</p>
 
-					   <p class="conTitle">
-							<span class="fr" style="margin-right: 264px;"> 
-							<select id="searchkey" name="searchkey">
-							   <option value="title">강의명</option>
-							   <option value="name">강사명</option>
-							   <option value="subject">과목</option>
-							</select>
+					    <p class="conTitle">
+                     <span class="fr" style="margin-right: 264px;"> 
+                     <select id="searchkey" name="searchkey">
+                        <option value="title">강의명</option>
+                        <option value="name">강사명</option>
+                        <option value="subject">과목</option>
+                     </select>
                             <input type="text" name="searchword" id="searchword" style="height: 23.5px;">
                             <a>작성일</a>                  
                             <input type="date" style="width: 120px" id="Sstartdate" name="Sstartdate">
@@ -513,15 +513,15 @@
                             <!-- <input type="button" value="검  색  " id="searchBtn" name="btn" class="test_btn1" 
                               style="border-collapse: collapse; border: 0px gray solid; background-color: #50bcdf; width: 70px; color: white"/> -->
                             
-						   </span>
-						</p> 
-						
-					<!--검색창  --> 
-					<div style="margin-bottom:10px; margin-left: 920px;">
-					 <c:set var="nullNum" value=""></c:set>
+                     </span>
+                  </p> 
+                  
+               <!--검색창  --> 
+               <div style="margin-bottom:10px; margin-left: 920px;">
+                <c:set var="nullNum" value=""></c:set>
                      <a class="btnType blue" href="javascript:fNoticeModal(${nullNum});" name="modal">
                      <span>신규등록</span></a>
-					</div>
+               </div>
 					
 						
                     
