@@ -133,10 +133,13 @@
 		tel2 = #{tel2},
 		tel3 = #{tel3},
 		area = #{area},
-		birthday = REPLACE( #{birthday} , '-', ''),
-	  	imgname = #{fileName},
-  		imgpath = #{filePath},
-	  	imgsize = #{fileSize}
+		birthday = REPLACE( #{birthday} , '-', '')
+		<if test="(fileName != null) and (!fileName.equals(''))">			
+			,imgname = #{fileName}
+  			,imgpath = #{filePath}
+	  		,imgsize = #{fileSize}
+		</if>
+
 	WHERE
 		loginID = #{loginID}
 	</update>

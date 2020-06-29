@@ -4,10 +4,9 @@
 		<div id="divUserInfoVue" class="regcontainer">
 		   <div id="divpicture" class="divpicture">
 		   		<!-- <img  src="/images/mpm/사쿠라.jpg"> -->
-		   	<template v-if="vUploadImageData != null ">
-		   		{{ vUploadImageData }}
+		   	<!--  <template v-if="vUploadImageData != null ">-->
 		   		<img width="200" :src="vCurrentImage"><!--  :src="'/images/userImage/'+vUploadImageData" > -->
-	   		</template>
+	   		<!--</template>-->
 	   		<template v-if="vformUseType != 'R'">
 		   		<input type="file" @change="ImageChange" ref="vUploadImageData">
 		   	</template>		   		

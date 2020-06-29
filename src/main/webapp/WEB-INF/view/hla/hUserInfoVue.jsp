@@ -286,9 +286,9 @@ function hUserInfoVueInit() {
 				this.vUserAddress = Data.area;
 				this.vUserJoinDate = Data.joinDate;
 				this.vUserBirthDate = Data.birthday;
-				this.vUploadImageData = String(Data.imgpath + Data.imgname);
+				//this.vUploadImageData = String(Data.imgpath + Data.imgname);
 				this.vCurrentImage = String(Data.imgpath + Data.imgname);
-				alert(this.vUploadImageData);
+				alert(this.vCurrentImage);
 
 			},
 			hidCheck : function()

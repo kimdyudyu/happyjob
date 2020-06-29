@@ -1,6 +1,7 @@
 package kr.happy.jobkorea.hla.service;
 
 import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,13 @@ public class UserInfoServiceImpl implements UserInfoService {
 		// TODO Auto-generated method stub
 		MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest)request;
 		
-		
+        Iterator<String> files = multipartHttpServletRequest.getFileNames();
+        
+        System.out.println(files.hasNext());
+        
+        //while(files.hasNext()){
+        	
+            //String uploadFile = files.next();
 		// D:\\FileRepository\\ 밑에 F200330 이런식으로 폴더생성하기위해 가져옴.
 		String savaDir = "D:/egov/workspace/happyjob/src/main/webapp/WEB-INF/resource/images/userImage/";
 		String dirPath = userInfoDao.getDirectory();
@@ -61,18 +68,20 @@ public class UserInfoServiceImpl implements UserInfoService {
 		
 		// 데이터 저장
 		try {
-			models = fileUtil.uploadFiles();
-			//models = fileUtil.uploadFiles();
-			if(models != null && models.size()>0){
-				
-					//System.out.println("itemFilePath    :    " + savaDir + File.separator + itemFilePath);
-				   FileUtilModel model = models.get(0);
-				   paramMap.put("fileName", model.getLgc_fil_nm());
-				   paramMap.put("filePath", "/images/userImage/" );
-				   paramMap.put("fileSize", model.getFil_siz());
-				   System.out.println("fileName : " + model.getLgc_fil_nm());
-				   //System.out.println("filePath : " + model.getLgc_fil_nm());
-		   }
+			if(files.hasNext()){
+				models = fileUtil.uploadFiles();
+				//models = fileUtil.uploadFiles();
+				if(models != null && models.size()>0){
+					
+						//System.out.println("itemFilePath    :    " + savaDir + File.separator + itemFilePath);
+					   FileUtilModel model = models.get(0);
+					   paramMap.put("fileName", model.getLgc_fil_nm());
+					   paramMap.put("filePath", "/images/userImage/" );
+					   paramMap.put("fileSize", model.getFil_siz());
+					   System.out.println("fileName : " + model.getLgc_fil_nm());
+					   //System.out.println("filePath : " + model.getLgc_fil_nm());
+			   }
+			}
 			userInfoDao.UpdateUser(paramMap);
 			//cmntBbsDao.saveCmntBbsAtmtFil(paramMap);	
 		}catch(Exception e) {
