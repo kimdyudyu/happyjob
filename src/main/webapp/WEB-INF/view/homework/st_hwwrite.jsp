@@ -75,7 +75,7 @@
                   </tbody>
                </table>
             </div>                  
-            <div class="btn_areaC mt30">                  
+            <div class="btn_areaC mt30" style="padding-bottom: 10px;">                  
                <a href="javascript:insertLmm()" class="btnType blue" ><span>저장</span></a>
                <a href="javascript:cancel()" class="btnType gray" ><span>취소</span></a>
             </div>
