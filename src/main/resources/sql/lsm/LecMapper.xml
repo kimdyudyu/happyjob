@@ -4,7 +4,7 @@
 <mapper namespace="kr.happy.jobkorea.lsm.dao.LectureListDao">
 	
 	<!-- 전체 조회 -->
-	<select id="lecList" resultType="Map">
+<!-- 	<select id="lecList" resultType="Map">
 		SELECT lt.lec_seq,
 		  		 	lt.lec_nm,
 	    			lt.user_id,
@@ -22,7 +22,7 @@
         AND	 lt.user_id=#{loginId}
         GROUP BY lt.lec_seq, lt.lec_nm
 	</select>
-	
+ -->	
 	<!-- 강의 목록 카운트 -->
 	<select id="countlecList" resultType="int">
 	SELECT COUNT(1) AS tot_cnt FROM tb_lecture

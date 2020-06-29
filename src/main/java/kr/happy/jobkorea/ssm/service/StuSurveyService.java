@@ -7,7 +7,7 @@ public interface StuSurveyService {
 
 	List<Map<String, Object>> getLecList(Map<String, Object> paramMap);
 
-	List<Map<String, Object>> getSurveyList(Map<String, Object> paramMap);
+	Map<String, Object> getSurveyList(Map<String, Object> paramMap);
 
 	void savesurvey(Map<String, Object> paramMap);
 

@@ -2,6 +2,7 @@ package kr.happy.jobkorea.lsm.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -144,7 +145,7 @@ public class LSMBoardServiceImpl implements LSMBoardService {
 	// 강의번호 조회
 	public List<Integer> selectLecSeq() throws Exception {
 
-		List<Integer> lecSeqList = lsmBoardDao.selectLecSeq();
+		List<Integer>  lecSeqList = lsmBoardDao.selectLecSeq();
 
 		return lecSeqList;
 	}
@@ -155,8 +156,47 @@ public class LSMBoardServiceImpl implements LSMBoardService {
 		List<String> lecNmList = lsmBoardDao.selectLecNm();
 
 		return lecNmList;
+	} 
+	
+	//강사 명 조회
+	public List<String> selectLecTName() throws Exception{
+		
+		List<String> lecTNameList = lsmBoardDao.selectLecTName();
+		
+		return lecTNameList;
 	}
+	//강의 시작일 조회
+	public List<Date> selectLecStartDate() throws Exception{
+		
+		List<Date> lecSDateList = lsmBoardDao.selectLecStartDate();
+		
+		return lecSDateList;
+	}
+	
+	//강의 종료일 조회
+	public List<Date> selectLecEndDate() throws Exception{
+		
+		List<Date> lecEDateList = lsmBoardDao.selectLecEndDate();
+		
+		return lecEDateList;
+	}
+	
+//	진도 조회해서 넘기기
+	public List<String> selectLecProgress() throws Exception {
+		
+		List<String> LecProgressList = lsmBoardDao.selectLecProgress();
 
+		return LecProgressList;
+	}
+	
+	//강의실 조회해서 넘기기
+	public List<String> selectLecRoom() throws Exception{
+		
+		List<String> lecRoom = lsmBoardDao.selectLecRoom();
+		
+		return lecRoom;
+	}
+		
 	// 과제 삭제
 	public int deleteLsmCod(Map<String, Object> paramMap) throws Exception {
 
@@ -317,5 +357,13 @@ public class LSMBoardServiceImpl implements LSMBoardService {
 		System.out.println("------------------------------------------------" + stuFilModel );
 		return stuFilModel;
 	}
+
+	@Override
+	public Map<String, Object> lsmModal(Map<String, Object> paramMap) {
+		
+		return lsmBoardDao.lsmModal(paramMap);
+	}
+
+
 
 }

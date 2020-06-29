@@ -21,7 +21,7 @@ public class StuSurveyServiceImpl implements StuSurveyService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getSurveyList(Map<String, Object> paramMap) {
+	public Map<String,Object> getSurveyList(Map<String, Object> paramMap) {
 		
 		return stuSurveyDao.getSurveyList(paramMap);
 	}
@@ -29,8 +29,7 @@ public class StuSurveyServiceImpl implements StuSurveyService {
 	@Override
 	public void savesurvey(Map<String, Object> paramMap) {
 		
-		stuSurveyDao.saveSurvey(paramMap);
+		stuSurveyDao.savesurvey(paramMap);
 		
 	}
-
 }

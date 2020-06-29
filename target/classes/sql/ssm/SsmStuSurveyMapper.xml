@@ -22,32 +22,65 @@
 
 	</select> -->
 	
-	<select id="getLecList" resultType="Map">
-	select  tl.lec_seq, tl.lec_nm, tl.lec_contents, tl.lec_gl, tl.lec_pl, tl.lec_tm, 
-		    tl.rm_seq, tl.user_id teacher,tr.user_id, tr.lec_yon,
-		    ts.lec_seq, ts.sv_seq, ts.sv_score, ts.sv_comments, ts.enr_user YY,
-		    SUBSTRING_INDEX(tl.lec_st, ' ', 1) lec_st,
-		    SUBSTRING_INDEX(tl.lec_ed, ' ', 1) lec_ed
-	FROM   tb_lecture tl 
-			join ( select lec_seq, user_id,lec_yon 
-	    		   FROM tb_request_list
-	     		   where user_id=#{user_id}) tr
-			on tl.lec_seq = tr.lec_seq 
-	left join ( select * 
-			    from tb_survey 
-			    where enr_user=#{user_id} )ts
-	on ts.lec_seq = tr.lec_seq
-	group by tl.lec_seq, tl.lec_nm, tl.lec_contents
-	
-	</select>
+	<!-- 강사들이 올린 리스트 조회 -->
+	<select id="getLecList"  resultType="Map" parameterType="Map">
+	<!--  			SELECT
+								tb_lecture.no,
+								tb_lecture.title,
+								tb_lecture.loginID,
+								Date_Format(tb_lecture.enddate,'%Y.%m.%d') AS end_date,
+								Date_Format(tb_lecture.startdate,'%Y.%m.%d') AS start_date,
+								tb_lecture.room,
+								tb_process.processrate
+						 FROM tb_lecture, tb_tcourse, tb_userinfo, tb_process								  
+						WHERE (@rownum:=0)=0
+                and tb_lecture.no = tb_tcourse.no
+     					  and tb_userinfo.loginID = tb_tcourse.loginID
+       					and tb_process.no = tb_lecture.no
+     					  and tb_process.seq = (
+                                      select max(ps.seq)
+                                        from tb_process ps
+                                       where ps.no = tb_lecture.no
+                                   )           
+				      and tb_tcourse.loginID = #{loginID}
+				      and tb_process.processrate >= 100
+				    -->	  
+select 
+  B.no, B.title, B.loginID, B.room,
+  Date_Format(B.enddate,'%Y.%m.%d') AS end_date,
+  Date_Format(B.startdate,'%Y.%m.%d') AS start_date
+from 
+  ( 
+    select 
+      A.no 
+    from 
+      tb_tcourse A 
+    inner join 
+      (
+        select 
+          no 
+        from 
+          tb_process 
+        where 
+          processrate >= 100 
+      ) as B
+on A.no = B.no
 
-	<select id="getSurveyList" resultType="Map">
-		select sv_seq, sv_qst, sv_contents, sv_score,
-			   enr_user,enr_date, upd_user, upd_date 
-		FROM tb_survey
+where A.loginID = #{loginID}) as A left outer join tb_lecture as B
+on A.no = B.no
+where A.no not in (select no from tb_survey where loginID = #{loginID});
 	</select>
-	
-	
+		<insert id="savesurvey"  >
+				insert into tb_survey(
+				no, loginID, survey
+				) VALUES
+				(
+				#{no},
+				#{loginID},
+				#{totalScore}
+				)
+		</insert>
+	<!-- 
 	<insert id="saveSurvey">
 		insert into tb_survey  (
 		   lec_seq,sv_seq ,sv_score,sv_comments,
@@ -58,11 +91,10 @@
 		  ,#{totalScore}  
 		  ,#{comment} 
 		  ,#{enr_user} 
-		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )   
+		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )
 		  ,#{enr_user}  
-		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )  
+		  ,DATE_FORMAT(NOW(),'%Y-%c-%d %T' )
 		FROM tb_survey
 		where lec_seq=#{lec_seq};
-	</insert>
-
+	</insert> -->
 </mapper>

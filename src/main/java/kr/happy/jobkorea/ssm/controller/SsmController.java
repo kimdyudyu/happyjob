@@ -249,19 +249,17 @@ public class SsmController {
 		return resultMap;
 	}
 
-	@RequestMapping("survey.do")
+	@RequestMapping(value="/")
 	public String survey(Model result, @RequestParam Map<String, String> paramMap, HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) throws Exception {
 
 		/* Map<String, Object> resultMap = new HashMap<String, Object>(); */
 
 		logger.info("=======================================Start survey.do");
-		
-		
 		logger.info("=======================================END survey.do");
 
 		return "/ssm/survey/surveyhome";
-	}
+	} 
 	
 	@RequestMapping("studentQna.do")
 	public String studentQna(Model result, @RequestParam Map<String, String> paramMap, HttpServletRequest request,

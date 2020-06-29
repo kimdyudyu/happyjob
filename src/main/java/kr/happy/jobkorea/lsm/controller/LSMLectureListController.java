@@ -21,7 +21,7 @@ import kr.happy.jobkorea.lsm.model.LectureListModel;
 import kr.happy.jobkorea.lsm.service.LectureListService;
 
 @Controller
-@RequestMapping("/lec/")
+@RequestMapping("/manageC")
 public class LSMLectureListController {
 
 	// Set logger
@@ -33,9 +33,9 @@ public class LSMLectureListController {
 	@Autowired
 	LectureListService lectureListService;
 	
-	@RequestMapping("lecList.do")
+	@RequestMapping("alecList.do")
 	public String lectureList(Model model, @RequestParam Map<String, Object> paramMap, HttpServletRequest request,
-			HttpServletResponse response, HttpSession session, String resultMap) throws Exception {
+	HttpServletResponse response, HttpSession session, String resultMap) throws Exception {
 	
 		logger.info("+ Start " + className + ".selectList");
 		

@@ -65,15 +65,7 @@ function init(){
 					eventBus.$emit('sendeventscore',id,score);
 				}
 			}
-			
 		}); 
-
-	
-
-
-
-	
-	
 	LecListVue = new Vue({
 		el:'#vuedatatable',
 		data:{
@@ -164,16 +156,8 @@ function fsaveSurvey(){
 		fgetLecList();
 		
 	};
-	
-	
-	
+
 	callAjax("/survey/savesurvey.do", "post", "json",true, param ,resultCallback);
-	
-	
-	
-	
-	
-	
 }
 
 
@@ -185,7 +169,7 @@ function fgetLecList(){
 	var param={
 			user_id : userid
 	}
-	callAjax("/survey/lectureList.do", "post", "json",true, param ,resultCallback);
+	//callAjax("/manageC/LecList.do", "post", "json",true, param ,resultCallback);
 }
 
 function qnaWritePopup(id) {
@@ -213,11 +197,9 @@ function qnaWritePopup(id) {
 
 
 </script>
-
-
 </head>
 <body>
-	<jsp:include page="/WEB-INF/view/ssm/survey/lecList.jsp"></jsp:include>
-	<jsp:include page="/WEB-INF/view/ssm/survey/doSurvey.jsp"></jsp:include>
+	<%-- <jsp:include page="/WEB-INF/view/ssm/survey/LecList.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/view/ssm/survey/doSurvey.jsp"></jsp:include> --%>
 </body>
 </html>

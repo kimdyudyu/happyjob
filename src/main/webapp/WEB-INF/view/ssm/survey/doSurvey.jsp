@@ -53,7 +53,7 @@
 							</tr>
 						
 							<tr style="border-top: solid;">
-								<td colspan="8"><span>한마디하세요</span></td>
+								<td colspan="8"><span>불평 불만 lego</span></td>
 							</tr>
 							<tr>
 								<td colspan="8">
