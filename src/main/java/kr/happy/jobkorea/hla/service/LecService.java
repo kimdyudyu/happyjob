@@ -11,6 +11,8 @@ public interface LecService {
 
 	List<LecListModel> lectList(Map<String, Object> paramMap)throws Exception;
 
+	int lecListCount(Map<String, Object> paramMap) throws Exception;
+	
 	List<LecListModel> lectPeopleInfo(Map<String, Object> paramMap) throws Exception;
 
 	List<Map<String, Object>> studentCnsInfo(Map<String, Object> paramMap) throws Exception;

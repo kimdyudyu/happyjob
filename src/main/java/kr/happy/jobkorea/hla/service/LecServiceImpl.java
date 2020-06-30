@@ -75,6 +75,12 @@ public class LecServiceImpl implements LecService{
 		
 	}
 
+	@Override
+	public int lecListCount(Map<String, Object> paramMap) throws Exception {
+		int lecListCount=lecturerDao.lecListCount(paramMap);
+		return lecListCount;
+	}
+
 
 /*	@Override
 	public List<LecListModel> classtListAct(Map<String, Object> paramMap) throws Exception {

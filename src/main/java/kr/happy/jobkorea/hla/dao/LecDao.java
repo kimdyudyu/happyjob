@@ -8,6 +8,8 @@ import kr.happy.jobkorea.hla.model.LecListModel;
 public interface LecDao {
 
 	List<LecListModel> lectList(Map<String, Object> paramMap);
+	
+	int lecListCount(Map<String, Object> paramMap);
 
 	List<LecListModel> lectPeopleInfo(Map<String, Object> paramMap);
 	

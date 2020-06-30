@@ -19,7 +19,8 @@ td:hover {
 
 
 <script type="text/javascript">
-
+var pageSize=10;
+var pageBlock=10;
 var lect;
 var cnsv;
 var cnsdetailvue;
@@ -151,9 +152,9 @@ function init() {
 					cnsDetail(cnsNo);
 					
 				},
-				insertCns : function(no,loginID){
+				insertCns : function(no,loginID,lec_name,cns_name){
 					console.log(no+" 등록 눌렀을 때 "+loginID);
-					cnsInsert(no,loginID);
+					cnsInsert(no,loginID,lec_name,cns_name);
 				}
 			}
 	});
@@ -194,7 +195,7 @@ function init() {
 				userId : '',
 				cnsNo : '',
 				no	: '',
-				loginId : ''
+				loginID : ''
 			
 			},
 			methods :{
@@ -215,26 +216,37 @@ function init() {
 	
 
 // 강의 전체 목록 조회
-function lectList() {
+function lectList(currentPage) {
 	console.log("여기왔나요? ");
-	param='';
+	currentPage = currentPage || 1;
+	var param={
+			currentPage : currentPage,
+			pageSize : pageSize
+		}
 	
 	var resultCallback = function(data){  // 데이터를 이 함수로 넘깁시다. 
 		console.log("여기왔나요? -2 ");
-		lectListCallback(data); 
+		lectListCallback(data,currentPage); 
  	}
  	callAjax("/hla/lectListAct.do","post","json", true, param, resultCallback);
 	
 }
 
 //강의 전체 목록 조회 콜백
-function lectListCallback(data){
+function lectListCallback(data,currentPage){
 	//alert(JSON.stringify(data));
 	lect.lectList=[];
 	lect.lectList=data.lectList;
 	
 	console.log(lect.lectList);
-  
+   var lecListCount = data.lecListCount;
+   console.log(currentPage+" "+lecListCount+" "+pageSize+" "+pageBlock);
+   var pagingnavi = getPaginationHtml(currentPage, lecListCount,
+			pageSize, pageBlock, 'lectList');
+   console.log("lecListCount 찍기"+lecListCount);
+   
+   $("#pagingnavi").empty().append(pagingnavi); // 위에꺼를 첨부합니다.
+	$("#currentPage").val(currentPage);
 }
 
 // 수강중인 학생 조회
@@ -259,15 +271,17 @@ function personInfoCallback(data){
 	lect.studentList=[];
 	lect.studentList=data.lectPeopleInfo;
 	//강의 번호를 3번째 학생상담이력 테이블에 값 보내주기
-	cnsv.cnsq=[];
+/* 	cnsv.cnsq=[];
 	if(data.lectPeopleInfo[0].no!=''){
 		cnsv.no=data.lectPeopleInfo[0].no;
 		console.log("강의 번호를 3번째 학생상담이력 테이블에 값 보내주기"+cnsv.no);
 		console.log("강의 번호를 3번째 학생상담이력 테이블에 값 보내주기"+data.lectPeopleInfo[0].no);
 		console.log("lect.studentList"+lect.studentList);
 	  	
+	}else if(data.lectPeopleInfo[0].no==''){
+		cnsv.cnsq
 	}
-			
+		 */	
 			
 	
 }
@@ -345,17 +359,20 @@ function cnsDetailCallback(data){
 	}
 }
 //상담내용 insert
-function cnsInsert(no,loginID){
+function cnsInsert(no,loginID,lec_name,cns_name){
 	console.log("상담등록");
 	
 	console.log(no);
 	console.log(loginID);
 	cnsdetailvue2.no = no;
 	cnsdetailvue2.loginID = loginID;
+	cnsdetailvue2.lec_name = lec_name;
+	cnsdetailvue2.cns_name = cns_name;
 	console.log(cnsdetailvue2.no);
 	console.log(cnsdetailvue2.loginID);
-	/* cnsdetailvue2.loginID = loginID; */
-	/* console.log(cnsdetailvue2.no); */
+	
+	console.log(cnsdetailvue2.lec_name);
+	console.log(cnsdetailvue2.cns_name);
 		gfModalPop("#layer2");
 		
 	
@@ -392,7 +409,7 @@ function finsertCns(e){
 
 </script>
 <body>
-
+<input type="hidden" id="currentPage" value="1">
 
 
 	<!-- 모달 배경 -->
@@ -461,6 +478,7 @@ function finsertCns(e){
 										<!-- /.lecturerinfor_box --> </template>
 									</tbody>
 								</table>
+								<div class="paging_area" id="pagingnavi"></div>
 								<div class="" id="lecture_box">
 
 									<div class="lecture_tit_box">수강학생 목록</div>
@@ -499,27 +517,27 @@ function finsertCns(e){
 							<div id="insert_button">
 								<a id="insertbutton" href=""
 									style="float: right; margin-bottom: 20px;" class="btnType blue"
-									@click.prevent="insertCns(no,loginID)"><span>등록</span></a>
+									@click.prevent="insertCns(no,loginID,lec_name,cns_name)"><span>등록</span></a>
 							</div>
 						</div>
 						<div class="lecture_listbox">
 							<table id="cnsInfo">
 								<thead>
 									<tr>
+										<th>상담 번호</th>
 										<th>학생이름</th>
 										<th>상담일자</th>
 										<th>상담자</th>
-										<th>번호 찍어 보자</th>
-										<th>아이디 찍어 보자</th>
+										<th>아이디</th>
 									</tr>
 								</thead>
 								<tbody>
 									<template v-for="Cnslist in cnsq">
 									<tr @click="showCnsDetail(Cnslist.cnsNo)">
+										<td>{{Cnslist.no}}</td>
 										<td>{{ Cnslist.name }}</td>
 										<td>{{ Cnslist.reg_date }}</td>
 										<td>{{ Cnslist.regId }}</td>
-										<td>{{Cnslist.no}}</td>
 										<td>{{Cnslist.loginID}}</td>
 									</tr>
 

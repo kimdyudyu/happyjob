@@ -13,9 +13,21 @@
 		date_format(lec.enddate, '%Y-%m-%d') as ed_date
 		FROM
 		tb_lecture as lec
+		order by
+		no+0
+		LIMIT
+			#{pageIndex}, #{pageSize}
 
 	</select>
+	<!-- 강의 리스트 페이징 처리 -->
+	<select id="lecListCount" resultType="int">
+		select 
+			count(l.no)
+		from tb_lecture l
 
+
+
+	</select>
 
 	<select id="lectPeopleInfo" resultType="kr.happy.jobkorea.hla.model.LecListModel">
 		select tc.no
@@ -57,7 +69,8 @@
 		tb_userinfo us,
 		tb_lecture lt
 		where
-		tc.loginID = cns.loginID
+		tc.loginID =
+		cns.loginID
 		and
 		us.loginID = tc.loginID
 		and
@@ -103,9 +116,8 @@
 
 
 	<insert id="insertCns">
-<!-- 	 <selectKey keyProperty="reg_date" resultType="java.util.Date" order="AFTER">
-   		select reg_date FROM tb_counsel
-  	 </selectKey> -->
+		<!-- <selectKey keyProperty="reg_date" resultType="java.util.Date" order="AFTER"> 
+			select reg_date FROM tb_counsel </selectKey> -->
 		insert into
 		tb_counsel
 		(cnsNo,
@@ -130,22 +142,15 @@
 
 
 
-	<!-- <select id="lectPeopleInfo" resultType="kr.happy.jobkorea.hla.model.LecListModel">
-		SELECT ui.loginID , ui.name , ui.user_email , uc.lec_yon FROM tb_userinfo
-		AS ui LEFT OUTER JOIN tb_request_list AS uc ON ui.loginID = uc.user_id
-		WHERE
-		uc.lec_seq = #{lec_seq};
-	</select>
-	<select id="classtListAct" resultType="kr.happy.jobkorea.hla.model.LecListModel">
-		SELECT lec.lec_seq , lec.lec_nm , lec.lec_gl , lec.lec_pl , lec.lec_contents
-		, ui.loginID , ui.name , ui.user_email , date_format(lec.lec_enr, '%Y.
-		%m.
-		%d') as lec_enr , date_format(lec.lec_st, '%Y. %m. %d') as lec_st ,
-		date_format(lec.lec_ed,
-		'%Y. %m. %d') as lec_ed FROM tb_lecture AS lec LEFT OUTER JOIN tb_userinfo
-		AS ui ON lec.user_id = ui.loginID ORDER BY lec.lec_seq; </select>
-	<insert id="applyForClass"> INSERT INTO tb_request_list ( lec_seq , user_id )
-		VALUES
-		( #{lec_seq} , #{user_id} )
-	</insert> -->
+	<!-- <select id="lectPeopleInfo" resultType="kr.happy.jobkorea.hla.model.LecListModel"> 
+		SELECT ui.loginID , ui.name , ui.user_email , uc.lec_yon FROM tb_userinfo 
+		AS ui LEFT OUTER JOIN tb_request_list AS uc ON ui.loginID = uc.user_id WHERE 
+		uc.lec_seq = #{lec_seq}; </select> <select id="classtListAct" resultType="kr.happy.jobkorea.hla.model.LecListModel"> 
+		SELECT lec.lec_seq , lec.lec_nm , lec.lec_gl , lec.lec_pl , lec.lec_contents 
+		, ui.loginID , ui.name , ui.user_email , date_format(lec.lec_enr, '%Y. %m. 
+		%d') as lec_enr , date_format(lec.lec_st, '%Y. %m. %d') as lec_st , date_format(lec.lec_ed, 
+		'%Y. %m. %d') as lec_ed FROM tb_lecture AS lec LEFT OUTER JOIN tb_userinfo 
+		AS ui ON lec.user_id = ui.loginID ORDER BY lec.lec_seq; </select> <insert 
+		id="applyForClass"> INSERT INTO tb_request_list ( lec_seq , user_id ) VALUES 
+		( #{lec_seq} , #{user_id} ) </insert> -->
 </mapper>

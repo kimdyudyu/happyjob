@@ -47,15 +47,32 @@ public class LecListController {
 
 		logger.info("+ Start " + className + ".lectListAct");
 		logger.info("   - paramMap : " + paramMap);
-
+		
+		
+		int currentPage = Integer.parseInt((String) paramMap.get("currentPage")); // 현재
+		int pageSize = Integer.parseInt((String) paramMap.get("pageSize")); // 페이지
+		int pageIndex = (currentPage - 1) * pageSize; // 페이지 시작 row 번호
+		logger.info("pageIndex~"+pageIndex);
+		paramMap.put("pageIndex", pageIndex);
+		paramMap.put("pageSize", pageSize);
+		logger.info("pageSize 찍는다~~~"+pageSize);
+		int lecListCount = lecturerService.lecListCount(paramMap);
+		logger.info(lecListCount);
+		
+		
+		
 		// 서비스 호출
 		System.out.println("진행확인1 여기는 오냐 ?");
 		List<LecListModel> lectList = lecturerService.lectList(paramMap);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
+	/*	Integer.parseInt((String) lectList.*/
+		
 		resultMap.put("lectList", lectList);
+		resultMap.put("lecListCount",lecListCount);
+		
 		System.out.println("진행확인2");
 		logger.info("+ End " + className + ".lectListAct");
-
+		
 		return resultMap;
 	}
 
